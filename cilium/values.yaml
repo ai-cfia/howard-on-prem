@@ -26,10 +26,6 @@ k8sClientRateLimit:
   burst: 20
 
 # -- Configure L2 announcements
-# S'il n'est pas possible de configurer un load balancer avec BGP sur un des routeurs, il serait possible d'utiliser le 
-# ingressController.hostNetwork, mais il y a des problems en ce moment (pour plus d'info voir https://github.com/cilium/cilium/issues/34028).
-# Si le probleme persiste, il serait possible d'utiliser metallb qui fait a la fois 
-# 
 l2announcements:
   # -- Enable L2 announcements
   enabled: true
