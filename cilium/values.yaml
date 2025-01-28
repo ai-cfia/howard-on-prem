@@ -25,6 +25,11 @@ k8sClientRateLimit:
   # @default -- 10 for k8s up to 1.26. 20 for k8s version 1.27+
   burst: 20
 
+# -- Configure the kube-proxy replacement in Cilium BPF datapath
+# Valid options are "true" or "false".
+# ref: https://docs.cilium.io/en/stable/network/kubernetes/kubeproxy-free/
+kubeProxyReplacement: "true"
+
 # -- Configure L2 announcements
 l2announcements:
   # -- Enable L2 announcements
