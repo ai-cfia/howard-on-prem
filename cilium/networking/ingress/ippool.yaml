@@ -4,9 +4,9 @@ metadata:
   name: ingress-ippool
   namespace: kube-system
 spec:
-  serviceSelector:
-    matchLabels:
-      ingress: cilium
+  # serviceSelector:
+  #   matchLabels:
+  #     ingress: cilium
   blocks:
     - start: "10.140.79.2"
-      stop: "10.140.70.49"
+      stop: "10.140.79.49"

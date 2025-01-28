@@ -6,6 +6,6 @@ metadata:
 spec:
   externalIPs: true
   loadBalancerIPs: true
-  serviceSelector:
-    matchLabels:
-      ingress: cilium
+  # serviceSelector:
+  #   matchLabels:
+  #     ingress: cilium
