@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vault-internal-ingress
+  namespace: vault
+  labels:
+    ingress: cilium
+  annotations:
+    ingress.cilium.io/force-https: enabled
+spec:
+  ingressClassName: cilium
+  rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: vault-ui
+              port:
+                name: https

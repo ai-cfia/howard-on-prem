@@ -1,0 +1,37 @@
+replicaCount: 1
+
+# -- Specifies the amount of historic ReplicaSets k8s should keep (see https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#clean-up-policy)
+revisionHistoryLimit: 4
+# -- If set, install and upgrade CRDs through helm chart.
+installCRDs: true
+
+
+# Need to add the CA cert from vault.
+# More information here:
+# https://github.com/external-secrets/external-secrets/discussions/2865 
+# https://external-secrets.io/v0.9.19/api/clustersecretstore/#example
+# https://github.com/digitalocean/Kubernetes-Starter-Kit-Developers/blob/main/06-kubernetes-secrets/external-secrets-operator.md 
+## -- Extra volumes to pass to pod.
+extraVolumes: []
+## -- Extra environment variables to add to container.
+extraEnv: []
+## -- Extra volumes to mount to the container.
+extraVolumeMounts: []
+
+crds:
+  # -- If true, create CRDs for Cluster External Secret.
+  createClusterExternalSecret: true
+  # -- If true, create CRDs for Cluster Secret Store.
+  createClusterSecretStore: true
+  # -- If true, create CRDs for Cluster Generator.
+  createClusterGenerator: true
+  # -- If true, create CRDs for Push Secret.
+  createPushSecret: true
+  annotations: {}
+  conversion:
+    # -- If webhook is set to false this also needs to be set to false otherwise the kubeapi will be hammered because the conversion is looking for a webhook endpoint.
+    enabled: true
+
+# -- If true, external-secrets will perform leader election between instances to ensure no more
+# than one instance of external-secrets operates at a time.
+leaderElect: false

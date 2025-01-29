@@ -14,7 +14,7 @@ resources:
 
   # Storage applications
   # - ../../storage/rook-ceph/operator/
-  #- ../../storage/rook-ceph/cluster/
+  # - ../../storage/rook-ceph/cluster/
 
   # Example of deployment, ingress, pvc's, etc...
 
@@ -40,6 +40,7 @@ patches:
       syncPolicy:
         automated:
           selfHeal: true
+          prune: true
       syncOptions:
         - CreateNamespace=true
       revisionHistoryLimit: 4
