@@ -5,16 +5,16 @@ resources:
   # ACIA-CFIA applications
 
   # Networking applications
-  - networking/cilium/
+  - ../../networking/cilium/
 
   # Gitops applications
-  - gitops/argocd/
+  - argocd/
 
   # Security applications
 
   # Storage applications
-  - storage/rook-ceph/operator/
-  - storage/rook-ceph/cluster/
+  - ../../storage/rook-ceph/operator/
+  - ../../storage/rook-ceph/cluster/
 
   # Example of deployment, ingress, pvc's, etc...
 
