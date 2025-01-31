@@ -13,7 +13,7 @@ resources:
   # Security applications
 
   # Storage applications
-  - ../../storage/rook-ceph/operator/
+  # - ../../storage/rook-ceph/operator/
   # - ../../storage/rook-ceph/cluster/
 
   # Example of deployment, ingress, pvc's, etc...
