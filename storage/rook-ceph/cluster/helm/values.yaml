@@ -52,7 +52,7 @@ cephClusterSpec:
     ssl: false
 
   storage: # cluster level storage configuration and selection
-    useAllNodes: true
+    useAllNodes: false
     useAllDevices: true
     # deviceFilter:
     # config:
