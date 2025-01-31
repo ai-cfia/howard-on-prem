@@ -73,6 +73,9 @@ cephClusterSpec:
       - name: "ai-lab-3"
         devices:
           - name: "/dev/sdb"
+      - name: "ai-lab-4"
+        devices:
+          - name: "/dev/sdb"
 
   # Configure the healthcheck and liveness probes for ceph pods.
   # Valid values for daemons are 'mon', 'osd', 'status'
