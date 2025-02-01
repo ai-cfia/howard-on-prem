@@ -69,6 +69,10 @@ cephClusterSpec:
     # For more information: see this issue: 
     # - https://tracker.ceph.com/issues/69173
     # - https://github.com/rook/rook/issues/15026
+    # found a kick patch / workaround to remove "use/bind" osd ids
+    # kubectl rook-cehp ceph osd crush remove osd.{the_concurrent_id} (e.g 0,1,2,3)
+    # kubectl rook-cehp ceph auth del osd.{the_concurrent_id}
+    # kubectl rook-cehp ceph osd rm {the_concurrent_id}
     nodes:
       - name: "ai-lab-1"
         devices:
@@ -79,9 +83,9 @@ cephClusterSpec:
       - name: "ai-lab-3"
         devices:
           - name: "/dev/sdb"
-      # - name: "ai-lab-4"
-      #   devices:
-      #     - name: "/dev/sdb"
+      - name: "ai-lab-4"
+        devices:
+          - name: "/dev/sdb"
 
   # Configure the healthcheck and liveness probes for ceph pods.
   # Valid values for daemons are 'mon', 'osd', 'status'
