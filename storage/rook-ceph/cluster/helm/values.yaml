@@ -73,9 +73,9 @@ cephClusterSpec:
       - name: "ai-lab-1"
         devices:
           - name: "/dev/sdb"
-      # - name: "ai-lab-2"
-      #   devices:
-      #     - name: "/dev/sdb"
+      - name: "ai-lab-2"
+        devices:
+          - name: "/dev/sdb"
       # - name: "ai-lab-3"
       #   devices:
       #     - name: "/dev/sdb"
