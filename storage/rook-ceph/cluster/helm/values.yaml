@@ -55,7 +55,7 @@ cephClusterSpec:
     ssl: false
 
   storage: # cluster level storage configuration and selection
-    useAllNodes: false
+    useAllNodes: true
     useAllDevices: true
     # deviceFilter:
     # config:
@@ -73,19 +73,19 @@ cephClusterSpec:
     # kubectl rook-cehp ceph osd crush remove osd.{the_concurrent_id} (e.g 0,1,2,3)
     # kubectl rook-cehp ceph auth del osd.{the_concurrent_id}
     # kubectl rook-cehp ceph osd rm {the_concurrent_id}
-    nodes:
-      - name: "ai-lab-1"
-        devices:
-          - name: "/dev/sdb"
-      - name: "ai-lab-2"
-        devices:
-          - name: "/dev/sdb"
-      - name: "ai-lab-3"
-        devices:
-          - name: "/dev/sdb"
-      - name: "ai-lab-4"
-        devices:
-          - name: "/dev/sdb"
+    # nodes:
+    #   - name: "ai-lab-1"
+    #     devices:
+    #       - name: "/dev/sdb"
+    #   - name: "ai-lab-2"
+    #     devices:
+    #       - name: "/dev/sdb"
+    #   - name: "ai-lab-3"
+    #     devices:
+    #       - name: "/dev/sdb"
+    #   - name: "ai-lab-4"
+    #     devices:
+    #       - name: "/dev/sdb"
 
   # Configure the healthcheck and liveness probes for ceph pods.
   # Valid values for daemons are 'mon', 'osd', 'status'
