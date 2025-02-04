@@ -36,18 +36,17 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx-internal-ingress
+  name: cilium-external-ingress
   namespace: demo
   labels:
     ingress: cilium
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.10
-    cert-manager.io/cluster-issuer: internal-ca-issuer
+    cert-manager.io/cluster-issuer: letsencrypt-onprem
     ingress.cilium.io/force-https: enabled
 spec:
   ingressClassName: cilium
   rules:
-    - host: test.cfia.ca
+    - host: test.onprem.inspection.alpha.canada.ca
       http:
         paths:
         - path: /
@@ -59,5 +58,5 @@ spec:
                 number: 80
   tls:
     - hosts:
-        - test.cfia.ca
+        - test.onprem.inspection.alpha.canada.ca
       secretName: test-tls
