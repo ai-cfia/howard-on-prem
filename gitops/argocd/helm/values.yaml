@@ -13,7 +13,7 @@ crds:
 global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
-  domain: 
+  domain: argocd.onprem.inspection.alpha.canada.ca
 
   # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
   revisionHistoryLimit: 3
@@ -348,7 +348,7 @@ server:
     ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
     annotations:
       lbipam.cilium.io/ips: 10.140.79.3
-      ingress.cilium.io/loadbalancer-mode: dedicated
+      # ingress.cilium.io/loadbalancer-mode: dedicated
       # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
 
