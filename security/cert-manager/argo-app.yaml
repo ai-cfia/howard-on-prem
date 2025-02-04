@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  sources:
+    - chart: cert-manager
+      repoURL: https://charts.jetstack.io
+      targetRevision: 1.17.0
+      helm:
+        releaseName: cert-manager
+        valueFiles:
+          - $values/security/cert-manager/helm/values.yaml
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      path: security/cert-manager/base
+      targetRevision: HEAD
