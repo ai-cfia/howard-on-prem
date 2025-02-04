@@ -56,15 +56,21 @@ metadata:
   name: nginx-ingress
   annotations:
     lbipam.cilium.io/ips: 10.140.79.8
+    cert-manager.io/cluster-issuer: internal-ca-issuer
 spec:
   ingressClassName: cilium
   rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: nginx-service
-            port:
-              number: 80
+    - host: test.cfia.ca
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: nginx-service
+              port:
+                number: 80
+  tls:
+    - hosts:
+        - test.cfia.ca
+      secretName: test-tls
