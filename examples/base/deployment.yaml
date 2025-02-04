@@ -41,8 +41,9 @@ metadata:
   labels:
     ingress: cilium
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.8
+    lbipam.cilium.io/ips: 10.140.79.10
     cert-manager.io/cluster-issuer: internal-ca-issuer
+    ingress.cilium.io/force-https: enabled
 spec:
   ingressClassName: cilium
   rules:
