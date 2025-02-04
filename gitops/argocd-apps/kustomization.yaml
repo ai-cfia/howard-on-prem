@@ -1,0 +1,58 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # ACIA-CFIA applications
+
+  # Networking applications
+  - ../../networking/cilium/
+
+  # Gitops applications
+  - ../argocd/
+
+  # Security applications
+  - ../../security/cert-manager/
+  # - ../../security/eso/
+  # - ../../security/vault/
+
+  # Storage applications
+  - ../../storage/rook-ceph/operator/
+  - ../../storage/rook-ceph/cluster/
+
+  # Example of deployment, ingress, pvc's, etc...
+  - ../../examples/
+
+# This patch enforces a standardized sync policy for Argo CD applications:
+# - Enables automated sync with pruning (removes orphaned resources) and self-healing.
+# - Adds a finalizer to ensure proper cascading deletion.
+# - Automatically creates namespaces if they don’t exist.
+# - Retains up to 4 revision history records.
+# - Implements a retry strategy:
+#   - Retries failed syncs up to 3 times.
+#   - Uses an exponential backoff (starting at 5s, doubling each time).
+#   - Capped at a maximum wait time of 3 minutes.
+# - Applies to all Application resources.
+patches:
+- patch: |-
+    apiVersion: argoproj.io/v1alpha1
+    kind: Application
+    metadata:
+      name: not-used
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io # cascading deletion
+    spec:
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+      syncOptions:
+        - CreateNamespace=true
+      revisionHistoryLimit: 4
+      retry:
+        limit: 3
+        backoff:
+          duration: 5s
+          factor: 2
+          maxDuration: 3m
+  target:
+    kind: Application

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-deployment
+  namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: demo
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-internal-ingress
+  namespace: demo
+  labels:
+    ingress: cilium
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.10
+    cert-manager.io/cluster-issuer: internal-ca-issuer
+    ingress.cilium.io/force-https: enabled
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: test.cfia.ca
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: nginx-service
+              port:
+                number: 80
+  tls:
+    - hosts:
+        - test.cfia.ca
+      secretName: test-tls

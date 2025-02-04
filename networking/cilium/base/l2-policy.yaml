@@ -1,0 +1,11 @@
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: ingress-l2-policy
+  namespace: kube-system
+spec:
+  externalIPs: true
+  loadBalancerIPs: true
+  # serviceSelector:
+  #   matchLabels:
+  #     ingress: cilium

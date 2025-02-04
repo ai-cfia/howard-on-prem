@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-ceph
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  destination:
+    namespace: rook-ceph
+    server: https://kubernetes.default.svc
+  sources:
+    - chart: rook-ceph
+      helm:
+        releaseName: rook-ceph
+        valueFiles:
+          - $values/storage/rook-ceph/operator/helm/values.yaml
+      repoURL: https://charts.rook.io/release
+      targetRevision: 1.16.2
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
