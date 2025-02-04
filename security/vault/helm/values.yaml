@@ -14,7 +14,7 @@ server:
   # Use the Enterprise Image
   image:
     repository: "hashicorp/vault-enterprise"
-    tag: "1.16.1-ent"
+    tag: "1.18.4-ent"
 
   # These Resource Limits are in line with node requirements in the
   # Vault Reference Architecture for a Small Cluster
