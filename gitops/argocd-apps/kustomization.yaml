@@ -11,6 +11,9 @@ resources:
   - ../argocd/
 
   # Security applications
+  # - ../security/cert-manager/ # need a public IP with DNS
+  # - ../security/eso/
+  - ../security/vault/
 
   # Storage applications
   - ../../storage/rook-ceph/operator/
