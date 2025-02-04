@@ -1,12 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ceph-internal-ingress
-  namespace: rook-ceph
+  name: vault-internal-ingress
+  namespace: vault
   labels:
     ingress: cilium
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.4
+    ingress.cilium.io/force-https: enabled
 spec:
   ingressClassName: cilium
   rules:
@@ -16,6 +16,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: rook-ceph-mgr-dashboard
+              name: vault-ui
               port:
-                number: 8443
+                name: https

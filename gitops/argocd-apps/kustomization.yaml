@@ -11,6 +11,9 @@ resources:
   - ../argocd/
 
   # Security applications
+  - ../security/cert-manager/
+  # - ../security/eso/
+  # - ../security/vault/
 
   # Storage applications
   - ../../storage/rook-ceph/operator/
@@ -40,6 +43,7 @@ patches:
       syncPolicy:
         automated:
           selfHeal: true
+          prune: true
       syncOptions:
         - CreateNamespace=true
       revisionHistoryLimit: 4

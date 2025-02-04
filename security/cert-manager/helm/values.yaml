@@ -1,0 +1,152 @@
+crds:
+  # This option decides if the CRDs should be installed
+  # as part of the Helm installation.
+  enabled: true
+
+  # This option makes it so that the "helm.sh/resource-policy": keep
+  # annotation is added to the CRD. This will prevent Helm from uninstalling
+  # the CRD when the Helm release is uninstalled.
+  # WARNING: when the CRDs are removed, all cert-manager custom resources
+  # (Certificates, Issuers, ...) will be removed too by the garbage collector.
+  keep: true
+
+# +docs:section=Controller
+
+# The number of replicas of the cert-manager controller to run.
+#
+# The default is 1, but in production set this to 2 or 3 to provide high
+# availability.
+#
+# If `replicas > 1`, consider setting `podDisruptionBudget.enabled=true`.
+#
+# Note that cert-manager uses leader election to ensure that there can
+# only be a single instance active at a time.
+replicaCount: 1
+
+# List of signer names that cert-manager will approve by default. CertificateRequests
+# referencing these signer names will be auto-approved by cert-manager. Defaults to just
+# approving the cert-manager.io Issuer and ClusterIssuer issuers. When set to an empty
+# array, ALL issuers will be auto-approved by cert-manager. To disable the auto-approval,
+# because eg. you are using approver-policy, you can enable 'disableAutoApproval'.
+# ref: https://cert-manager.io/docs/concepts/certificaterequest/#approval
+# +docs:property
+approveSignerNames:
+- issuers.cert-manager.io/*
+- clusterissuers.cert-manager.io/*
+
+prometheus:
+  # Enable Prometheus monitoring for the cert-manager controller and webhook.
+  # If you use the Prometheus Operator, set prometheus.podmonitor.enabled or
+  # prometheus.servicemonitor.enabled, to create a PodMonitor or a
+  # ServiceMonitor resource.
+  # Otherwise, 'prometheus.io' annotations are added to the cert-manager and
+  # cert-manager-webhook Deployments.
+  # Note that you can not enable both PodMonitor and ServiceMonitor as they are
+  # mutually exclusive. Enabling both will result in an error.
+  enabled: false
+
+  servicemonitor:
+    # Create a ServiceMonitor to add cert-manager to Prometheus.
+    enabled: false
+
+    # The namespace that the service monitor should live in, defaults
+    # to the cert-manager namespace.
+    # +docs:property
+    # namespace: cert-manager
+
+    # Specifies the `prometheus` label on the created ServiceMonitor. This is
+    # used when different Prometheus instances have label selectors matching
+    # different ServiceMonitors.
+    prometheusInstance: default
+
+    # The target port to set on the ServiceMonitor. This must match the port that the
+    # cert-manager controller is listening on for metrics.
+    targetPort: 9402
+
+    # The path to scrape for metrics.
+    path: /metrics
+
+    # The interval to scrape metrics.
+    interval: 60s
+
+    # The timeout before a metrics scrape fails.
+    scrapeTimeout: 30s
+
+    # Additional labels to add to the ServiceMonitor.
+    labels: {}
+
+    # Additional annotations to add to the ServiceMonitor.
+    annotations: {}
+
+    # Keep labels from scraped data, overriding server-side labels.
+    honorLabels: false
+
+    # EndpointAdditionalProperties allows setting additional properties on the
+    # endpoint such as relabelings, metricRelabelings etc.
+    #
+    # For example:
+    #  endpointAdditionalProperties:
+    #   relabelings:
+    #   - action: replace
+    #     sourceLabels:
+    #     - __meta_kubernetes_pod_node_name
+    #     targetLabel: instance
+    #
+    # +docs:property
+    endpointAdditionalProperties: {}
+
+  # Note that you can not enable both PodMonitor and ServiceMonitor as they are mutually exclusive. Enabling both will result in an error.
+  podmonitor:
+    # Create a PodMonitor to add cert-manager to Prometheus.
+    enabled: false
+
+    # The namespace that the pod monitor should live in, defaults
+    # to the cert-manager namespace.
+    # +docs:property
+    # namespace: cert-manager
+
+    # Specifies the `prometheus` label on the created PodMonitor. This is
+    # used when different Prometheus instances have label selectors matching
+    # different PodMonitors.
+    prometheusInstance: default
+
+    # The path to scrape for metrics.
+    path: /metrics
+
+    # The interval to scrape metrics.
+    interval: 60s
+
+    # The timeout before a metrics scrape fails.
+    scrapeTimeout: 30s
+
+    # Additional labels to add to the PodMonitor.
+    labels: {}
+
+    # Additional annotations to add to the PodMonitor.
+    annotations: {}
+
+    # Keep labels from scraped data, overriding server-side labels.
+    honorLabels: false
+
+    # EndpointAdditionalProperties allows setting additional properties on the
+    # endpoint such as relabelings, metricRelabelings etc.
+    #
+    # For example:
+    #  endpointAdditionalProperties:
+    #   relabelings:
+    #   - action: replace
+    #     sourceLabels:
+    #     - __meta_kubernetes_pod_node_name
+    #     targetLabel: instance
+    #   # Configure the PodMonitor for TLS connections
+    #   # See https://cert-manager.io/docs/devops-tips/prometheus-metrics/#tls
+    #   scheme: https
+    #   tlsConfig:
+    #     serverName: cert-manager-metrics
+    #     ca:
+    #       secret:
+    #         name: cert-manager-metrics-ca
+    #         key: "tls.crt"
+    #
+    # +docs:property
+    endpointAdditionalProperties: {}

@@ -1,26 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cilium
+  name: vault
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   destination:
-    namespace: kube-system
     server: https://kubernetes.default.svc
+    namespace: vault
   sources:
-    - chart: cilium
+    - chart: vault
+      repoURL: https://helm.releases.hashicorp.com
+      targetRevision: 0.29.1
       helm:
-        releaseName: cilium
+        releaseName: vault
         valueFiles:
-          - $values/networking/cilium/helm/values.yaml
-      repoURL: https://helm.cilium.io/
-      targetRevision: 1.16.5
+          - $values/security/vault/helm/values.yaml
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      path: networking/cilium/base/
+      path: security/vault/base
       targetRevision: HEAD

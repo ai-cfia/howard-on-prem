@@ -1,26 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cilium
+  name: cert-manager
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   destination:
-    namespace: kube-system
     server: https://kubernetes.default.svc
+    namespace: cert-manager
   sources:
-    - chart: cilium
+    - chart: cert-manager
+      repoURL: https://charts.jetstack.io
+      targetRevision: 1.17.0
       helm:
-        releaseName: cilium
+        releaseName: cert-manager
         valueFiles:
-          - $values/networking/cilium/helm/values.yaml
-      repoURL: https://helm.cilium.io/
-      targetRevision: 1.16.5
+          - $values/security/cert-manager/helm/values.yaml
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      path: networking/cilium/base/
+      path: security/cert-manager/base
       targetRevision: HEAD
