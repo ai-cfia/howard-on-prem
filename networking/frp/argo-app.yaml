@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: frp
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  destination:
+    namespace: frp
+    server: https://kubernetes.default.svc
+  sources:
+    - chart: frp-operator
+      helm:
+        releaseName: frp-operator
+        valueFiles:
+          - $values/networking/frp/helm/values.yaml
+      repoURL: https://zufardhiyaulhaq.com/frp-operator/charts/releases/
+      targetRevision: 1.2.0
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values

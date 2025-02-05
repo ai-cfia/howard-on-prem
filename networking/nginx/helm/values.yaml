@@ -1,0 +1,83 @@
+controller:
+  name: controller
+  enableAnnotationValidations: true
+  ingressClassResource:
+    # -- Name of the IngressClass
+    name: nginx
+    # -- Create the IngressClass or not
+    enabled: true
+    # -- If true, Ingresses without `ingressClassName` get assigned to this IngressClass on creation.
+    # Ingress creation gets rejected if there are multiple default IngressClasses.
+    # Ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#default-ingress-class
+    default: false
+    # -- Annotations to be added to the IngressClass resource.
+    annotations:
+    # -- Controller of the IngressClass. An Ingress Controller looks for IngressClasses it should reconcile by this value.
+    # This value is also being set as the `--controller-class` argument of this Ingress Controller.
+    # Ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class
+    controllerValue: k8s.io/ingress-nginx
+    # -- Aliases of this IngressClass. Creates copies with identical settings but the respective alias as name.
+    # Useful for development environments with only one Ingress Controller but production-like Ingress resources.
+    # `default` gets enabled on the original IngressClass only.
+    aliases: []
+    # aliases:
+    # - nginx-alias-1
+    # - nginx-alias-2
+    # -- A link to a custom resource containing additional configuration for the controller.
+    # This is optional if the controller consuming this IngressClass does not require additional parameters.
+    # Ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class
+    parameters: {}
+    # parameters:
+    #   apiGroup: k8s.example.com
+    #   kind: IngressParameters
+    #   name: external-lb
+    # -- Will add custom configuration options to Nginx https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/
+    config: {}
+      # proxy-body-size: "200m"
+      # ssl-prefer-server-ciphers: "true"
+      # ssl-ciphers: "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256"
+      # ssl-ecdh-curve: "secp256r1:secp384r1:secp521r1"
+      # force-ssl-redirect: "true"
+      # use-forwarded-headers: "true"
+      # server-snippet: |
+      #   add_header X-Robots-Tag "noindex,nofollow";
+      #   error_page 403 = @error403;
+      #   location @error403 {
+      #     add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
+      #     add_header Pragma "no-cache";
+      #     add_header Expires "0";
+      #     return 301 https://landing.inspection.alpha.canada.ca?redirect=https://$host$request_uri;
+      #   }
+      #   ssl_conf_command CipherSuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384;
+  # -- For backwards compatibility with ingress.class annotation, use ingressClass.
+  # Algorithm is as follows, first ingressClassName is considered, if not present, controller looks for ingress.class annotation
+  ingressClass: nginx
+    serviceMonitor:
+      enabled: false
+      additionalLabels: {}
+      # -- Annotations to be added to the ServiceMonitor.
+      annotations: {}
+      ## The label to use to retrieve the job name from.
+      ## jobLabel: "app.kubernetes.io/name"
+      namespace: ""
+      namespaceSelector: {}
+      ## Default: scrape .Release.Namespace or namespaceOverride only
+      ## To scrape all, use the following:
+      ## namespaceSelector:
+      ##   any: true
+      scrapeInterval: 30s
+      # honorLabels: true
+      targetLabels: []
+      relabelings: []
+      metricRelabelings: []
+      # -- Per-scrape limit on number of labels that will be accepted for a sample.
+      labelLimit: 0
+      # -- Per-scrape limit on length of labels name that will be accepted for a sample.
+      labelNameLengthLimit: 0
+      # -- Per-scrape limit on length of labels value that will be accepted for a sample.
+      labelValueLengthLimit: 0
+      # -- Defines a per-scrape limit on the number of scraped samples that will be accepted.
+      sampleLimit: 0
+      # -- Defines a limit on the number of scraped targets that will be accepted.
+      targetLimit: 0
+revisionHistoryLimit: 4
