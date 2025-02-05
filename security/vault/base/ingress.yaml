@@ -5,8 +5,10 @@ metadata:
   namespace: vault
   labels:
     ingress: cilium
+    app: vault
   annotations:
-    ingress.cilium.io/force-https: enabled
+    lbipam.cilium.io/ips: 10.140.79.12
+    ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
   rules:
@@ -18,4 +20,29 @@ spec:
             service:
               name: vault-ui
               port:
-                name: https
+                number: 8200
+
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: vault-external-ingress
+#   namespace: vault
+#   labels:
+#     ingress: cilium
+#     app: vault
+#   annotations:
+#     ingress.cilium.io/force-https: enabled
+#     cert-manager.io/cluster-issuer: letsencrypt-prod
+# spec:
+#   ingressClassName: cilium
+#   rules:
+#     - http:
+#         paths:
+#         - path: /
+#           pathType: Prefix
+#           backend:
+#             service:
+#               name: vault-ui
+#               port:
+#                 name: https
