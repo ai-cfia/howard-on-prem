@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  sources:
+    - chart: cilium
+      helm:
+        releaseName: cilium
+        valueFiles:
+          - $values/networking/cilium/helm/values.yaml
+      repoURL: https://helm.cilium.io/
+      targetRevision: 1.16.5
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      path: networking/cilium/base/
+      targetRevision: HEAD
