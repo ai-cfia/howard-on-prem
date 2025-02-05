@@ -33,13 +33,44 @@ spec:
       targetPort: 80
   type: ClusterIP
 ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: demo-external-ingress
+#   namespace: demo
+#   labels:
+#     ingress: cilium
+#   annotations:
+#     cert-manager.io/cluster-issuer: letsencrypt-prod
+#     ingress.cilium.io/force-https: enabled
+# spec:
+#   ingressClassName: cilium
+#   rules:
+#     - host: test.onprem.inspection.alpha.canada.ca
+#       http:
+#         paths:
+#         - path: /
+#           pathType: Prefix
+#           backend:
+#             service:
+#               name: nginx-service
+#               port:
+#                 number: 80
+#   tls:
+#     - hosts:
+#         - test.onprem.inspection.alpha.canada.ca
+#       secretName: test-tls
+# ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx-internal-ingress
+  name: demo-internal-ingress
   namespace: demo
   labels:
     ingress: cilium
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.11
+    ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
   rules:

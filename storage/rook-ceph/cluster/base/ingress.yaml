@@ -5,6 +5,9 @@ metadata:
   namespace: rook-ceph
   labels:
     ingress: cilium
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.4
+    ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
   rules:
