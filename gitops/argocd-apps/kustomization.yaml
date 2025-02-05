@@ -22,6 +22,9 @@ resources:
   # Example of deployment, ingress, pvc's, etc...
   - ../../examples/
 
+  # MLOps
+  - ../../mlops/nvidia/
+
 # This patch enforces a standardized sync policy for Argo CD applications:
 # - Enables automated sync with pruning (removes orphaned resources) and self-healing.
 # - Adds a finalizer to ensure proper cascading deletion.
