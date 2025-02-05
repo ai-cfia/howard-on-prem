@@ -1,4 +1,4 @@
-name: workflows
+name: Howard on prem integration workflow
 
 on:
   pull_request:
@@ -9,9 +9,18 @@ on:
 
 jobs:
   markdown-check:
-    uses: ai-cfia/github-workflows/.github/workflows/workflow-markdown-check.yml@main
-    secrets: inherit
+    uses:
+      ai-cfia/github-workflows/.github/workflows/workflow-markdown-check.yml@main
 
   repo-standard:
-    uses: ai-cfia/github-workflows/.github/workflows/workflow-repo-standards-validation.yml@main
+    uses:
+      ai-cfia/github-workflows/.github/workflows/workflow-repo-standards-validation.yml@main
+    secrets: inherit
+
+  pr-labelling:
+    uses: ai-cfia/github-workflows/.github/workflows/workflow-pr-labelling.yml@main
+    secrets: inherit
+
+  check-commit-author:
+    uses: ai-cfia/github-workflows/.github/workflows/workflow-check-author-email.yml@main
     secrets: inherit
