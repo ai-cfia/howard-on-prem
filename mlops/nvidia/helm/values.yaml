@@ -11,7 +11,7 @@ hostPaths:
   driverInstallDir: "/run/nvidia/driver"
 
 driver:
-  enabled: true
+  enabled: false
   nvidiaDriverCRD:
     enabled: false
     deployDefaultCR: true
