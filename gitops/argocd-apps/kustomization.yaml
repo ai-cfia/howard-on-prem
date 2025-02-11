@@ -13,7 +13,7 @@ resources:
   # Security applications
   - ../../security/cert-manager/
   # - ../../security/eso/
-  # - ../../security/vault/
+  - ../../security/vault/
 
   # Storage applications
   - ../../storage/rook-ceph/operator/
