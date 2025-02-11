@@ -18,6 +18,12 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
+        env:
+          - name: VAULT_ESO_SECRET_TEST
+            valueFrom:
+              secretKeyRef:
+                name: demo-secret
+                key: vault-eso-test
 ---
 apiVersion: v1
 kind: Service
