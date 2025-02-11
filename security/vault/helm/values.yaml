@@ -43,7 +43,7 @@ server:
   # kubectl --namespace vault create secret tls tls-server --cert ./tls-server.cert --key ./tls-server.key
   # kubectl create secret generic consul-token --from-file=./consul_token
   extraEnvironmentVars:
-    VAULT_CACERT: /vault/userconfig/tls-ca/tls.crt.
+    VAULT_CACERT: /vault/userconfig/tls-ca/tls.crt
 
   # extraVolumes is a list of extra volumes to mount. These will be exposed
   # to Vault in the path `/vault/userconfig/<name>/`.
