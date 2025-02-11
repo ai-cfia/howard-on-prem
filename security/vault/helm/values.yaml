@@ -14,7 +14,7 @@ server:
   # Use the free Image
   image:
     repository: "hashicorp/vault"
-    tag: "1.18.1"
+    tag: "1.18.4"
 
   # These Resource Limits are in line with node requirements in the
   # Vault Reference Architecture for a Small Cluster
