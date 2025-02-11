@@ -9,8 +9,8 @@ spec:
       caProvider:
         type: "Secret"
         namespace: "vault"
-        name: "vault-ca"
-        key: "ca.crt"
+        name: "tls-ca"
+        key: "tls.crt"
       auth:
         tokenSecretRef:
           name: "vault-token"

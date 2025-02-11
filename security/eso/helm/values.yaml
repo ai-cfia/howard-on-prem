@@ -5,7 +5,6 @@ revisionHistoryLimit: 4
 # -- If set, install and upgrade CRDs through helm chart.
 installCRDs: true
 
-
 # Need to add the CA cert from vault.
 # More information here:
 # https://github.com/external-secrets/external-secrets/discussions/2865 

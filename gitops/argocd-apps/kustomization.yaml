@@ -12,7 +12,7 @@ resources:
 
   # Security applications
   - ../../security/cert-manager/
-  # - ../../security/eso/
+  - ../../security/eso/
   - ../../security/vault/
 
   # Storage applications
