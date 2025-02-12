@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: acia-cfia-prod-cluster-snapshot
+  namespace: cloudnativepg
+spec:
+  schedule: "0 20 * * 5"  # Every friday at 20h00 UTC
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: create-snapshot
+            image: bitnami/kubectl:latest
+            command:
+            - /bin/sh
+            - -c
+            - |
+              kubectl apply -f - <<EOF
+              apiVersion: snapshot.storage.k8s.io/v1
+              kind: VolumeSnapshot
+              metadata:
+                name: acia-cfia-prod-cluster-snapshot-$(date +\%s)
+                namespace: cloudnativepg
+              spec:
+                volumeSnapshotClassName: ceph-block
+                source:
+                  persistentVolumeClaimName: acia-cfia-prod-cluster-snapshot-1
+              EOF
+          restartPolicy: OnFailure
