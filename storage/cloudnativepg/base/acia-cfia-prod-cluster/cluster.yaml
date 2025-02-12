@@ -1,0 +1,28 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: acia-cfia-prod-cluster
+spec:
+  description: "ACIA-CFIA prod cluster"
+  imageName: ghcr.io/cloudnative-pg/postgresql:15.3
+  instances: 3
+  primaryUpdateStrategy: unsupervised
+
+  postgresql:
+    pg_hba:
+      - host all all 10.140.79.0/24 md5
+
+  storage:
+    storageClass: ceph-block
+    size: 70Gi
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-type
+                operator: In
+                values:
+                  - worker
+    enablePodAntiAffinity: true
