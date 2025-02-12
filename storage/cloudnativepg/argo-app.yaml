@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudnativepg
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudnativepg
+  sources:
+    - chart: cloudnative-pg
+      repoURL: https://cloudnative-pg.io/charts/
+      targetRevision: 0.23.0
+      helm:
+        releaseName: cloudnative-pg
+        valueFiles:
+          - $values/storage/cloudnativepg/helm/values.yaml
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values

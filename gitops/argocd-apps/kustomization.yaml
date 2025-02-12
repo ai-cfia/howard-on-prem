@@ -18,6 +18,7 @@ resources:
   # Storage applications
   - ../../storage/rook-ceph/operator/
   - ../../storage/rook-ceph/cluster/
+  - ../../storage/cloudnativepg/
 
   # Example of deployment, ingress, pvc's, etc...
   - ../../examples/
