@@ -3,4 +3,8 @@ kind: Kustomization
 
 resources:
  - acia-cfia-dev-cluster/cluster.yaml
+ - acia-cfia-dev-cluster/snapshot.yaml
+
  - acia-cfia-prod-cluster/cluster.yaml
+ - acia-cfia-prod-cluster/snapshot.yaml
+
