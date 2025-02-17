@@ -12,9 +12,28 @@ spec:
     pg_hba:
       - host all all 10.140.79.0/24 md5
 
+  managed:
+    roles:
+      - name: fertiscan-preview-user
+        ensure: present
+        comment: "Owner of fertiscan-preview-database"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: fertiscan-preview-user-creds
+
   storage:
     storageClass: ceph-block
     size: 70Gi
+
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: acia-cfia-dev-cluster-creds
 
   affinity:
     nodeAffinity:
