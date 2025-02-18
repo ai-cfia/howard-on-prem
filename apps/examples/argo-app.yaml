@@ -12,5 +12,5 @@ spec:
     server: https://kubernetes.default.svc
   sources:
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      path: examples/base/
+      path: apps/examples/base/
       targetRevision: HEAD
