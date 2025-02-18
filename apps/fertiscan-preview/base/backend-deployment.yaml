@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fertiscan-backend-preview
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: fertiscan-backend-preview
+  template:
+    metadata:
+      labels:
+        app: fertiscan-backend-preview
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-type
+                    operator: In
+                    values:
+                      - worker
+      containers:
+        - name: fertiscan-backend-preview
+          image: ghcr.io/ai-cfia/fertiscan-backend:242
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: fertiscan-backend-preview-secrets
+          env:
+            - name: API_BASE_PATH
+              value: "/api"
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: tmp
+              mountPath: /cachedir_joblib
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: logs
+          persistentVolumeClaim:
+            claimName: fertiscan-preview-logs-pvc
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: fertiscan-preview-uploads-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fertiscan-backend-preview-svc
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.21
+spec:
+  type: LoadBalancer
+  loadBalancerClass: io.cilium/l2-announcer
+  selector:
+    app: fertiscan-backend-preview
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      name: api

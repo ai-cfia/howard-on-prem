@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fertiscan-preview-logs-pvc
+spec:
+  storageClassName: ceph-block
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fertiscan-preview-uploads-pvc
+spec:
+  storageClassName: ceph-block
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
