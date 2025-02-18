@@ -5,13 +5,13 @@ metadata:
 spec:
   provider:
     vault:
-      server: "https://vault.vault.svc.cluster.local:8200"
+      server: "http://vault.vault.svc.cluster.local:8200"
       path: "secrets"
-      caProvider:
-        type: "Secret"
-        namespace: "vault"
-        name: "tls-ca"
-        key: "tls.crt"
+      # caProvider:
+      #   type: "Secret"
+      #   namespace: "vault"
+      #   name: "tls-ca"
+      #   key: "tls.crt"
       auth:
         tokenSecretRef:
           name: "vault-token"
