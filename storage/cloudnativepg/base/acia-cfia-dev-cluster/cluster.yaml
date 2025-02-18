@@ -31,7 +31,7 @@ spec:
     storageClass: ceph-block
     size: 70Gi
 
-  # enableSuperuserAccess: true
+  enableSuperuserAccess: true
   superuserSecret:
     name: acia-cfia-dev-cluster-creds
 
