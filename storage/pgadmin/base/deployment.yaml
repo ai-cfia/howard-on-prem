@@ -22,7 +22,7 @@ spec:
               name: pgadmin-secrets
         volumeMounts:
           - name: pgadmin-data
-            mountPath: /var/lib/pgadmin
+            mountPath: /var/lib/pgadmin/sessions
       volumes:
         - name: pgadmin-data
           persistentVolumeClaim:
