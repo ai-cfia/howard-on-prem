@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: fertiscan-preview-database
+spec:
+  name: fertiscan-preview-database
+  owner: fertiscan
+  cluster:
+    name: acia-cfia-dev-cluster

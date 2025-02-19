@@ -1,0 +1,179 @@
+hostPaths:
+  # rootFS represents the path to the root filesystem of the host.
+  # This is used by components that need to interact with the host filesystem
+  # and as such this must be a chroot-able filesystem.
+  # Examples include the MIG Manager and Toolkit Container which may need to
+  # stop, start, or restart systemd services
+  rootFS: "/"
+
+  # driverInstallDir represents the root at which driver files including libraries,
+  # config files, and executables can be found.
+  driverInstallDir: "/run/nvidia/driver"
+
+driver:
+  enabled: false
+  nvidiaDriverCRD:
+    enabled: false
+    deployDefaultCR: true
+    driverType: gpu
+    nodeSelector: {}
+  kernelModuleType: "auto"
+
+  # NOTE: useOpenKernelModules has been deprecated and made no-op. Please use kernelModuleType instead.
+  # useOpenKernelModules: false
+
+  # use pre-compiled packages for NVIDIA driver installation.
+  # only supported for as a tech-preview feature on ubuntu22.04 kernels.
+  usePrecompiled: false
+  repository: nvcr.io/nvidia
+  image: driver
+  version: "570.86.15"
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: []
+  startupProbe:
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    # nvidia-smi can take longer than 30s in some cases
+    # ensure enough timeout is set
+    timeoutSeconds: 60
+    failureThreshold: 120
+  rdma:
+    enabled: false
+    useHostMofed: false
+  upgradePolicy:
+    # global switch for automatic upgrade feature
+    # if set to false all other options are ignored
+    autoUpgrade: true
+    # how many nodes can be upgraded in parallel
+    # 0 means no limit, all nodes will be upgraded in parallel
+    maxParallelUpgrades: 1
+    # maximum number of nodes with the driver installed, that can be unavailable during
+    # the upgrade. Value can be an absolute number (ex: 5) or
+    # a percentage of total nodes at the start of upgrade (ex:
+    # 10%). Absolute number is calculated from percentage by rounding
+    # up. By default, a fixed value of 25% is used.'
+    maxUnavailable: 25%
+    # options for waiting on pod(job) completions
+    waitForCompletion:
+      timeoutSeconds: 0
+      podSelector: ""
+    # options for gpu pod deletion
+    gpuPodDeletion:
+      force: false
+      timeoutSeconds: 300
+      deleteEmptyDir: false
+    # options for node drain (`kubectl drain`) before the driver reload
+    # this is required only if default GPU pod deletions done by the operator
+    # are not sufficient to re-install the driver
+    drain:
+      enable: false
+      force: false
+      podSelector: ""
+      # It's recommended to set a timeout to avoid infinite drain in case non-fatal error keeps happening on retries
+      timeoutSeconds: 300
+      deleteEmptyDir: false
+  manager:
+    image: k8s-driver-manager
+    repository: nvcr.io/nvidia/cloud-native
+    # When choosing a different version of k8s-driver-manager, DO NOT downgrade to a version lower than v0.6.4
+    # to ensure k8s-driver-manager stays compatible with gpu-operator starting from v24.3.0
+    version: v0.8.0
+    imagePullPolicy: IfNotPresent
+    env:
+      - name: ENABLE_GPU_POD_EVICTION
+        value: "true"
+      - name: ENABLE_AUTO_DRAIN
+        value: "false"
+      - name: DRAIN_USE_FORCE
+        value: "false"
+      - name: DRAIN_POD_SELECTOR_LABEL
+        value: ""
+      - name: DRAIN_TIMEOUT_SECONDS
+        value: "0s"
+      - name: DRAIN_DELETE_EMPTYDIR_DATA
+        value: "false"
+  env: []
+  resources: {}
+  # Private mirror repository configuration
+  repoConfig:
+    configMapName: ""
+  # custom ssl key/certificate configuration
+  certConfig:
+    name: ""
+  # vGPU licensing configuration
+  licensingConfig:
+    configMapName: ""
+    nlsEnabled: true
+  # vGPU topology daemon configuration
+  virtualTopology:
+    config: ""
+  # kernel module configuration for NVIDIA driver
+  kernelModuleConfig:
+    name: ""
+
+toolkit:
+  enabled: true
+  repository: nvcr.io/nvidia/k8s
+  image: container-toolkit
+  version: v1.17.4-ubuntu20.04
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: []
+  env: []
+  resources: {}
+  installDir: "/usr/local/nvidia"
+
+devicePlugin:
+  enabled: true
+  repository: nvcr.io/nvidia
+  image: k8s-device-plugin
+  version: v0.17.0
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: []
+  args: []
+  env:
+    - name: PASS_DEVICE_SPECS
+      value: "true"
+    - name: FAIL_ON_INIT_ERROR
+      value: "true"
+    - name: DEVICE_LIST_STRATEGY
+      value: envvar
+    - name: DEVICE_ID_STRATEGY
+      value: uuid
+    - name: NVIDIA_VISIBLE_DEVICES
+      value: all
+    - name: NVIDIA_DRIVER_CAPABILITIES
+      value: all
+  resources: {}
+  # Plugin configuration
+  # Use "name" to either point to an existing ConfigMap or to create a new one with a list of configurations(i.e with create=true).
+  # Use "data" to build an integrated ConfigMap from a set of configurations as
+  # part of this helm chart. An example of setting "data" might be:
+  # config:
+  #   name: device-plugin-config
+  #   create: true
+  #   data:
+  #     default: |-
+  #       version: v1
+  #       flags:
+  #         migStrategy: none
+  #     mig-single: |-
+  #       version: v1
+  #       flags:
+  #         migStrategy: single
+  #     mig-mixed: |-
+  #       version: v1
+  #       flags:
+  #         migStrategy: mixed
+  config:
+    # Create a ConfigMap (default: false)
+    create: false
+    # ConfigMap name (either existing or to create a new one with create=true above)
+    name: ""
+    # Default config name within the ConfigMap
+    default: ""
+    # Data section for the ConfigMap to create (i.e only applies when create=true)
+    data: {}
+  # MPS related configuration for the plugin
+  mps:
+    # MPS root path on the host
+    root: "/run/nvidia/mps"

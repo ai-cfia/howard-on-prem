@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fertiscan-frontend-preview
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: fertiscan-frontend-preview
+  template:
+    metadata:
+      labels:
+        app: fertiscan-frontend-preview
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-type
+                    operator: In
+                    values:
+                      - worker
+      containers:
+        - name: fertiscan-frontend-preview
+          image: ghcr.io/ai-cfia/fertiscan-frontend:468
+          imagePullPolicy: Always
+          env:
+            - name: NEXT_PUBLIC_DEBUG
+              value: "true"
+            - name: BACKEND_URL
+              value: "http://10.140.79.21/api"
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fertiscan-frontend-preview-svc
+spec:
+  clusterIP: None
+  selector:
+    app: fertiscan-frontend-preview
+  ports:
+    - protocol: TCP
+      port: 3000

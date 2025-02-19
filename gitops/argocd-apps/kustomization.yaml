@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   # ACIA-CFIA applications
+  - ../../apps/fertiscan-preview/
 
   # Networking applications
   - ../../networking/cilium/
@@ -12,15 +13,20 @@ resources:
 
   # Security applications
   - ../../security/cert-manager/
-  # - ../../security/eso/
-  # - ../../security/vault/
+  - ../../security/eso/
+  - ../../security/vault/
 
   # Storage applications
   - ../../storage/rook-ceph/operator/
   - ../../storage/rook-ceph/cluster/
+  - ../../storage/cloudnativepg/
+  - ../../storage/pgadmin/
 
   # Example of deployment, ingress, pvc's, etc...
-  - ../../examples/
+  - ../../apps/examples/
+
+  # MLOps
+  - ../../mlops/nvidia/
 
 # This patch enforces a standardized sync policy for Argo CD applications:
 # - Enables automated sync with pruning (removes orphaned resources) and self-healing.
