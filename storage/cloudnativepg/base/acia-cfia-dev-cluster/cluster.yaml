@@ -10,7 +10,7 @@ spec:
 
   postgresql:
     pg_hba:
-      - host all all 10.140.79.0/24 md5
+      - host all all 10.240.79.0/24 md5
 
   managed:
     roles:
