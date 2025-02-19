@@ -4,6 +4,6 @@ metadata:
   name: fertiscan-preview-database
 spec:
   name: fertiscan-preview-database
-  owner: fertiscan-preview-user
+  owner: fertiscan
   cluster:
     name: acia-cfia-dev-cluster

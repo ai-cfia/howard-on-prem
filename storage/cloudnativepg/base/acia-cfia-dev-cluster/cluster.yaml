@@ -14,9 +14,9 @@ spec:
 
   managed:
     roles:
-      - name: fertiscan-preview-user
+      - name: fertiscan
         ensure: present
-        comment: "Owner of fertiscan-preview-database"
+        comment: "Owner of fertiscan databases"
         login: true
         createdb: true
         createrole: false
@@ -25,7 +25,7 @@ spec:
         bypassrls: false
         connectionLimit: 10
         passwordSecret:
-          name: fertiscan-preview-user-creds
+          name: fertiscan-user-creds
     services:
       additional:
         - selectorType: rw
