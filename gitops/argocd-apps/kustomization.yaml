@@ -20,6 +20,7 @@ resources:
   - ../../storage/rook-ceph/operator/
   - ../../storage/rook-ceph/cluster/
   - ../../storage/cloudnativepg/
+  - ../../storage/pgadmin/
 
   # Example of deployment, ingress, pvc's, etc...
   - ../../apps/examples/
