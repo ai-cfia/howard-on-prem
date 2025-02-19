@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jsantos-webtop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jsantos-webtop
+  template:
+    metadata:
+      labels:
+        app: jsantos-webtop
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-type
+                    operator: In
+                    values:
+                      - worker
+      containers:
+      - name: webtop
+        image: lscr.io/linuxserver/webtop:ubuntu-xfce
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DOCKER_HOST
+          value: "tcp://localhost:2375"
+        - name: DOCKER_TLS_CERTDIR
+          value: ""
+        envFrom:
+        - secretRef:
+            name: jsantos-webtop-secrets
+        volumeMounts:
+        - name: config
+          mountPath: /config
+      - name: docker-dind
+        image: docker:dind
+        securityContext:
+          privileged: true
+        ports:
+        - containerPort: 2375
+        env:
+        - name: DOCKER_TLS_CERTDIR
+          value: ""
+        args:
+        - "--host=tcp://0.0.0.0:2375"
+        - "--tls=false"
+        volumeMounts:
+        - name: docker-graph-storage
+          mountPath: /var/lib/docker
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: jsantos-webtop-config-pvc
+      - name: docker-graph-storage
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jsantos-webtop-service
+spec:
+  type: ClusterIP
+  selector:
+    app: jsantos-webtop
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 3000
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jsantos-webtop-config-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: jsantos-webtop-shared-pvc
+  namespace: webtop
+  finalizers:
+    - kubernetes.io/pvc-protection
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 8Ti
+  volumeName: # pvc-a02dd277-cb26-4c1e-9434-478ebc321e22-newnamespace
+  storageClassName: rook-cephfs
+  volumeMode: Filesystem

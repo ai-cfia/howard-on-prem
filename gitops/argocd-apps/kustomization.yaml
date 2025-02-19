@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   # ACIA-CFIA applications
   - ../../apps/fertiscan-preview/
+  - ../../apps/webtop/
 
   # Networking applications
   - ../../networking/cilium/

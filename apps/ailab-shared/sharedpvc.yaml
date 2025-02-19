@@ -1,0 +1,13 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ailab-shared-pvc
+  namespace: ailab-shared
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 8Ti
+  storageClassName: ceph-filesystem
+  volumeMode: Filesystem
