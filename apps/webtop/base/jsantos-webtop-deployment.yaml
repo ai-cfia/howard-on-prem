@@ -89,8 +89,8 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: second-pvc
-  namespace: newnamespace
+  name: jsantos-webtop-shared-pvc
+  namespace: webtop
   finalizers:
     - kubernetes.io/pvc-protection
 spec:
@@ -99,6 +99,6 @@ spec:
   resources:
     requests:
       storage: 8Ti
-  volumeName: pvc-a02dd277-cb26-4c1e-9434-478ebc321e22-newnamespace
+  volumeName: # pvc-a02dd277-cb26-4c1e-9434-478ebc321e22-newnamespace
   storageClassName: rook-cephfs
   volumeMode: Filesystem
