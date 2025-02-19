@@ -105,7 +105,7 @@ controller:
     enableHttps: true
     ports:
       # -- Port the external HTTP listener is published with.
-      http: 82
+      http: 80
       # -- Port the external HTTPS listener is published with.
       https: 443
     targetPorts:
@@ -222,7 +222,7 @@ revisionHistoryLimit: 10
 ## Ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/exposing-tcp-udp-services.md
 ##
 tcp:
-  "80": "cloudnativepg/acia-cfia-dev-cluster-rw:5432"
+  "22": "cloudnativepg/acia-cfia-dev-cluster-rw:5432"
 
 # -- UDP service key-value pairs
 ## Ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/exposing-tcp-udp-services.md
