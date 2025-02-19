@@ -26,20 +26,6 @@ spec:
         connectionLimit: 10
         passwordSecret:
           name: fertiscan-user-creds
-    services:
-      additional:
-        - selectorType: rw
-          serviceTemplate:
-            metadata:
-              name: "acia-cfia-dev-cluster-svc-rw"
-              annotations:
-                lbipam.cilium.io/ips: 10.140.79.30
-            spec:
-              type: LoadBalancer
-              ports:
-                - port: 22
-                  targetPort: 22
-                  protocol: TCP
 
   storage:
     storageClass: ceph-block
