@@ -26,16 +26,6 @@ spec:
         connectionLimit: 10
         passwordSecret:
           name: fertiscan-preview-user-creds
-
-  storage:
-    storageClass: ceph-block
-    size: 70Gi
-
-  enableSuperuserAccess: true
-  superuserSecret:
-    name: acia-cfia-dev-cluster-creds
-
-  managed:
     services:
       additional:
         - selectorType: rw
@@ -46,6 +36,14 @@ spec:
                 lbipam.cilium.io/ips: 10.140.79.30
             spec:
               type: LoadBalancer
+
+  storage:
+    storageClass: ceph-block
+    size: 70Gi
+
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: acia-cfia-dev-cluster-creds
 
   affinity:
     nodeAffinity:
