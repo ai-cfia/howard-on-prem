@@ -36,6 +36,10 @@ spec:
                 lbipam.cilium.io/ips: 10.140.79.30
             spec:
               type: LoadBalancer
+              ports:
+                - port: 22
+                  targetPort: 22
+                  protocol: TCP
 
   storage:
     storageClass: ceph-block
