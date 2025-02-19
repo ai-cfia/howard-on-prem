@@ -9,5 +9,5 @@ spec:
   resources:
     requests:
       storage: 8Ti
-  storageClassName: rook-cephfs-ailab
+  storageClassName: ceph-filesystem
   volumeMode: Filesystem

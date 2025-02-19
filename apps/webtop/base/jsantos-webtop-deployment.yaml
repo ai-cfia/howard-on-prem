@@ -84,3 +84,21 @@ spec:
   resources:
     requests:
       storage: 10Gi
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: second-pvc
+  namespace: newnamespace
+  finalizers:
+    - kubernetes.io/pvc-protection
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 8Ti
+  volumeName: pvc-a02dd277-cb26-4c1e-9434-478ebc321e22-newnamespace
+  storageClassName: rook-cephfs
+  volumeMode: Filesystem
