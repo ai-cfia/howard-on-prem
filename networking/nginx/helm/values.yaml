@@ -222,7 +222,7 @@ revisionHistoryLimit: 10
 ## Ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/exposing-tcp-udp-services.md
 ##
 tcp:
-  "6000": "cloudnativepg/acia-cfia-dev-cluster-rw:5432"
+  "80": "cloudnativepg/acia-cfia-dev-cluster-rw:5432"
 
 # -- UDP service key-value pairs
 ## Ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/exposing-tcp-udp-services.md
