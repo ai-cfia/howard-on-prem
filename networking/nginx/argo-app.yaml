@@ -8,19 +8,16 @@ metadata:
 spec:
   project: default
   destination:
-    namespace: kube-system
+    namespace: nginx
     server: https://kubernetes.default.svc
   sources:
-    - chart: cilium
+    - chart: ingress-nginx
       helm:
-        releaseName: cilium
+        releaseName: ingress-nginx
         valueFiles:
-          - $values/networking/cilium/helm/values.yaml
-      repoURL: https://helm.cilium.io/
-      targetRevision: 1.16.5
+          - $values/networking/nginx/helm/values.yaml
+      repoURL: https://kubernetes.github.io/ingress-nginx
+      targetRevision: 4.12.0
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
-    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      path: networking/cilium/base/
-      targetRevision: HEAD
