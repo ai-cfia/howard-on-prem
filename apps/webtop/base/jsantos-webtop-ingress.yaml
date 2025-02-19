@@ -8,12 +8,12 @@ metadata:
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
-  tls:
-    - hosts:
-        - jsantos-webtop.inspection.alpha.canada.ca
-      secretName: jsantos-webtop-tls
+  # tls:
+  #   - hosts:
+  #       - jsantos-webtop.inspection.alpha.canada.ca
+  #     secretName: jsantos-webtop-tls
   rules:
-    - host: jsantos-webtop.inspection.alpha.canada.ca
+  #   - host: jsantos-webtop.inspection.alpha.canada.ca
       http:
         paths:
           - path: /
