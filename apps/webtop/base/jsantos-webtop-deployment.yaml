@@ -99,6 +99,6 @@ spec:
   resources:
     requests:
       storage: 8Ti
-  volumeName: # pvc-a02dd277-cb26-4c1e-9434-478ebc321e22-newnamespace
+  volumeName: pvc-3db0ac10-748d-46a8-ae40-47ae13664bca-webtop
   storageClassName: rook-cephfs
   volumeMode: Filesystem
