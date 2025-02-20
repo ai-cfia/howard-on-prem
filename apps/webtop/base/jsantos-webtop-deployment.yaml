@@ -37,6 +37,8 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
+        - name: ailab-shared
+          mountPath: /ailab
       - name: docker-dind
         image: docker:dind
         securityContext:
@@ -58,6 +60,9 @@ spec:
           claimName: jsantos-webtop-config-pvc
       - name: docker-graph-storage
         emptyDir: {}
+      - name: ailab-shared
+        persistentVolumeClaim:
+          claimName: jsantos-webtop-shared-pvc
 
 ---
 apiVersion: v1
