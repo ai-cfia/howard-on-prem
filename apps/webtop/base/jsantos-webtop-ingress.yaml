@@ -14,7 +14,7 @@ spec:
   #     secretName: jsantos-webtop-tls
   rules:
   #   - host: jsantos-webtop.inspection.alpha.canada.ca
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
