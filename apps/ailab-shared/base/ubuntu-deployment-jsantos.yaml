@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ailab-shared
+  name: ubuntu-jsantos
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: ailab-shared
+      app: ubuntu-jsantos
   template:
     metadata:
       labels:
-        app: ailab-shared
+        app: ubuntu-jsantos
     spec:
       affinity:
         nodeAffinity:
@@ -23,12 +23,12 @@ spec:
                     values:
                       - worker
       containers:
-        - name: ailab-shared
+        - name: ubuntu
           image: docker.io/ubuntu:noble-20250127
           imagePullPolicy: Always
-          envFrom:
-            - secretRef:
-                name: ailab-shared-secrets
+          # envFrom:
+          #   - secretRef:
+          #       name: ailab-shared-secrets
           ports:
             - containerPort: 22
           volumeMounts:
@@ -55,11 +55,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ailab-shared-svc
+  name: ubuntu-jsantos-svc
 spec:
   clusterIP: None
   selector:
-    app: ailab-shared
+    app: ubuntu-jsantos
   ports:
     - protocol: TCP
       port: 443
