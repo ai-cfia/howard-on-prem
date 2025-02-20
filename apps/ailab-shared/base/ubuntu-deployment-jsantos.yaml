@@ -26,6 +26,10 @@ spec:
         - name: ubuntu
           image: docker.io/ubuntu:noble-20250127
           imagePullPolicy: Always
+          entrypoint:
+            - /bin/bash
+            - -c
+            - tail -f /dev/null
           # envFrom:
           #   - secretRef:
           #       name: ailab-shared-secrets
