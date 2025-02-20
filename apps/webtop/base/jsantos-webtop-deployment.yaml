@@ -100,5 +100,5 @@ spec:
     requests:
       storage: 8Ti
   volumeName: pvc-3db0ac10-748d-46a8-ae40-47ae13664bca-webtop
-  storageClassName: cephfs-filesystem
+  storageClassName: ceph-filesystem
   volumeMode: Filesystem
