@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ailab-shared
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: ailab-shared
+  template:
+    metadata:
+      labels:
+        app: ailab-shared
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-type
+                    operator: In
+                    values:
+                      - worker
+      containers:
+        - name: ailab-shared
+          image: docker.io/ubuntu:noble-20250127
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: ailab-shared-secrets
+          ports:
+            - containerPort: 22
+          volumeMounts:
+            - name: tmp
+              mountPath: /cachedir_joblib
+            - name: ailab-shared-volume
+              mountPath: /ailab
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: ailab-shared-volume
+          persistentVolumeClaim:
+            claimName: ailab-shared-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ailab-shared-svc
+spec:
+  clusterIP: None
+  selector:
+    app: ailab-shared
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 22
+      name: ssh
