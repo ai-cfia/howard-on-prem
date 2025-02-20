@@ -1,1 +1,31 @@
-init
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvc-3db0ac10-748d-46a8-ae40-47ae13664bca-webtop
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 8Ti
+  csi:
+    controllerExpandSecretRef:
+      name: rook-csi-cephfs-provisioner
+      namespace: rook-ceph
+    driver: rook-ceph.cephfs.csi.ceph.com
+    fsType: ext4
+    nodeStageSecretRef:
+      name: rook-csi-cephfs-node-user
+      namespace: rook-ceph
+    volumeAttributes:
+      clusterID: rook-ceph
+      fsName: ceph-filesystem
+      pool: ceph-filesystem-data0
+      storage.kubernetes.io/csiProvisionerIdentity: 1738966545601-2940-rook-ceph.cephfs.csi.ceph.com
+      subvolumeName: csi-vol-9d4678c8-1e22-4256-9cee-ce4c1825588a
+      subvolumePath: /volumes/csi/csi-vol-9d4678c8-1e22-4256-9cee-ce4c1825588a/5a837e00-aee1-4aab-a30e-a013f57aeb80
+      staticVolume: "true"
+      rootPath: /volumes/csi/csi-vol-9d4678c8-1e22-4256-9cee-ce4c1825588a/5a837e00-aee1-4aab-a30e-a013f57aeb80
+    volumeHandle: 0001-0009-rook-ceph-0000000000000001-9d4678c8-1e22-4256-9cee-ce4c1825588a-webtop
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ceph-filesystem
+  volumeMode: Filesystem
