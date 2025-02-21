@@ -126,13 +126,13 @@ server:
           }
         }
 
-        seal "transit" {
-          address = "http://vault.vault:8200"
-          disable_renewal = "false"
-          key_name = "autounseal"
-          mount_path = "transit/"
-          tls_skip_verify = "true"
-        }
+        # seal "transit" {
+        #   address = "http://vault.vault:8200"
+        #   disable_renewal = "false"
+        #   key_name = "autounseal"
+        #   mount_path = "transit/"
+        #   tls_skip_verify = "true"
+        # }
   
   # Ingress allows ingress services to be created to allow external access
   # from Kubernetes to access Vault pods.
