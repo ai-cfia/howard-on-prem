@@ -16,6 +16,11 @@ server:
     repository: "hashicorp/vault"
     tag: "1.18.1"
 
+  extraSecretEnvironmentVars:
+    - envName: VAULT_TOKEN
+      secretName: vault-transit-token
+      secretKey: VAULT_TOKEN
+
   # These Resource Limits are in line with node requirements in the
   # Vault Reference Architecture for a Small Cluster
   # resources:
@@ -119,7 +124,15 @@ server:
             # leader_client_cert_file = "/vault/userconfig/tls-server/tls.crt"
             # leader_client_key_file = "/vault/userconfig/tls-server/tls.key"
           }
-        } 
+        }
+
+        seal "transit" {
+          address = "http://vault.vault:8200"
+          disable_renewal = "false"
+          key_name = "autounseal"
+          mount_path = "transit/"
+          tls_skip_verify = "true"
+        }
   
   # Ingress allows ingress services to be created to allow external access
   # from Kubernetes to access Vault pods.
