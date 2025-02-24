@@ -23,12 +23,9 @@ spec:
         releaseName: vault-autounseal
         valueFiles:
           - $values/security/vault/helm/autounseal.yaml
-    # - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-    #   targetRevision: HEAD
-    #   ref: vault
-    # - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-    #   targetRevision: HEAD
-    #   ref: autounseal
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       path: security/vault/base
       targetRevision: HEAD
