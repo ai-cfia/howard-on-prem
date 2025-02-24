@@ -25,10 +25,10 @@ spec:
           - $values/security/vault/helm/autounseal.values.yaml
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
-      ref: vault.values
+      ref: vault_values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
-      ref: autounseal.values
+      ref: autounseal_values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       path: security/vault/base
       targetRevision: HEAD
