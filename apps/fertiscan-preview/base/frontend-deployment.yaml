@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: fertiscan-frontend-preview
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -40,9 +40,6 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 10
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: false
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
             capabilities:
