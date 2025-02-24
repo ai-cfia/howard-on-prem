@@ -13,11 +13,6 @@ spec:
       labels:
         app: fertiscan-frontend-preview
     spec:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 3000
-        fsGroup: 2000
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -45,7 +40,10 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 10
           securityContext:
-            readOnlyRootFilesystem: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: false
+            readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
             capabilities:
               drop:
