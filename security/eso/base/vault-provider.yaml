@@ -14,9 +14,9 @@ spec:
       #   key: "tls.crt"
       auth:
         tokenSecretRef:
-          name: "vault-token"
+          name: "vault-root-token"
           namespace: "vault"
-          key: "token"
+          key: "root_token"
 ---
 # This secret won't be tracked by argocd
 # TODO: Change the tokenSecretRef to OIDC

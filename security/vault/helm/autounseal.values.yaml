@@ -1,0 +1,70 @@
+# Default values for vault-autounseal.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 4
+
+image:
+  repository: opennix/vault-autounseal
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+settings:
+  vault_url: "http://vault.vault:8200"
+  # vault unlocking keys settings:
+  vault_secret_shares: 3
+  vault_secret_threshold: 2
+  # secret for storing vault root token
+  vault_root_token_secret: vault-root-token
+  # secret for storing vault unlock keys
+  vault_keys_secret: vault-keys
+  # time between polling for vault status, in seconds
+  scan_delay: 5
+  # vault label to use to retrieve vault instance
+  vault_label_selector: app.kubernetes.io/instance=vault,component=server

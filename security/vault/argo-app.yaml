@@ -15,7 +15,14 @@ spec:
       helm:
         releaseName: vault
         valueFiles:
-          - $values/security/vault/helm/values.yaml
+          - $values/security/vault/helm/vault.values.yaml
+    - chart: vault-autounseal
+      repoURL: https://pytoshka.github.io/vault-autounseal
+      targetRevision: 0.5.3
+      helm:
+        releaseName: vault-autounseal
+        valueFiles:
+          - $values/security/vault/helm/autounseal.values.yaml
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
