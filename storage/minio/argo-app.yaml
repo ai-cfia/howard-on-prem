@@ -20,5 +20,5 @@ spec:
       targetRevision: HEAD
       ref: values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      path: kubernetes/aks/system/minio/base
+      path: storage/minio/base
       targetRevision: HEAD
