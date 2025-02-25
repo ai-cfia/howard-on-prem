@@ -24,7 +24,7 @@ spec:
                       - worker
       containers:
         - name: fertiscan-frontend-preview
-          image: ghcr.io/ai-cfia/fertiscan-frontend:468
+          image: ghcr.io/ai-cfia/fertiscan-frontend:479
           imagePullPolicy: Always
           env:
             - name: NEXT_PUBLIC_DEBUG
