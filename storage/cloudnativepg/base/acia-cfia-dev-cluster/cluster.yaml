@@ -45,6 +45,7 @@ spec:
           - "--min-chunk-size=5MB"
           - "--read-timeout=60"
           - "-vv"
+    retentionPolicy: "30d"
 
   storage:
     storageClass: ceph-block
