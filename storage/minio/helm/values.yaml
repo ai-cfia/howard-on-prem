@@ -118,6 +118,8 @@ ingress:
     lbipam.cilium.io/ips: 10.140.79.25
     ingress.cilium.io/loadbalancer-mode: dedicated
   path: /
+  hosts:
+    - ""
 
 consoleService:
   type: ClusterIP
@@ -147,6 +149,8 @@ consoleIngress:
     lbipam.cilium.io/ips: 10.140.79.26
     ingress.cilium.io/loadbalancer-mode: dedicated
   path: /
+  hosts:
+    - ""
 
 ## Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/

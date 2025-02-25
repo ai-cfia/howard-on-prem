@@ -30,7 +30,7 @@ spec:
   backup:
     barmanObjectStore:
       destinationPath: s3://acia-cfia-dev-cluster-backup/
-      endpointURL: http://minio-console.minio:9000
+      endpointURL: http://minio-svc.minio:9000
       s3Credentials:
         accessKeyId:
           name: minio-secret
