@@ -4,8 +4,6 @@ kind: Application
 metadata:
   name: minio
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   destination:
@@ -15,12 +13,12 @@ spec:
     - chart: minio
       helm:
         valueFiles:
-          - $values/kubernetes/aks/system/minio/helm/values.yaml
+          - $values/storage/minio/helm/values.yaml
       repoURL: https://charts.min.io/
       targetRevision: 5.4.0
-    - repoURL: https://github.com/ai-cfia/howard.git
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
-    - repoURL: https://github.com/ai-cfia/howard.git
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       path: kubernetes/aks/system/minio/base
       targetRevision: HEAD
