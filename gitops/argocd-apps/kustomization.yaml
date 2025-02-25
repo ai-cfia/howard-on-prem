@@ -24,6 +24,7 @@ resources:
   - ../../storage/rook-ceph/cluster/
   - ../../storage/cloudnativepg/
   - ../../storage/pgadmin/
+  - ../../storage/minio/
 
   # Example of deployment, ingress, pvc's, etc...
   - ../../apps/examples/
