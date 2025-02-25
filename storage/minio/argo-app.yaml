@@ -1,0 +1,26 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    namespace: minio
+    server: https://kubernetes.default.svc
+  sources:
+    - chart: minio
+      helm:
+        valueFiles:
+          - $values/kubernetes/aks/system/minio/helm/values.yaml
+      repoURL: https://charts.min.io/
+      targetRevision: 5.4.0
+    - repoURL: https://github.com/ai-cfia/howard.git
+      targetRevision: HEAD
+      ref: values
+    - repoURL: https://github.com/ai-cfia/howard.git
+      path: kubernetes/aks/system/minio/base
+      targetRevision: HEAD
