@@ -90,7 +90,8 @@ auth:
 api:
   containers:
     # TODO: Validate configuration
-    args: []
+    args:
+      - --disable-csrf-protection=true
     resources:
       requests:
         cpu: 100m
@@ -106,6 +107,7 @@ web:
     # Full list of arguments: https://github.com/kubernetes/dashboard/blob/master/docs/common/arguments.md
     args:
       - --system-banner="howard-on-prem kubernetes dashboard"
+      - --disable-csrf-protection=true
     # TODO: Validate configuration
     resources:
       requests:
