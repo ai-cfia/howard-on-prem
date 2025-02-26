@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: k8s-dashboard
-  namespace: argocd
+  namespace: monitoring
 spec:
   project: default
   destination:
