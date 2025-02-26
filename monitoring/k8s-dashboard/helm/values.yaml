@@ -7,25 +7,25 @@ app:
   settings:
     ## Global dashboard settings
     global:
-    # Cluster name that appears in the browser window title if it is set
-    clusterName: howard-on-prem
-    # Max number of items that can be displayed on each list page
-    itemsPerPage: 10
-    # Max number of labels that are displayed by default on most views.
-    labelsLimit: 3
-    # Number of seconds between every auto-refresh of logs
-    logsAutoRefreshTimeInterval: 5
-    # Number of seconds between every auto-refresh of every resource. Set 0 to disable
-    resourceAutoRefreshTimeInterval: 10
-    # Hide all access denied warnings in the notification panel
-    disableAccessDeniedNotifications: false
-    # Hide all namespaces option in namespace selection dropdown to avoid accidental selection in large clusters thus preventing OOM errors
-    hideAllNamespaces: false
-    # Namespace that should be selected by default after logging in.
-    defaultNamespace: _all
-    # List of namespaces that should be presented to user without namespace list privileges.
-    namespaceFallbackList:
-      - _all
+      # Cluster name that appears in the browser window title if it is set
+      clusterName: howard-on-prem
+      # Max number of items that can be displayed on each list page
+      itemsPerPage: 10
+      # Max number of labels that are displayed by default on most views.
+      labelsLimit: 3
+      # Number of seconds between every auto-refresh of logs
+      logsAutoRefreshTimeInterval: 5
+      # Number of seconds between every auto-refresh of every resource. Set 0 to disable
+      resourceAutoRefreshTimeInterval: 10
+      # Hide all access denied warnings in the notification panel
+      disableAccessDeniedNotifications: false
+      # Hide all namespaces option in namespace selection dropdown to avoid accidental selection in large clusters thus preventing OOM errors
+      hideAllNamespaces: false
+      # Namespace that should be selected by default after logging in.
+      defaultNamespace: _all
+      # List of namespaces that should be presented to user without namespace list privileges.
+      namespaceFallbackList:
+        - _all
     ## Pinned resources that will be displayed in dashboard's menu
     pinnedResources: []
     # - kind: customresourcedefinition
