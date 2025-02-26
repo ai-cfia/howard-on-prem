@@ -123,7 +123,7 @@ metricsScraper:
   enabled: true
   containers:
     args:
-      - --metric-duration="60m0s"
+      - --metric-duration=60m0s
       - --db-file="/logs/metrics.db"
     volumeMounts:
       - mountPath: /logs
