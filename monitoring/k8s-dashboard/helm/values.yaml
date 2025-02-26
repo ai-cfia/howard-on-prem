@@ -137,11 +137,11 @@ metricsScraper:
         memory: 400Mi
   volumes:
     # See: https://github.com/kubernetes/dashboard/issues/9654
-    # - name: metrics-storage
-    #   persistentVolumeClaim:
-    #     claimName: metrics-scraper-pvc
     - name: metrics-storage
-      emptyDir: {}
+      persistentVolumeClaim:
+        claimName: metrics-scraper-pvc
+    # - name: metrics-storage
+    #   emptyDir: {}
     
 
 ## Required Kong sub-chart with DBless configuration to act as a gateway
