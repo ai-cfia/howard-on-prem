@@ -124,9 +124,9 @@ metricsScraper:
   containers:
     args:
       - --metric-duration=60m0s
-      - --db-file="/tmp/metrics.db"
+      - --db-file="/logs/metrics.db"
     volumeMounts:
-      - mountPath: /tmp
+      - mountPath: /logs
         name: metrics-storage
     # TODO: Validate configuration
     resources:
@@ -137,9 +137,13 @@ metricsScraper:
         cpu: 250m
         memory: 400Mi
   volumes:
+    # See: https://github.com/kubernetes/dashboard/issues/9654
+    # - name: metrics-storage
+    #   persistentVolumeClaim:
+    #     claimName: metrics-scraper-pvc
     - name: metrics-storage
-      persistentVolumeClaim:
-        claimName: metrics-scraper-pvc
+      emptyDir: {}
+    
 
 ## Required Kong sub-chart with DBless configuration to act as a gateway
 ## for our all containers.
