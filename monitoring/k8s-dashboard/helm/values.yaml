@@ -124,9 +124,8 @@ metricsScraper:
   containers:
     args:
       - --metric-duration=60m0s
-      - --db-file="/logs/metrics.db"
     volumeMounts:
-      - mountPath: /logs
+      - mountPath: /tmp
         name: metrics-storage
     # TODO: Validate configuration
     resources:
