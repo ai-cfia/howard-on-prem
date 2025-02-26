@@ -26,11 +26,14 @@ resources:
   - ../../storage/pgadmin/
   - ../../storage/minio/
 
-  # Example of deployment, ingress, pvc's, etc...
-  - ../../apps/examples/
+  # Monitoring applications
+  - ../../monitoring/k8s-dashboard/
 
   # MLOps
   - ../../mlops/nvidia/
+
+  # Example of deployment, ingress, pvc's, etc...
+  - ../../apps/examples/
 
 # This patch enforces a standardized sync policy for Argo CD applications:
 # - Enables automated sync with pruning (removes orphaned resources) and self-healing.
