@@ -105,7 +105,6 @@ web:
     # Full list of arguments: https://github.com/kubernetes/dashboard/blob/master/docs/common/arguments.md
     args:
       - --system-banner="howard-on-prem kubernetes dashboard"
-      - --insecure-port="8000"
     # TODO: Validate configuration
     resources:
       requests:
