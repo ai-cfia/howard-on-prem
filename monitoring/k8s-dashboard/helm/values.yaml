@@ -151,7 +151,7 @@ metricsScraper:
 kong:
   enabled: true
   proxy:
-    type: ClusterIP
+    type: NodePort
     http:
       enabled: true
 
