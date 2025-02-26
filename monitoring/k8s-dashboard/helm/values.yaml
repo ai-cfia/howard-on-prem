@@ -8,7 +8,7 @@ app:
     ## Global dashboard settings
     global:
     # Cluster name that appears in the browser window title if it is set
-    clusterName: "howard-on-prem"
+    clusterName: howard-on-prem
     # Max number of items that can be displayed on each list page
     itemsPerPage: 10
     # Max number of labels that are displayed by default on most views.
@@ -22,10 +22,10 @@ app:
     # Hide all namespaces option in namespace selection dropdown to avoid accidental selection in large clusters thus preventing OOM errors
     hideAllNamespaces: false
     # Namespace that should be selected by default after logging in.
-    defaultNamespace: kube-system
+    defaultNamespace: _all
     # List of namespaces that should be presented to user without namespace list privileges.
     namespaceFallbackList:
-      - kube-system
+      - _all
     ## Pinned resources that will be displayed in dashboard's menu
     pinnedResources: []
     # - kind: customresourcedefinition
