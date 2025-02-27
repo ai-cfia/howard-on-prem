@@ -35,9 +35,9 @@ l2announcements:
   # -- Enable L2 announcements
   enabled: true
   # -- If a lease is not renewed for X duration, the current leader is considered dead, a new leader is picked
-  leaseDuration: 15s
+  leaseDuration: 30s
   # -- The interval at which the leader will renew the lease
-  leaseRenewDeadline: 5s
+  leaseRenewDeadline: 20s
   # -- The timeout between retries if renewal fails
   leaseRetryPeriod: 2s
 
