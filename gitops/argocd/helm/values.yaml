@@ -16,7 +16,6 @@ global:
   # domain: argocd.onprem.inspection.alpha.canada.ca
   domain: 
 
-
   # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
   revisionHistoryLimit: 3
 
@@ -416,3 +415,15 @@ server:
     usages: []
     # -- Annotations that allow the certificate to be composed from data residing in existing Kubernetes Resources
     secretTemplateAnnotations: {}
+
+## Repo Server
+repoServer:
+  name: repo-server
+  replicas: 1
+  containerSecurityContext:
+    runAsNonRoot: true
+    readOnlyRootFilesystem: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
