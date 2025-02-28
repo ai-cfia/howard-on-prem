@@ -12,7 +12,7 @@ resources:
   - ../../networking/nginx/
 
   # Gitops applications
-  - ../argocd/
+  # - ../argocd/
 
   # Security applications
   - ../../security/cert-manager/
