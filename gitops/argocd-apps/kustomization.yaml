@@ -3,9 +3,9 @@ kind: Kustomization
 
 resources:
   # ACIA-CFIA applications
-  - ../../apps/ailab-shared/
-  - ../../apps/fertiscan-preview/
-  - ../../apps/webtop/
+  # - ../../apps/ailab-shared/
+  # - ../../apps/fertiscan-preview/
+  # - ../../apps/webtop/
 
   # Networking applications
   - ../../networking/cilium/
@@ -17,14 +17,14 @@ resources:
   # Security applications
   - ../../security/cert-manager/
   - ../../security/eso/
-  - ../../security/vault/
+  # - ../../security/vault/
 
   # Storage applications
-  - ../../storage/rook-ceph/operator/
-  - ../../storage/rook-ceph/cluster/
-  - ../../storage/cloudnativepg/
+  # - ../../storage/rook-ceph/operator/
+  # - ../../storage/rook-ceph/cluster/
+  # - ../../storage/cloudnativepg/
   - ../../storage/pgadmin/
-  - ../../storage/minio/
+  # - ../../storage/minio/
 
   # Monitoring applications
   - ../../monitoring/k8s-dashboard/
