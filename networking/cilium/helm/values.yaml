@@ -1,5 +1,5 @@
 # -- (string) Kubernetes service host - use "auto" for automatic lookup from the cluster-info ConfigMap (kubeadm-based clusters only)
-k8sServiceHost: "10.140.79.58"
+k8sServiceHost: "10.140.79.65"
 # @schema
 # type: [string, integer]
 # @schema
