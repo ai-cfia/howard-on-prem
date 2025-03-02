@@ -22,5 +22,5 @@ spec:
       targetRevision: HEAD
       ref: values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      path: storage/rook-ceph/clusters/base/
+      path: storage/rook-ceph/clusters/rook-ceph-hot-cluster/base/
       targetRevision: HEAD
