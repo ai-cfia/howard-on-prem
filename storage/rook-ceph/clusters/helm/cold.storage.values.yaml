@@ -5,6 +5,8 @@
 # -- Namespace of the main rook operator
 operatorNamespace: rook-ceph
 
+clusterName: rook-ceph-cold-cluster
+
 # All values below are taken from the CephCluster CRD
 # -- Cluster configuration.
 # @default -- See [below](#ceph-cluster-spec)
