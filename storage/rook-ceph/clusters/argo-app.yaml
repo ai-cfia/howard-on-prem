@@ -13,14 +13,21 @@ spec:
   sources:
     - chart: rook-ceph-cluster
       helm:
-        releaseName: rook-ceph-cluster
+        releaseName: rook-ceph-cold-cluster
         valueFiles:
-          - $values/storage/rook-ceph/cluster/helm/values.yaml
+          - $values/storage/rook-ceph/clusters/helm/cold.storage.values.yaml
+      repoURL: https://charts.rook.io/release
+      targetRevision: 1.16.2
+    - chart: rook-ceph-cluster
+      helm:
+        releaseName: rook-ceph-hot-cluster
+        valueFiles:
+          - $values/storage/rook-ceph/clusters/helm/hot.storage.values.yaml
       repoURL: https://charts.rook.io/release
       targetRevision: 1.16.2
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      path: storage/rook-ceph/cluster/base/
+      path: storage/rook-ceph/clusters/base/
       targetRevision: HEAD
