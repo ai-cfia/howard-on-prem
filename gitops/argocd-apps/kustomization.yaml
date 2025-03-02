@@ -20,7 +20,7 @@ resources:
   # - ../../security/vault/
 
   # Storage applications
-  # - ../../storage/rook-ceph/operator/
+  - ../../storage/rook-ceph/operator/
   # - ../../storage/rook-ceph/clusters/
   # - ../../storage/cloudnativepg/
   # - ../../storage/pgadmin/
