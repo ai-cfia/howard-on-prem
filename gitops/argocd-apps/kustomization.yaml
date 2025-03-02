@@ -21,8 +21,8 @@ resources:
 
   # Storage applications
   - ../../storage/rook-ceph/operator/
-  #- ../../storage/rook-ceph/clusters/rook-ceph-cold-cluster/
-  #- ../../storage/rook-ceph/clusters/rook-ceph-hot-cluster/
+  - ../../storage/rook-ceph/clusters/rook-ceph-cold-cluster/
+  - ../../storage/rook-ceph/clusters/rook-ceph-hot-cluster/
 
   # - ../../storage/cloudnativepg/
   # - ../../storage/pgadmin/
