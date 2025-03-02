@@ -28,10 +28,10 @@ server:
     repository: "hashicorp/vault"
     tag: "1.18.1"
 
-  extraSecretEnvironmentVars:
-    - envName: VAULT_TOKEN
-      secretName: vault-transit-token
-      secretKey: VAULT_TOKEN
+  extraSecretEnvironmentVars: []
+    # - envName: VAULT_TOKEN
+    #   secretName: vault-transit-token
+    #   secretKey: VAULT_TOKEN
 
   affinity:
     nodeAffinity:
