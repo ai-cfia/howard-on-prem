@@ -2,7 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: rook-ceph-cold-cluster-internal-ingress
-  namespace: rook-ceph
   labels:
     ingress: cilium
   annotations:
