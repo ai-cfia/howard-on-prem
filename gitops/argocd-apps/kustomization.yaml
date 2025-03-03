@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   # ACIA-CFIA applications
   # - ../../apps/ailab-shared/
-  # - ../../apps/fertiscan-preview/
+  - ../../apps/fertiscan-preview/
   # - ../../apps/webtop/
 
   # Networking applications
@@ -34,7 +34,7 @@ resources:
   - ../../mlops/nvidia/
 
   # Example of deployment, ingress, pvc's, etc...
-  - ../../apps/examples/
+  # - ../../apps/examples/
 
 # This patch enforces a standardized sync policy for Argo CD applications:
 # - Enables automated sync with pruning (removes orphaned resources) and self-healing.
