@@ -48,7 +48,7 @@ spec:
     retentionPolicy: "30d"
 
   storage:
-    storageClass: ceph-block
+    storageClass: ceph-hot-block
     size: 70Gi
 
   enableSuperuserAccess: true
