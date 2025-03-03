@@ -5,6 +5,7 @@ metadata:
     app: open-webui
   name: open-webui-pvc
 spec:
+  storageClassName: ceph-cold-storage
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:

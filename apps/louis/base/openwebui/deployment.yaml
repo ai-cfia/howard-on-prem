@@ -4,6 +4,7 @@ metadata:
   name: open-webui-deployment
 spec:
   replicas: 1
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: open-webui
@@ -24,6 +25,15 @@ spec:
           volumeMounts:
             - name: webui-volume
               mountPath: /app/backend/data
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - ai-worker
       volumes:
         - name: webui-volume
           persistentVolumeClaim:

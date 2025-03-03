@@ -8,4 +8,3 @@ resources:
   - openwebui/deployment.yaml
   - openwebui/ingress.yaml
   - openwebui/pvcs.yaml
-
