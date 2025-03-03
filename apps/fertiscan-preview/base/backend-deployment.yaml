@@ -24,7 +24,7 @@ spec:
                       - app-worker
       containers:
         - name: fertiscan-backend-preview
-          image: ghcr.io/ai-cfia/fertiscan-backend:248
+          image: ghcr.io/ai-cfia/fertiscan-backend:250
           imagePullPolicy: Always
           envFrom:
             - secretRef:
