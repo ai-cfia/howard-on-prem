@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: open-webui-ingress
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.6
+    ingress.cilium.io/loadbalancer-mode: dedicated
+spec:
+  ingressClassName: cilium
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: open-webui-service
+                port:
+                  number: 8080

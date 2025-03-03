@@ -5,6 +5,7 @@ resources:
   # ACIA-CFIA applications
   # - ../../apps/ailab-shared/
   - ../../apps/fertiscan-preview/
+  - ../../apps/louis/
   # - ../../apps/webtop/
 
   # Networking applications
