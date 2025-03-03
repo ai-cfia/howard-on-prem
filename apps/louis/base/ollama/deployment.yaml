@@ -39,7 +39,7 @@ spec:
     - metadata:
         name: ollama-volume
       spec:
-        storageClassName: ceph-cold-storage
+        storageClassName: ceph-cold-block
         accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
