@@ -415,4 +415,3 @@ server:
     usages: []
     # -- Annotations that allow the certificate to be composed from data residing in existing Kubernetes Resources
     secretTemplateAnnotations: {}
-
