@@ -10,6 +10,18 @@ hostPaths:
   # config files, and executables can be found.
   driverInstallDir: "/run/nvidia/driver"
 
+
+operator:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                  - ai-worker
+
 driver:
   enabled: false
   nvidiaDriverCRD:

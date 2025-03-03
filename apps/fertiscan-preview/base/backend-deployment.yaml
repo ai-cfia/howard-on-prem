@@ -18,10 +18,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: node-type
+                  - key: type
                     operator: In
                     values:
-                      - worker
+                      - app-worker
       containers:
         - name: fertiscan-backend-preview
           image: ghcr.io/ai-cfia/fertiscan-backend:248

@@ -23,10 +23,9 @@ resources:
   - ../../storage/rook-ceph/operator/
   - ../../storage/rook-ceph/clusters/rook-ceph-cold-cluster/
   - ../../storage/rook-ceph/clusters/rook-ceph-hot-cluster/
-
-  # - ../../storage/cloudnativepg/
-  # - ../../storage/pgadmin/
-  # - ../../storage/minio/
+  - ../../storage/cloudnativepg/
+  - ../../storage/pgadmin/
+  - ../../storage/minio/
 
   # Monitoring applications
   - ../../monitoring/k8s-dashboard/
