@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fertiscan-frontend-preview
+  name: fertiscan-backend
 spec:
-  replicas: 1
+  replicas: 2
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: fertiscan-frontend-preview
+      app: fertiscan-backend
   template:
     metadata:
       labels:
-        app: fertiscan-frontend-preview
+        app: fertiscan-backend
     spec:
       affinity:
         nodeAffinity:
@@ -23,23 +23,24 @@ spec:
                     values:
                       - worker
       containers:
-        - name: fertiscan-frontend-preview
-          image: ghcr.io/ai-cfia/fertiscan-frontend:479
+        - name: fertiscan-backend
+          image: ghcr.io/ai-cfia/fertiscan-backend:250
           imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: fertiscan-backend-secrets
           env:
-            - name: NEXT_PUBLIC_DEBUG
-              value: "true"
-            - name: BACKEND_URL
-              value: "http://fertiscan-frontend-preview-svc.fertiscan-preview:5000/api"
+            - name: API_BASE_PATH
+              value: "/api"
           ports:
-            - containerPort: 3000
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 60
-            periodSeconds: 10
+            - containerPort: 5000
+          volumeMounts:
+            - name: tmp
+              mountPath: /cachedir_joblib
           securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: false
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
             capabilities:
@@ -49,11 +50,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: fertiscan-frontend-preview-svc
+  name: fertiscan-backend-svc
 spec:
   clusterIP: None
   selector:
-    app: fertiscan-frontend-preview
+    app: fertiscan-backend
   ports:
     - protocol: TCP
-      port: 3000
+      port: 5000
+      targetPort: 5000
+      name: api

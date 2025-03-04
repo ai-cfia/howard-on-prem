@@ -46,15 +46,6 @@ spec:
             capabilities:
               drop:
                 - ALL
-      volumes:
-        - name: tmp
-          emptyDir: {}
-        - name: logs
-          persistentVolumeClaim:
-            claimName: fertiscan-preview-logs-pvc
-        - name: uploads
-          persistentVolumeClaim:
-            claimName: fertiscan-preview-uploads-pvc
 ---
 apiVersion: v1
 kind: Service
