@@ -48,7 +48,7 @@ spec:
     retentionPolicy: "30d"
 
   storage:
-    storageClass: ceph-block
+    storageClass: ceph-hot-block
     size: 70Gi
 
   enableSuperuserAccess: true
@@ -60,8 +60,8 @@ spec:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
           - matchExpressions:
-              - key: node-type
+              - key: type
                 operator: In
                 values:
-                  - worker
+                  - app-worker
     enablePodAntiAffinity: true

@@ -5,6 +5,8 @@
 # -- Namespace of the main rook operator
 operatorNamespace: rook-ceph
 
+clusterName: rook-ceph-hot-cluster
+
 # All values below are taken from the CephCluster CRD
 # -- Cluster configuration.
 # @default -- See [below](#ceph-cluster-spec)
@@ -18,7 +20,7 @@ cephClusterSpec:
   # The path on the host where configuration files will be persisted. Must be specified. If there are multiple clusters, the directory must be unique for each cluster.
   # Important: if you reinstall the cluster, make sure you delete this directory from each host or else the mons will fail to start on the new cluster.
   # In Minikube, the '/data' directory is configured to persist across reboots. Use "/data/rook" in Minikube environment.
-  dataDirHostPath: /var/lib/rook
+  dataDirHostPath: /var/lib/rook-hot
 
   mon:
     # Set the number of mons to be started. Generally recommended to be 3.
@@ -26,14 +28,14 @@ cephClusterSpec:
     count: 3
     # The mons should be on unique nodes. For production, at least 3 nodes are recommended for this reason.
     # Mons should only be allowed on the same node for test environments where data loss is acceptable.
-    allowMultiplePerNode: false
+    allowMultiplePerNode: true
 
   mgr:
     # When higher availability of the mgr is needed, increase the count to 2.
     # In that case, one mgr will be active and one in standby. When Ceph updates which
     # mgr is active, Rook will update the mgr services to match the active mgr.
     count: 2
-    allowMultiplePerNode: false
+    allowMultiplePerNode: true
     modules:
       # List of modules to optionally enable or disable.
       # Note the "dashboard" and "monitoring" modules are already configured by other settings in the cluster CR.
@@ -74,18 +76,41 @@ cephClusterSpec:
     # kubectl rook-cehp ceph auth del osd.{the_concurrent_id}
     # kubectl rook-cehp ceph osd rm {the_concurrent_id}
     nodes:
-      - name: "ai-lab-1"
-        devices:
-          - name: "/dev/sdb"
-      - name: "ai-lab-2"
-        devices:
-          - name: "/dev/sdb"
       - name: "ai-lab-3"
         devices:
           - name: "/dev/sdb"
       - name: "ai-lab-4"
         devices:
           - name: "/dev/sdb"
+  
+  # To control where various services will be scheduled by kubernetes, use the placement configuration sections below.
+  # The example under 'all' would have all services scheduled on kubernetes nodes labeled with 'role=storage-node' and
+  # tolerate taints with a key of 'storage-node'.
+  placement:
+    all:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: type
+                  operator: In
+                  values:
+                    - app-worker
+      # podAffinity:
+      # podAntiAffinity:
+      # topologySpreadConstraints:
+      # tolerations:
+      # - key: storage-node
+      #   operator: Exists
+    # The above placement information can also be specified for mon, osd, and mgr components
+    # mon:
+    # Monitor deployments may contain an anti-affinity rule for avoiding monitor
+    # collocation on the same node. This is a required rule when host network is used
+    # or when AllowMultiplePerNode is false. Otherwise this anti-affinity rule is a
+    # preferred rule with weight: 50.
+    # osd:
+    # mgr:
+    # cleanup:
 
   # Configure the healthcheck and liveness probes for ceph pods.
   # Valid values for daemons are 'mon', 'osd', 'status'
@@ -117,21 +142,21 @@ ingress:
 # -- A list of CephBlockPool configurations to deploy
 # @default -- See [below](#ceph-block-pools)
 cephBlockPools:
-  - name: ceph-blockpool
+  - name: ceph-hot-blockpool
     # see https://github.com/rook/rook/blob/master/Documentation/CRDs/Block-Storage/ceph-block-pool-crd.md#spec for available configuration
     spec:
       failureDomain: host
       replicated:
-        size: 3
+        size: 2
       # Enables collecting RBD per-image IO statistics by enabling dynamic OSD performance counters. Defaults to false.
       # For reference: https://docs.ceph.com/docs/latest/mgr/prometheus/#rbd-io-statistics
       enableRBDStats: true
     storageClass:
       enabled: true
-      name: ceph-block
+      name: ceph-hot-block
       annotations: {}
       labels: {}
-      isDefault: true
+      isDefault: false
       reclaimPolicy: Delete
       allowVolumeExpansion: true
       volumeBindingMode: "Immediate"
@@ -182,16 +207,16 @@ cephBlockPools:
 # -- A list of CephFileSystem configurations to deploy
 # @default -- See [below](#ceph-file-systems)
 cephFileSystems:
-  - name: ceph-filesystem
+  - name: ceph-hot-filesystem
     # see https://github.com/rook/rook/blob/master/Documentation/CRDs/Shared-Filesystem/ceph-filesystem-crd.md#filesystem-settings for available configuration
     spec:
       metadataPool:
         replicated:
-          size: 3
+          size: 2
       dataPools:
         - failureDomain: host
           replicated:
-            size: 3
+            size: 2
           # Optional and highly recommended, 'data0' by default, see https://github.com/rook/rook/blob/master/Documentation/CRDs/Shared-Filesystem/ceph-filesystem-crd.md#pools
           name: data0
       metadataServer:
@@ -207,7 +232,7 @@ cephFileSystems:
     storageClass:
       enabled: true
       isDefault: false
-      name: ceph-filesystem
+      name: ceph-hot-filesystem
       # (Optional) specify a data pool to use, must be the name of one of the data pools above, 'data0' by default
       pool: data0
       reclaimPolicy: Delete
@@ -234,8 +259,8 @@ cephFileSystems:
 # @default -- See [CephFS Snapshots](../Storage-Configuration/Ceph-CSI/ceph-csi-snapshot.md#cephfs-snapshots)
 cephFileSystemVolumeSnapshotClass:
   enabled: true
-  name: ceph-filesystem
-  isDefault: true
+  name: ceph-hot-filesystem
+  isDefault: false
   deletionPolicy: Delete
   annotations: {}
   labels: {}
@@ -246,8 +271,8 @@ cephFileSystemVolumeSnapshotClass:
 # @default -- See [RBD Snapshots](../Storage-Configuration/Ceph-CSI/ceph-csi-snapshot.md#rbd-snapshots)
 cephBlockPoolsVolumeSnapshotClass:
   enabled: true
-  name: ceph-block
-  isDefault: true
+  name: ceph-hot-block
+  isDefault: false
   deletionPolicy: Delete
   annotations: {}
   labels: {}
@@ -257,13 +282,13 @@ cephBlockPoolsVolumeSnapshotClass:
 # -- A list of CephObjectStore configurations to deploy
 # @default -- See [below](#ceph-object-stores)
 cephObjectStores:
-  - name: ceph-objectstore
+  - name: ceph-hot-objectstore
     # see https://github.com/rook/rook/blob/master/Documentation/CRDs/Object-Storage/ceph-object-store-crd.md#object-store-settings for available configuration
     spec:
       metadataPool:
         failureDomain: host
         replicated:
-          size: 3
+          size: 2
       dataPool:
         failureDomain: host
         erasureCoded:
@@ -292,8 +317,8 @@ cephObjectStores:
         #       cpu: "100m"
         #       memory: "40Mi"
     storageClass:
-      enabled: true
-      name: ceph-bucket
+      enabled: false # s3 storage disable, using minio
+      name: ceph-hot-bucket
       reclaimPolicy: Delete
       volumeBindingMode: "Immediate"
       annotations: {}

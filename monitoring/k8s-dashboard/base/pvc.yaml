@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: metrics-scraper-pvc
 spec:
-  storageClassName: ceph-block
+  storageClassName: ceph-hot-block
   accessModes:
     - ReadWriteOnce
   resources:

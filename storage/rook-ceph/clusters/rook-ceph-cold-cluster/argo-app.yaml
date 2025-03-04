@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-ceph-cold-cluster
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  destination:
+    namespace: rook-ceph-cold-cluster
+    server: https://kubernetes.default.svc
+  sources:
+    - chart: rook-ceph-cluster
+      helm:
+        releaseName: rook-ceph-cold-cluster
+        valueFiles:
+          - $values/storage/rook-ceph/clusters/rook-ceph-cold-cluster/helm/values.yaml
+      repoURL: https://charts.rook.io/release
+      targetRevision: 1.16.2
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      path: storage/rook-ceph/clusters/rook-ceph-cold-cluster/base/
+      targetRevision: HEAD

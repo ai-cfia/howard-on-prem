@@ -16,7 +16,6 @@ global:
   # domain: argocd.onprem.inspection.alpha.canada.ca
   domain: 
 
-
   # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
   revisionHistoryLimit: 3
 
@@ -189,7 +188,7 @@ configs:
 ## Dex
 dex:
   # -- Enable dex
-  enabled: true
+  enabled: false
   # -- Dex name
   name: dex-server
 
