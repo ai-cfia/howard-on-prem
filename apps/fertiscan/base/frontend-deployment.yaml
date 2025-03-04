@@ -30,7 +30,7 @@ spec:
             - name: NEXT_PUBLIC_DEBUG
               value: "true"
             - name: BACKEND_URL
-              value: "http://fertiscan-frontend-svc.fertiscan:5000/api"
+              value: "http://fertiscan-backend-svc.fertiscan:5000/api"
           ports:
             - containerPort: 3000
           livenessProbe:
