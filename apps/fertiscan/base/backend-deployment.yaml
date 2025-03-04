@@ -35,7 +35,7 @@ spec:
           ports:
             - containerPort: 5000
           volumeMounts:
-            - name: tmp
+           - name: tmp
               mountPath: /cachedir_joblib
           securityContext:
             runAsUser: 1000
@@ -46,9 +46,9 @@ spec:
             capabilities:
               drop:
                 - ALL
-          volumes:
-            - name: tmp
-              emptyDir: {}
+    volumes:
+     - name: tmp
+       emptyDir: {}      
 ---
 apiVersion: v1
 kind: Service
