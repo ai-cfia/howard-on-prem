@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: fertiscan-frontend
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -18,10 +18,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: node-type
+                  - key: type
                     operator: In
                     values:
-                      - worker
+                      - app-worker
       containers:
         - name: fertiscan-frontend
           image: ghcr.io/ai-cfia/fertiscan-frontend:479

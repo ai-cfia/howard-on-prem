@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: fertiscan-backend-frontend-ingress
+  name: fertiscan-backend-preview-ingress
   annotations:
     lbipam.cilium.io/ips: 10.140.79.21
     ingress.cilium.io/loadbalancer-mode: dedicated
@@ -22,7 +22,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: fertiscan-preview-frontend-ingress
+  name: fertiscan-frontend-preview-ingress
   annotations:
     lbipam.cilium.io/ips: 10.140.79.22
     ingress.cilium.io/loadbalancer-mode: dedicated
