@@ -46,6 +46,9 @@ spec:
             capabilities:
               drop:
                 - ALL
+          volume:
+            - name: tmp
+              emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
