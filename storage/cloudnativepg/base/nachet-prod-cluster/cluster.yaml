@@ -34,25 +34,25 @@ spec:
         passwordSecret:
           name: nachet-prod-user-creds
 
-  backup:
-    barmanObjectStore:
-      destinationPath: s3://nachet-prod-cluster-backup/
-      endpointURL: http://minio-svc.minio:9000
-      s3Credentials:
-        accessKeyId:
-          name: minio-secret
-          key: rootUser
-        secretAccessKey:
-          name: minio-secret
-          key: rootPassword
-      wal:
-        compression: gzip
-      data:
-        additionalCommandArgs:
-          - "--min-chunk-size=5MB"
-          - "--read-timeout=60"
-          - "-vv"
-    retentionPolicy: "30d"
+  # backup:
+  #   barmanObjectStore:
+  #     destinationPath: s3://nachet-prod-cluster-backup/
+  #     endpointURL: http://minio-svc.minio:9000
+  #     s3Credentials:
+  #       accessKeyId:
+  #         name: minio-secret
+  #         key: rootUser
+  #       secretAccessKey:
+  #         name: minio-secret
+  #         key: rootPassword
+  #     wal:
+  #       compression: gzip
+  #     data:
+  #       additionalCommandArgs:
+  #         - "--min-chunk-size=5MB"
+  #         - "--read-timeout=60"
+  #         - "-vv"
+  #   retentionPolicy: "30d"
 
   storage:
     storageClass: ceph-hot-block
