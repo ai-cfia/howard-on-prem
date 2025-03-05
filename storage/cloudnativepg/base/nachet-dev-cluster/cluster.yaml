@@ -40,10 +40,10 @@ spec:
       endpointURL: http://minio-svc.minio:9000
       s3Credentials:
         accessKeyId:
-          name: minio-secret
+          name: minio-secret-nachet-dev
           key: rootUser
         secretAccessKey:
-          name: minio-secret
+          name: minio-secret-nachet-dev
           key: rootPassword
       wal:
         compression: gzip
