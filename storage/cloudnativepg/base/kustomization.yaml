@@ -19,4 +19,3 @@ resources:
  - nachet-prod-cluster/backup.yaml
 
  - database/nachet-prod.yaml
-
