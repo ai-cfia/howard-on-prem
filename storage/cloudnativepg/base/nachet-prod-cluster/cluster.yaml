@@ -11,6 +11,13 @@ spec:
   postgresql:
     pg_hba:
       - host all all 0.0.0.0/0 md5
+  
+  bootstrap:
+    initdb:
+      database: nachet
+      owner: nachet
+      passwordSecret:
+        name: nachet-prod-user-creds
 
   managed:
     roles:
@@ -25,7 +32,7 @@ spec:
         bypassrls: false
         connectionLimit: 10
         passwordSecret:
-          name: nachet-user-creds
+          name: nachet-prod-user-creds
 
   backup:
     barmanObjectStore:
