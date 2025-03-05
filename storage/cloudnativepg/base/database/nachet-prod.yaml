@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: nachet-prod-database
+spec:
+  name: nachet-prod-database
+  owner: nachet
+  cluster:
+    name: nachet-prod-cluster
