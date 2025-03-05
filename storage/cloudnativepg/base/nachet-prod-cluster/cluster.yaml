@@ -11,13 +11,6 @@ spec:
   postgresql:
     pg_hba:
       - host all all 0.0.0.0/0 md5
-  
-  bootstrap:
-    initdb:
-      database: nachet
-      owner: nachet
-      passwordSecret:
-        name: nachet-prod-user-creds
 
   managed:
     roles:
