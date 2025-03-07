@@ -82,7 +82,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: nachet-azurite-pdb
-  namespace: nachet
+  namespace: nachet-dev
 spec:
   minAvailable: 1
   selector:
@@ -94,7 +94,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nachet-azurite-svc
-  namespace: nachet
+  namespace: nachet-dev
 spec:
   clusterIP: None
   selector:
