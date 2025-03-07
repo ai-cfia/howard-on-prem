@@ -1,10 +1,4 @@
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: ailab-shared
-
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
