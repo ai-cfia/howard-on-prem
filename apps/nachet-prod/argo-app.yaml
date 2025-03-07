@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nachet-prod
+  labels:
+    name: nachet-prod
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nachet-prod
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nachet-prod
+  source:
+    repoURL: https://github.com/ai-cfia/howard-on-prem.git
+    path: apps/nachet-prod/base
+    targetRevision: HEAD
+  # syncPolicy:
+  #   automated:
+  #     selfHeal: true
+  #   syncOptions:
+  #     - CreateNamespace=true
