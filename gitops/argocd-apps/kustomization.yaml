@@ -8,7 +8,7 @@ resources:
   - ../../apps/fertiscan/
   - ../../apps/finesse/
   - ../../apps/louis/
-
+  - ../../apps/ragflow/
   # - ../../apps/webtop/
 
   # Networking applications

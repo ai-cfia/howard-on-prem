@@ -1,0 +1,86 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ragflow-mysql
+  labels:
+    app.kubernetes.io/component: mysql
+spec:
+  storageClassName: ceph-hot-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ragflow-mysql
+  labels:
+    app.kubernetes.io/component: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: mysql
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: mysql
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+      - name: mysql
+        image: mysql:8.0.39
+        envFrom:
+          - secretRef:
+              name: ragflow-env-config
+        args:
+          - --max_connections=1000
+          - --character-set-server=utf8mb4
+          - --collation-server=utf8mb4_general_ci
+          - --default-authentication-plugin=mysql_native_password
+          - --tls_version=TLSv1.2,TLSv1.3
+          - --init-file=/data/application/init.sql
+          - --disable-log-bin
+        ports:
+          - containerPort: 3306
+            name: mysql
+        volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: mysql-data
+          - mountPath: /data/application/init.sql
+            subPath: init.sql
+            readOnly: true
+            name: init-script-volume
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: ragflow-mysql
+        - name: init-script-volume
+          configMap:
+            name: mysql-init-script
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ragflow-mysql
+  labels:
+    app.kubernetes.io/component: mysql
+spec:
+  selector:
+    app.kubernetes.io/component: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: mysql
+  type: ClusterIP
