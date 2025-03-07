@@ -103,7 +103,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 8Ti
-  volumeName: pvc-3db0ac10-748d-46a8-ae40-47ae13664bca-webtop
-  storageClassName: ceph-filesystem
+      storage: 14Ti
+  volumeName: pvc-a45fb23a-fd99-4797-94da-ac0077141f89-webtop
+  storageClassName: ceph-cold-filesystem
   volumeMode: Filesystem
