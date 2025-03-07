@@ -41,7 +41,7 @@ spec:
                   - key: kubernetes.azure.com/role
                     operator: In
                     values:
-                      - agent
+                      - app-worker
       containers:
         - name: nachet-backend
           image: ghcr.io/ai-cfia/nachet-backend:152-Debug-Nachet-Datastore
