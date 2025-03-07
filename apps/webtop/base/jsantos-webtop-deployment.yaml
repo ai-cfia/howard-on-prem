@@ -17,10 +17,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: node-type
-                    operator: In
-                    values:
-                      - worker
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - ai-lab-2
       containers:
       - name: webtop
         image: lscr.io/linuxserver/webtop:ubuntu-xfce
