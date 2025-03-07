@@ -1,0 +1,13 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - infinity/deployment.yaml
+  - mysql/deployment.yaml
+  - mysql/mysql-config.yaml
+  - ragflow/deployment.yaml
+  - ragflow/ingress.yaml
+  - ragflow/nginx-config.yaml
+  - ragflow/secrets.yaml
+  - redis/deployment.yaml
