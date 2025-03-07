@@ -11,7 +11,7 @@ resources:
   #- ../../apps/nachet-dev/
   #- ../../apps/nachet-prod/
   # - ../../apps/ragflow/
-  # - ../../apps/webtop/
+  - ../../apps/webtop/
 
   # Networking applications
   - ../../networking/cilium/
