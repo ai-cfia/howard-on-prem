@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nachet-rcnn-detector
-  namespace: nachet-dev
+  name: nachet-backend
+  namespace: nachet-prod
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: nachet-rcnn-detector
+      app: nachet-backend
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,8 +17,13 @@ spec:
   template:
     metadata:
       labels:
-        app: nachet-rcnn-detector
+        app: nachet-backend
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -27,7 +32,7 @@ spec:
                   - key: app
                     operator: In
                     values:
-                      - nachet-rcnn-detector
+                      - nachet-backend
               topologyKey: "kubernetes.io/hostname"
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -38,73 +43,58 @@ spec:
                     values:
                       - app-worker
       containers:
-        - name: nachet-rcnn-detector
-          image: ghcr.io/ai-cfia/nachet-backend:29-azureml-seed-detector
-          imagePullPolicy: Always
+        - name: nachet-backend
+          image: ghcr.io/ai-cfia/nachet-backend:152-Debug-Nachet-Datastore
           command: ["/bin/sh", "-c"]
-          args: ['./startup.sh']
+          args: ['hypercorn -b :8080 app:app']
+          imagePullPolicy: Always
           envFrom:
             - secretRef:
-                name: nachet-rcnn-detector-secrets
+                name: nachet-backend-secrets
           ports:
-            - containerPort: 5001
-          volumeMounts:
-            - name: logs
-              mountPath: /app/logs
-            - name: tmp
-              mountPath: /tmp
+            - containerPort: 8080
           livenessProbe:
             httpGet:
-              path: /
-              port: 5001
+              path: /health
+              port: 8080
             initialDelaySeconds: 60
             periodSeconds: 10
           resources:
             requests:
               cpu: "1"
-              memory: "4Gi"
+              memory: "1Gi"
             limits:
               cpu: "2"
-              memory: "6Gi"
+              memory: "2Gi"
           securityContext:
-            runAsNonRoot: false
-            runAsUser: 1000
-            runAsGroup: 1000
-            readOnlyRootFilesystem: false
+            readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
-      volumes:
-        - name: tmp
-          emptyDir:
-            medium: Memory
-            sizeLimit: 500Mi
-        - name: logs
-          emptyDir:
-            medium: Memory
-            sizeLimit: 500Mi
+
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: nachet-rcnn-detector-pdb
-  namespace: nachet-dev
+  name: nachet-backend-pdb
+  namespace: nachet-prod
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: nachet-rcnn-detector
+      app: nachet-backend
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nachet-rcnn-detector-svc
-  namespace: nachet-dev
+  name: nachet-backend-svc
+  namespace: nachet-prod
 spec:
   clusterIP: None
   selector:
-    app: nachet-rcnn-detector
+    app: nachet-backend
   ports:
     - protocol: TCP
-      port: 5001
+      port: 8080

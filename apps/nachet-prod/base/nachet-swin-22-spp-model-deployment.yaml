@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nachet-rcnn-detector
-  namespace: nachet-dev
+  name: nachet-swin-classifier-22-spp
+  namespace: nachet-prod
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: nachet-rcnn-detector
+      app: nachet-swin-classifier-22-spp
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       labels:
-        app: nachet-rcnn-detector
+        app: nachet-swin-classifier-22-spp
     spec:
       affinity:
         podAntiAffinity:
@@ -27,7 +27,7 @@ spec:
                   - key: app
                     operator: In
                     values:
-                      - nachet-rcnn-detector
+                      - nachet-swin-classifier-22-spp
               topologyKey: "kubernetes.io/hostname"
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -38,14 +38,14 @@ spec:
                     values:
                       - app-worker
       containers:
-        - name: nachet-rcnn-detector
-          image: ghcr.io/ai-cfia/nachet-backend:29-azureml-seed-detector
+        - name: nachet-swin-classifier-22-spp
+          image: ghcr.io/ai-cfia/nachet-backend:29-azureml-swin-classifier-22-spp
           imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
-          args: ['./startup.sh']
+          args: ['azmlinfsrv --entry_script /app/score.py']
           envFrom:
             - secretRef:
-                name: nachet-rcnn-detector-secrets
+                name: nachet-swin-classifier-secrets
           ports:
             - containerPort: 5001
           volumeMounts:
@@ -62,10 +62,10 @@ spec:
           resources:
             requests:
               cpu: "1"
-              memory: "4Gi"
+              memory: "1Gi"
             limits:
               cpu: "2"
-              memory: "6Gi"
+              memory: "2Gi"
           securityContext:
             runAsNonRoot: false
             runAsUser: 1000
@@ -88,23 +88,23 @@ spec:
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: nachet-rcnn-detector-pdb
-  namespace: nachet-dev
+  name: nachet-swin-classifier-22-spp-pdb
+  namespace: nachet-prod
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: nachet-rcnn-detector
+      app: nachet-swin-classifier-22-spp
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nachet-rcnn-detector-svc
-  namespace: nachet-dev
+  name: nachet-swin-classifier-22-spp-svc
+  namespace: nachet-prod
 spec:
   clusterIP: None
   selector:
-    app: nachet-rcnn-detector
+    app: nachet-swin-classifier-22-spp
   ports:
     - protocol: TCP
       port: 5001
