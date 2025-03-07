@@ -11,4 +11,3 @@ resources:
   - ragflow/nginx-config.yaml
   - ragflow/secrets.yaml
   - redis/deployment.yaml
-
