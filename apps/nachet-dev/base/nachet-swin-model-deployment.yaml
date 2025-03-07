@@ -33,10 +33,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: type
+                  - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - app-worker
+                      - ai-lab-2
       containers:
         - name: nachet-swin-classifier
           image: ghcr.io/ai-cfia/nachet-backend:29-azureml-swin-classifier

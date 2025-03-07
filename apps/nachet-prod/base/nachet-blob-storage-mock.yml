@@ -38,10 +38,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: type
+                  - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - app-worker
+                      - ai-lab-2
       containers:
         - name: nachet-azurite
           image: mcr.microsoft.com/azure-storage/azurite
