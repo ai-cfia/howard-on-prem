@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nachet-azurite
+  namespace: nachet
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: nachet-azurite
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: nachet-azurite
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - nachet-azurite
+              topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.azure.com/role
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+        - name: nachet-azurite
+          image: mcr.microsoft.com/azure-storage/azurite
+          command: ["/bin/sh", "-c"]
+          args: ['azurite --loose --blobHost 0.0.0.0 --blobPort 10000  --location /workspace --debug /workspace/debug.log']
+          ports:
+            - containerPort: 10000
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 8080
+          #   initialDelaySeconds: 60
+          #   periodSeconds: 10
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "1m"
+              memory: "2Gi"
+          volumeMounts:
+            - name: workspace
+              mountPath: /workspace
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: workspace
+          emptyDir:
+            medium: Memory
+            sizeLimit: 500Mi
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nachet-azurite-pdb
+  namespace: nachet
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nachet-azurite
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nachet-azurite-svc
+  namespace: nachet
+spec:
+  clusterIP: None
+  selector:
+    app: nachet-azurite
+  ports:
+    - protocol: TCP
+      port: 10000
