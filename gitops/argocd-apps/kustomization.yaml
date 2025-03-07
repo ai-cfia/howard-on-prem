@@ -8,6 +8,7 @@ resources:
   - ../../apps/fertiscan/
   - ../../apps/finesse/
   - ../../apps/louis/
+  - ../../apps/nachet-dev/
   - ../../apps/ragflow/
   # - ../../apps/webtop/
 
