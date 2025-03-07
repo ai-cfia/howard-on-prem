@@ -8,5 +8,5 @@ spec:
   resources:
     requests:
       storage: 14Ti
-  storageClassName: ceph-filesystem
+  storageClassName: ceph-cold-filesystem
   volumeMode: Filesystem
