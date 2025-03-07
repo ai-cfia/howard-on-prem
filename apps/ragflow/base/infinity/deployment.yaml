@@ -36,7 +36,7 @@ spec:
                   - key: type
                     operator: In
                     values:
-                      - ai-worker
+                      - app-worker
       containers:
       - name: infinity
         image: infiniflow/infinity:v0.5.0

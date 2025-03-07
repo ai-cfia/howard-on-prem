@@ -22,7 +22,7 @@ spec:
                   - key: type
                     operator: In
                     values:
-                      - ai-worker
+                      - app-worker
       containers:
       - name: ragflow
         image: infiniflow/ragflow:v0.17.0-slim

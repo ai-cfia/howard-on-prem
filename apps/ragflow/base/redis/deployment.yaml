@@ -37,7 +37,7 @@ spec:
                   - key: type
                     operator: In
                     values:
-                      - ai-worker
+                      - app-worker
       containers:
       - name: redis
         image: valkey/valkey:8
