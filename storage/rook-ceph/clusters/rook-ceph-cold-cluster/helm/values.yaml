@@ -7,6 +7,12 @@ operatorNamespace: rook-ceph
 
 clusterName: rook-ceph-cold-cluster
 
+# -- Cluster ceph.conf override
+# Warning if < 10% is available for mon's
+configOverride: |
+  [global]
+  mon_data_avail_warn = 10
+
 # All values below are taken from the CephCluster CRD
 # -- Cluster configuration.
 # @default -- See [below](#ceph-cluster-spec)
