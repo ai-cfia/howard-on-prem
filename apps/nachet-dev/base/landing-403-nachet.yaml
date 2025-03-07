@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: landing-403-nachet-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: landing-403-nachet
+  template:
+    metadata:
+      labels:
+        app: landing-403-nachet
+    spec:
+      containers:
+        - name: landing-403-nachet
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: html-volume
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: html-volume
+          configMap:
+            name: landing-403-nachet-page-content
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: landing-403-nachet-page-content
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>VPN Reminder</title>
+    </head>
+    <body>
+      <h1>Remember to Activate VPN</h1>
+      <p>Please connect to your VPN before accessing this application.</p>
+      <br>
+      ---
+      <h1>Veuillez activer le VPN</h1>
+      <p>Veuillez vous connecter à votre VPN avant d'accéder à cette application.</p>
+    </body>
+    </html>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: default-nginx-backend
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: landing-403-nachet

@@ -6,8 +6,11 @@ resources:
   # - ../../apps/ailab-shared/
   - ../../apps/fertiscan-preview/
   - ../../apps/fertiscan/
+  - ../../apps/finesse/
   - ../../apps/louis/
-  # - ../../apps/ragflow/
+  - ../../apps/nachet-dev/
+  - ../../apps/nachet-prod/
+  - ../../apps/ragflow/
   # - ../../apps/webtop/
 
   # Networking applications
@@ -50,26 +53,26 @@ resources:
 #   - Capped at a maximum wait time of 3 minutes.
 # - Applies to all Application resources.
 patches:
-- patch: |-
-    apiVersion: argoproj.io/v1alpha1
-    kind: Application
-    metadata:
-      name: not-used
-      finalizers:
-        - resources-finalizer.argocd.argoproj.io # cascading deletion
-    spec:
-      syncPolicy:
-        automated:
-          selfHeal: true
-          prune: true
-      syncOptions:
-        - CreateNamespace=true
-      revisionHistoryLimit: 4
-      retry:
-        limit: 3
-        backoff:
-          duration: 5s
-          factor: 2
-          maxDuration: 3m
-  target:
-    kind: Application
+  - patch: |-
+      apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: not-used
+        finalizers:
+          - resources-finalizer.argocd.argoproj.io # cascading deletion
+      spec:
+        syncPolicy:
+          automated:
+            selfHeal: true
+            prune: true
+        syncOptions:
+          - CreateNamespace=true
+        revisionHistoryLimit: 4
+        retry:
+          limit: 3
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
+    target:
+      kind: Application

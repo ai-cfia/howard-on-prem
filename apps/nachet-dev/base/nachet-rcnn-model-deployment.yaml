@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nachet-rcnn-detector
+  namespace: nachet-dev
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: nachet-rcnn-detector
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: nachet-rcnn-detector
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - nachet-rcnn-detector
+              topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+        - name: nachet-rcnn-detector
+          image: ghcr.io/ai-cfia/nachet-backend:29-azureml-seed-detector
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args: ['./startup.sh']
+          envFrom:
+            - secretRef:
+                name: nachet-rcnn-detector-secrets
+          ports:
+            - containerPort: 5001
+          volumeMounts:
+            - name: logs
+              mountPath: /app/logs
+            - name: tmp
+              mountPath: /tmp
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5001
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "1"
+              memory: "4Gi"
+            limits:
+              cpu: "2"
+              memory: "6Gi"
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 500Mi
+        - name: logs
+          emptyDir:
+            medium: Memory
+            sizeLimit: 500Mi
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nachet-rcnn-detector-pdb
+  namespace: nachet-dev
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nachet-rcnn-detector
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nachet-rcnn-detector-svc
+  namespace: nachet-dev
+spec:
+  clusterIP: None
+  selector:
+    app: nachet-rcnn-detector
+  ports:
+    - protocol: TCP
+      port: 5001

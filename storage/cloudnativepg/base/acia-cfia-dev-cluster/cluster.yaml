@@ -27,6 +27,19 @@ spec:
         passwordSecret:
           name: fertiscan-user-creds
 
+      - name: finesse
+        ensure: present
+        comment: "Owner of finesse databases"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: finesse-user-creds
+
   backup:
     barmanObjectStore:
       destinationPath: s3://acia-cfia-dev-cluster-backup/

@@ -1,0 +1,42 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nachet-dev-backend-ingress
+  namespace: nachet-dev
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.40
+    ingress.cilium.io/loadbalancer-mode: dedicated
+spec:
+  ingressClassName: cilium
+  rules:
+    - http:
+        paths:
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: nachet-backend-svc
+                port:
+                  number: 8080
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nachet-dev-frontend-ingress
+  namespace: nachet-dev
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.41
+    ingress.cilium.io/loadbalancer-mode: dedicated
+spec:
+  ingressClassName: cilium
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nachet-frontend-svc
+                port:
+                  number: 3000
