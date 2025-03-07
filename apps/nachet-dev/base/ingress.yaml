@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nachet-backend-ingress
+  name: nachet-dev-backend-ingress
   annotations:
     lbipam.cilium.io/ips: 10.140.79.40
     ingress.cilium.io/loadbalancer-mode: dedicated
@@ -22,7 +22,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nachet-frontend-ingress
+  name: nachet-dev-frontend-ingress
   annotations:
     lbipam.cilium.io/ips: 10.140.79.41
     ingress.cilium.io/loadbalancer-mode: dedicated
