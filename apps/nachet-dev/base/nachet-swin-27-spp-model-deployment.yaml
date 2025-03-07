@@ -33,7 +33,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: kubernetes.azure.com/role
+                  - key: type
                     operator: In
                     values:
                       - app-worker
