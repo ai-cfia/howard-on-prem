@@ -1,12 +1,4 @@
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: nachet-prod
-  labels:
-    name: nachet-prod
-
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -23,8 +15,3 @@ spec:
     repoURL: https://github.com/ai-cfia/howard-on-prem.git
     path: apps/nachet-prod/base
     targetRevision: HEAD
-  # syncPolicy:
-  #   automated:
-  #     selfHeal: true
-  #   syncOptions:
-  #     - CreateNamespace=true
