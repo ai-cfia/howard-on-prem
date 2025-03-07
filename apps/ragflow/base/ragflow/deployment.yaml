@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ragflow
+  labels:
+    app.kubernetes.io/component: ragflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: ragflow
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: ragflow
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - ai-worker
+      containers:
+      - name: ragflow
+        image: infiniflow/ragflow:v0.17.0-slim
+        ports:
+          - containerPort: 80
+            name: http
+          - containerPort: 9380
+            name: http-api
+        volumeMounts:
+          - mountPath: /etc/nginx/conf.d/ragflow.conf
+            subPath: ragflow.conf
+            name: nginx-config-volume
+          - mountPath: /etc/nginx/proxy.conf
+            subPath: proxy.conf
+            name: nginx-config-volume
+          - mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+            name: nginx-config-volume
+        envFrom:
+          - secretRef:
+              name: ragflow-env-config
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ragflow
+  labels:
+    app.kubernetes.io/component: ragflow
+spec:
+  selector:
+    app.kubernetes.io/component: ragflow
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
+      name: http
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ragflow-api
+  labels:
+    app.kubernetes.io/component: ragflow
+spec:
+  selector:
+    app.kubernetes.io/component: ragflow
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http-api
+      name: http-api
+  type: ClusterIP

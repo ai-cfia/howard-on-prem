@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: nachet-dev-cluster-backup
+spec:
+  schedule: "0 0 * * 5"  # Friday midnight (UTC)
+  backupOwnerReference: self
+  cluster:
+    name: nachet-dev-cluster
