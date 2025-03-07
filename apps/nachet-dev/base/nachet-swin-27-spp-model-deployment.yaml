@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nachet-swin-classifier-27-spp
+  namespace: nachet
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: nachet-swin-classifier-27-spp
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: nachet-swin-classifier-27-spp
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - nachet-swin-classifier-27-spp
+              topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.azure.com/role
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+        - name: nachet-swin-classifier-27-spp
+          image: ghcr.io/ai-cfia/nachet-model-ccds/gpu-classifier-27spp-model-1:2025030321
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: nachet-swin-classifier-secrets
+          ports:
+            - containerPort: 8080
+          # volumeMounts:
+          #   - name: logs
+          #     mountPath: /app/logs
+          #   - name: tmp
+          #     mountPath: /tmp
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 5001
+          #   initialDelaySeconds: 60
+          #   periodSeconds: 10
+          resources:
+            requests:
+              cpu: "8"
+              memory: "12Gi"
+            limits:
+              cpu: "12"
+              memory: "16Gi"
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      # volumes:
+      #   - name: tmp
+      #     emptyDir:
+      #       medium: Memory
+      #       sizeLimit: 500Mi
+      #   - name: logs
+      #     emptyDir:
+      #       medium: Memory
+      #       sizeLimit: 500Mi
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nachet-swin-classifier-27-spp-pdb
+  namespace: nachet
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nachet-swin-classifier-27-spp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nachet-swin-classifier-27-spp-svc
+  namespace: nachet
+spec:
+  clusterIP: None
+  selector:
+    app: nachet-swin-classifier-27-spp
+  ports:
+    - protocol: TCP
+      port: 8080
