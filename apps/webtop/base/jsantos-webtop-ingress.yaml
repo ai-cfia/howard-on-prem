@@ -4,7 +4,7 @@ kind: Ingress
 metadata:
   name: jsantos-webtop-ingress
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.24
+    lbipam.cilium.io/ips: 10.140.79.35
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
