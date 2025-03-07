@@ -7,6 +7,6 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 8Ti
+      storage: 14Ti
   storageClassName: ceph-filesystem
   volumeMode: Filesystem

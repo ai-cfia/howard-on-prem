@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   # ACIA-CFIA applications
-  # - ../../apps/ailab-shared/
+  - ../../apps/ailab-shared/
   - ../../apps/fertiscan-preview/
   - ../../apps/fertiscan/
   - ../../apps/finesse/
