@@ -85,7 +85,9 @@ metadata:
   name: jsantos-webtop-config-pvc
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  storageClassName: ceph-cold-filesystem
   resources:
     requests:
       storage: 10Gi
