@@ -6,4 +6,4 @@ spec:
   name: nachet-dev-database
   owner: nachet
   cluster:
-    name: nachet-dev-cluster
+    name: acia-cfia-dev-cluster

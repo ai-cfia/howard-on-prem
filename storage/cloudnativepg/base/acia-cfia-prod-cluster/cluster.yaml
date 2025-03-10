@@ -1,9 +1,9 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: nachet-dev-cluster
+  name: acia-cfia-prod-cluster
 spec:
-  description: "nachet dev cluster"
+  description: "ACIA-CFIA prod cluster"
   imageName: ghcr.io/cloudnative-pg/postgresql:15.3
   instances: 1
   primaryUpdateStrategy: unsupervised
@@ -12,8 +12,7 @@ spec:
     pg_hba:
       - host all all 0.0.0.0/0 md5
 
-  managed:
-    roles:
+  managed:  
       - name: nachet
         ensure: present
         comment: "Owner of nachet databases"
@@ -25,18 +24,18 @@ spec:
         bypassrls: false
         connectionLimit: 10
         passwordSecret:
-          name: nachet-dev-user-creds
+          name: nachet-prod-user-creds
 
   backup:
     barmanObjectStore:
-      destinationPath: s3://nachet-dev-cluster-backup/
+      destinationPath: s3://acia-cfia-prod-cluster-backup/
       endpointURL: http://minio-svc.minio:9000
       s3Credentials:
         accessKeyId:
-          name: minio-secret-nachet-dev
+          name: minio-secret
           key: rootUser
         secretAccessKey:
-          name: minio-secret-nachet-dev
+          name: minio-secret
           key: rootPassword
       wal:
         compression: gzip
@@ -53,7 +52,7 @@ spec:
 
   enableSuperuserAccess: true
   superuserSecret:
-    name: nachet-dev-cluster-creds
+    name: acia-cfia-prod-cluster-creds
 
   affinity:
     nodeAffinity:

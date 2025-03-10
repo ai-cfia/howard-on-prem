@@ -39,6 +39,19 @@ spec:
         connectionLimit: 10
         passwordSecret:
           name: finesse-user-creds
+          
+      - name: nachet
+        ensure: present
+        comment: "Owner of nachet databases"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: nachet-dev-user-creds
 
   backup:
     barmanObjectStore:
