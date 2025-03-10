@@ -10,8 +10,8 @@ resources:
   - database/nachet-dev.yaml
   - database/finesse.yaml
 
-  - acia-cfia-dev-cluster/cluster.yaml
-  - acia-cfia-dev-cluster/secrets.yaml
-  - acia-cfia-dev-cluster/backup.yaml
+  - acia-cfia-prod-cluster/cluster.yaml
+  - acia-cfia-prod-cluster/secrets.yaml
+  - acia-cfia-prod-cluster/backup.yaml
 
   - database/nachet-prod.yaml
