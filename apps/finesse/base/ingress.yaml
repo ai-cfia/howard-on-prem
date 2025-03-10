@@ -51,8 +51,8 @@ spec:
   rules:
     - http:
         paths:
-          - path: /
-            pathType: Prefix
+          - path: /api
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: finesse-backend-svc
