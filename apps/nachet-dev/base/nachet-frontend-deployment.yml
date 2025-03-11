@@ -44,7 +44,7 @@ spec:
                       - ai-lab-2
       containers:
         - name: nachet-frontend
-          image: ghcr.io/ai-cfia/nachet-frontend:203-update-container-deployment
+          image: ghcr.io/ai-cfia/nachet-frontend:203-update-nachet-frontend-deployment
           imagePullPolicy: Always
           # command: ["/bin/sh", "-c"]
           # args: [serve -s build]
@@ -77,6 +77,8 @@ spec:
               mountPath: /home/node
             - name: node-modules
               mountPath: /nachet-frontend/node_modules
+            - name: dist
+              mountPath: /nachet-frontend/dist
       volumes:
         - name: node
           emptyDir:
@@ -85,7 +87,11 @@ spec:
         - name: node-modules
           emptyDir:
             medium: Memory
-            sizeLimit: 400Mi
+            sizeLimit: 1000Mi
+        - name: dist
+          emptyDir:
+            medium: Memory
+            sizeLimit: 20Mi
 
 ---
 apiVersion: policy/v1
