@@ -72,6 +72,14 @@ spec:
             capabilities:
               drop:
                 - ALL
+          volumeMounts:
+            - name: node
+              mountPath: /home/node
+      volumes:
+        - name: node
+          emptyDir:
+            medium: Memory
+            sizeLimit: 500Mi
 
 ---
 apiVersion: policy/v1
