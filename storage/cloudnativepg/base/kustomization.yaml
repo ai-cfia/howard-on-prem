@@ -7,17 +7,11 @@ resources:
   - acia-cfia-dev-cluster/backup.yaml
 
   - database/fertiscan-preview.yaml
-
-  - nachet-dev-cluster/cluster.yaml
-  - nachet-dev-cluster/secrets.yaml
-  - nachet-dev-cluster/backup.yaml
-
   - database/nachet-dev.yaml
+  - database/finesse.yaml
 
-  - nachet-prod-cluster/cluster.yaml
-  - nachet-prod-cluster/secrets.yaml
-  - nachet-prod-cluster/backup.yaml
+  - acia-cfia-prod-cluster/cluster.yaml
+  - acia-cfia-prod-cluster/secrets.yaml
+  - acia-cfia-prod-cluster/backup.yaml
 
   - database/nachet-prod.yaml
-
-  - database/finesse.yaml

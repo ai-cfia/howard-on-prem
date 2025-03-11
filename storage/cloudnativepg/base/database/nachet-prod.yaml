@@ -6,4 +6,4 @@ spec:
   name: nachet-prod-database
   owner: nachet
   cluster:
-    name: nachet-prod-cluster
+    name: acia-cfia-prod-cluster
