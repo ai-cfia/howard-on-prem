@@ -62,10 +62,10 @@ spec:
           resources:
             requests:
               cpu: "250m"
-              memory: "1Gi"
+              memory: "3Gi"
             limits:
               cpu: "500m"
-              memory: "2Gi"
+              memory: "3Gi"
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
@@ -75,23 +75,17 @@ spec:
           volumeMounts:
             - name: node
               mountPath: /home/node
-            - name: node-modules
-              mountPath: /nachet-frontend/node_modules
-            - name: dist
-              mountPath: /nachet-frontend/dist
+            - name: app
+              mountPath: /app
       volumes:
         - name: node
           emptyDir:
             medium: Memory
-            sizeLimit: 800Mi
-        - name: node-modules
+            sizeLimit: 200Mi
+        - name: app
           emptyDir:
             medium: Memory
-            sizeLimit: 1000Mi
-        - name: dist
-          emptyDir:
-            medium: Memory
-            sizeLimit: 20Mi
+            sizeLimit: 2000Mi
 
 ---
 apiVersion: policy/v1
