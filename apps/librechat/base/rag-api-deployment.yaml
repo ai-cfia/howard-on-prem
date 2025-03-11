@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-api
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: rag-api
+  template:
+    metadata:
+      labels:
+        app: rag-api
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+        - name: rag-api
+          image: ghcr.io/danny-avila/librechat-rag-api-dev-lite:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: rag-api-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rag-api
+spec:
+  type: ClusterIP
+  selector:
+    app: rag-api
+  ports:
+    - port: 8000
+      name: http
