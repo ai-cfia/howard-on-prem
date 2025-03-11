@@ -43,9 +43,9 @@ spec:
           imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args: ['azmlinfsrv --entry_script /app/score.py']
-          envFrom:
-            - secretRef:
-                name: nachet-swin-classifier-secrets
+          # envFrom:
+          #   - secretRef:
+          #       name: nachet-swin-classifier-secrets
           ports:
             - containerPort: 5001
           volumeMounts:
