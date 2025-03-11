@@ -46,8 +46,8 @@ spec:
         - name: nachet-frontend
           image: ghcr.io/ai-cfia/nachet-frontend:203-update-container-deployment
           imagePullPolicy: Always
-          command: ["/bin/sh", "-c"]
-          args: [serve -s build]
+          # command: ["/bin/sh", "-c"]
+          # args: [serve -s build]
           envFrom:
             - secretRef:
                 name: nachet-frontend-secrets
