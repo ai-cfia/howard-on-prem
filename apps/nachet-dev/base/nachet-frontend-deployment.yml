@@ -75,11 +75,17 @@ spec:
           volumeMounts:
             - name: node
               mountPath: /home/node
+            - name: node_modules
+              mountPath: /nachet-frontend/node_modules
       volumes:
         - name: node
           emptyDir:
             medium: Memory
-            sizeLimit: 500Mi
+            sizeLimit: 100Mi
+        - name: node_modules
+          emptyDir:
+            medium: Memory
+            sizeLimit: 400Mi
 
 ---
 apiVersion: policy/v1
