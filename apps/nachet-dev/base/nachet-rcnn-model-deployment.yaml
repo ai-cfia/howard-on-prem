@@ -64,8 +64,8 @@ spec:
               cpu: "1"
               memory: "4Gi"
             limits:
-              cpu: "2"
-              memory: "6Gi"
+              cpu: "8"
+              memory: "16Gi"
           securityContext:
             runAsNonRoot: false
             runAsUser: 1000
