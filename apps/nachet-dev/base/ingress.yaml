@@ -40,3 +40,25 @@ spec:
                 name: nachet-frontend-svc
                 port:
                   number: 3000
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nachet-dev-azurite-ingress
+  namespace: nachet-dev
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.15
+    ingress.cilium.io/loadbalancer-mode: dedicated
+spec:
+  ingressClassName: cilium
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nachet-azurite-svc
+                port:
+                  number: 10000
