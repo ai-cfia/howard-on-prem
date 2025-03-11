@@ -13,6 +13,9 @@ resources:
   - ../../apps/ragflow/
   - ../../apps/webtop/
 
+  # Example of deployment, ingress, pvc's, etc...
+  # - ../../apps/examples/
+
   # Networking applications
   - ../../networking/cilium/
   - ../../networking/nginx/
@@ -21,7 +24,7 @@ resources:
   - ../argocd/
 
   # Security applications
-  - ../../security/cert-manager/
+  # - ../../security/cert-manager/
   - ../../security/eso/
   - ../../security/vault/
 
@@ -38,9 +41,6 @@ resources:
 
   # MLOps
   - ../../mlops/nvidia/
-
-  # Example of deployment, ingress, pvc's, etc...
-  # - ../../apps/examples/
 
 # This patch enforces a standardized sync policy for Argo CD applications:
 # - Enables automated sync with pruning (removes orphaned resources) and self-healing.
