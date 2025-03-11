@@ -38,10 +38,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: type
+                  - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - app-worker
+                      - ai-lab-2
       containers:
         - name: nachet-backend
           image: ghcr.io/ai-cfia/nachet-backend:152-Debug-Nachet-Datastore
