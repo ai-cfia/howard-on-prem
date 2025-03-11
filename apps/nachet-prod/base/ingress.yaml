@@ -4,7 +4,7 @@ metadata:
   name: nachet-prod-backend-ingress
   namespace: nachet-prod
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.38
+    lbipam.cilium.io/ips: 10.140.79.18
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
@@ -26,7 +26,7 @@ metadata:
   name: nachet-prod-frontend-ingress
   namespace: nachet-prod
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.39
+    lbipam.cilium.io/ips: 10.140.79.19
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
