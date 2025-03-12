@@ -1,140 +1,210 @@
-# Default values for gha-runner-scale-set-controller.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-labels: {}
+## githubConfigUrl is the GitHub url for where you want to configure runners
+## ex: https://github.com/myorg/myrepo or https://github.com/myorg
+githubConfigUrl: "https://github.com/ai-cfia"
 
-# leaderElection will be enabled when replicaCount>1,
-# So, only one replica will in charge of reconciliation at a given time
-# leaderElectionId will be set to {{ define gha-runner-scale-set-controller.fullname }}.
-replicaCount: 1
+## githubConfigSecret is the k8s secrets to use when auth with GitHub API.
+## You can choose to use GitHub App or a PAT token
+githubConfigSecret: controller-manager
+  ### GitHub Apps Configuration
+  ## NOTE: IDs MUST be strings, use quotes
+  # github_app_id: ""
+  # github_app_installation_id: ""
+  # github_app_private_key: |
 
-image:
-  repository: "ghcr.io/actions/gha-runner-scale-set-controller"
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  ### GitHub PAT Configuration
+  # github_token: ""
+## If you have a pre-define Kubernetes secret in the same namespace the gha-runner-scale-set is going to deploy,
+## you can also reference it via `githubConfigSecret: pre-defined-secret`.
+## You need to make sure your predefined secret has all the required secret data set properly.
+##   For a pre-defined secret using GitHub PAT, the secret needs to be created like this:
+##   > kubectl create secret generic pre-defined-secret --namespace=my_namespace --from-literal=github_token='ghp_your_pat'
+##   For a pre-defined secret using GitHub App, the secret needs to be created like this:
+##   > kubectl create secret generic pre-defined-secret --namespace=my_namespace --from-literal=github_app_id=123456 --from-literal=github_app_installation_id=654321 --from-literal=github_app_private_key='-----BEGIN CERTIFICATE-----*******'
+# githubConfigSecret: pre-defined-secret
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+## proxy can be used to define proxy settings that will be used by the
+## controller, the listener and the runner of this scale set.
+#
+# proxy:
+#   http:
+#     url: http://proxy.com:1234
+#     credentialSecretRef: proxy-auth # a secret with `username` and `password` keys
+#   https:
+#     url: http://proxy.com:1234
+#     credentialSecretRef: proxy-auth # a secret with `username` and `password` keys
+#   noProxy:
+#     - example.com
+#     - example.org
 
-env:
-## Define environment variables for the controller pod
-#  - name: "ENV_VAR_NAME_1"
-#    value: "ENV_VAR_VALUE_1"
-#  - name: "ENV_VAR_NAME_2"
-#    valueFrom:
-#      secretKeyRef:
-#        key: ENV_VAR_NAME_2
-#        name: secret-name
-#        optional: true
+## maxRunners is the max number of runners the autoscaling runner set will scale up to.
+maxRunners: 3
 
-serviceAccount:
-  # Specifies whether a service account should be created for running the controller pod
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  # You can not use the default service account for this.
-  name: ""
+## minRunners is the min number of idle runners. The target number of runners created will be
+## calculated as a sum of minRunners and the number of jobs assigned to the scale set.
+minRunners: 1
 
-podAnnotations: {}
+runnerGroup: "Default"
 
-podLabels: {}
+## name of the runner scale set to create.  Defaults to the helm release name
+# runnerScaleSetName: ""
 
-podSecurityContext: {}
-# fsGroup: 2000
-
-securityContext: {}
-# capabilities:
-#   drop:
-#   - ALL
-# readOnlyRootFilesystem: true
-# runAsNonRoot: true
-# runAsUser: 1000
-
-resources:
-## We usually recommend not to specify default resources and to leave this as a conscious
-## choice for the user. This also increases chances charts run on environments with little
-## resources, such as Minikube. If you do want to specify resources, uncomment the following
-## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  limits:
-    cpu: 100m
-    memory: 128Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: type
-              operator: In
-              values:
-                - app-worker
-
-topologySpreadConstraints: []
-
-# Mount volumes in the container.
-volumes: []
-volumeMounts: []
-
-# Leverage a PriorityClass to ensure your pods survive resource shortages
-# ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
-# PriorityClass: system-cluster-critical
-priorityClassName: ""
-
-## If `metrics:` object is not provided, or commented out, the following flags
-## will be applied the controller-manager and listener pods with empty values:
-## `--metrics-addr`, `--listener-metrics-addr`, `--listener-metrics-endpoint`.
-## This will disable metrics.
+## A self-signed CA certificate for communication with the GitHub server can be
+## provided using a config map key selector. If `runnerMountPath` is set, for
+## each runner pod ARC will:
+## - create a `github-server-tls-cert` volume containing the certificate
+##   specified in `certificateFrom`
+## - mount that volume on path `runnerMountPath`/{certificate name}
+## - set NODE_EXTRA_CA_CERTS environment variable to that same path
+## - set RUNNER_UPDATE_CA_CERTS environment variable to "1" (as of version
+##   2.303.0 this will instruct the runner to reload certificates on the host)
 ##
-## To enable metrics, uncomment the following lines.
-# metrics:
-#   controllerManagerAddr: ":8080"
-#   listenerAddr: ":8080"
-#   listenerEndpoint: "/metrics"
+## If any of the above had already been set by the user in the runner pod
+## template, ARC will observe those and not overwrite them.
+## Example configuration:
+#
+# githubServerTLS:
+#   certificateFrom:
+#     configMapKeyRef:
+#       name: config-map-name
+#       key: ca.crt
+#   runnerMountPath: /usr/local/share/ca-certificates/
 
-flags:
-  ## Log level can be set here with one of the following values: "debug", "info", "warn", "error".
-  ## Defaults to "debug".
-  logLevel: "debug"
-  ## Log format can be set with one of the following values: "text", "json"
-  ## Defaults to "text"
-  logFormat: "text"
+## Container mode is an object that provides out-of-box configuration
+## for dind and kubernetes mode. Template will be modified as documented under the
+## template object.
+##
+## If any customization is required for dind or kubernetes mode, containerMode should remain
+## empty, and configuration should be applied to the template.
+# containerMode:
+#   type: "dind"  ## type can be set to dind or kubernetes
+#   ## the following is required when containerMode.type=kubernetes
+#   kubernetesModeWorkVolumeClaim:
+#     accessModes: ["ReadWriteOnce"]
+#     # For local testing, use https://github.com/openebs/dynamic-localpv-provisioner/blob/develop/docs/quickstart.md to provide dynamic provision volume with storageClassName: openebs-hostpath
+#     storageClassName: "dynamic-blob-storage"
+#     resources:
+#       requests:
+#         storage: 1Gi
+#   kubernetesModeServiceAccount:
+#     annotations:
 
-  ## Restricts the controller to only watch resources in the desired namespace.
-  ## Defaults to watch all namespaces when unset.
-  # watchSingleNamespace: ""
+## listenerTemplate is the PodSpec for each listener Pod
+## For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
+# listenerTemplate:
+#   spec:
+#     containers:
+#     # Use this section to append additional configuration to the listener container.
+#     # If you change the name of the container, the configuration will not be applied to the listener,
+#     # and it will be treated as a side-car container.
+#     - name: listener
+#       securityContext:
+#         runAsUser: 1000
+#     # Use this section to add the configuration of a side-car container.
+#     # Comment it out or remove it if you don't need it.
+#     # Spec for this container will be applied as is without any modifications.
+#     - name: side-car
+#       image: example-sidecar
 
-  ## Defines how the controller should handle upgrades while having running jobs.
-  ##
-  ## The strategies available are:
-  ## - "immediate": (default) The controller will immediately apply the change causing the
-  ##   recreation of the listener and ephemeral runner set. This can lead to an
-  ##   overprovisioning of runners, if there are pending / running jobs. This should not
-  ##   be a problem at a small scale, but it could lead to a significant increase of
-  ##   resources if you have a lot of jobs running concurrently.
-  ##
-  ## - "eventual": The controller will remove the listener and ephemeral runner set
-  ##   immediately, but will not recreate them (to apply changes) until all
-  ##   pending / running jobs have completed.
-  ##   This can lead to a longer time to apply the change but it will ensure
-  ##   that you don't have any overprovisioning of runners.
-  updateStrategy: "immediate"
+## template is the PodSpec for each runner Pod
+## For reference: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
+template:
+  ## template.spec will be modified if you change the container mode
+  ## with containerMode.type=dind, we will populate the template.spec with following pod spec
+  ## template:
+  ##   spec:
+  ##     initContainers:
+  ##     - name: init-dind-externals
+  ##       image: ghcr.io/actions/actions-runner:latest
+  ##       command: ["cp", "-r", "-v", "/home/runner/externals/.", "/home/runner/tmpDir/"]
+  ##       volumeMounts:
+  ##         - name: dind-externals
+  ##           mountPath: /home/runner/tmpDir
+  ##     containers:
+  ##     - name: runner
+  ##       image: ghcr.io/actions/actions-runner:latest
+  ##       command: ["/home/runner/run.sh"]
+  ##       env:
+  ##         - name: DOCKER_HOST
+  ##           value: unix:///var/run/docker.sock
+  ##       volumeMounts:
+  ##         - name: work
+  ##           mountPath: /home/runner/_work
+  ##         - name: dind-sock
+  ##           mountPath: /var/run
+  ##     - name: dind
+  ##       image: docker:dind
+  ##       args:
+  ##         - dockerd
+  ##         - --host=unix:///var/run/docker.sock
+  ##         - --group=$(DOCKER_GROUP_GID)
+  ##       env:
+  ##         - name: DOCKER_GROUP_GID
+  ##           value: "123"
+  ##       securityContext:
+  ##         privileged: true
+  ##       volumeMounts:
+  ##         - name: work
+  ##           mountPath: /home/runner/_work
+  ##         - name: dind-sock
+  ##           mountPath: /var/run
+  ##         - name: dind-externals
+  ##           mountPath: /home/runner/externals
+  ##     volumes:
+  ##     - name: work
+  ##       emptyDir: {}
+  ##     - name: dind-sock
+  ##       emptyDir: {}
+  ##     - name: dind-externals
+  ##       emptyDir: {}
+  ######################################################################################################
+  ## with containerMode.type=kubernetes, we will populate the template.spec with following pod spec
+  ## template:
+  ##   spec:
+  ##     containers:
+  ##     - name: runner
+  ##       image: ghcr.io/actions/actions-runner:latest
+  ##       command: ["/home/runner/run.sh"]
+  ##       env:
+  ##         - name: ACTIONS_RUNNER_CONTAINER_HOOKS
+  ##           value: /home/runner/k8s/index.js
+  ##         - name: ACTIONS_RUNNER_POD_NAME
+  ##           valueFrom:
+  ##             fieldRef:
+  ##               fieldPath: metadata.name
+  ##         - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
+  ##           value: "true"
+  ##       volumeMounts:
+  ##         - name: work
+  ##           mountPath: /home/runner/_work
+  ##     volumes:
+  ##       - name: work
+  ##         ephemeral:
+  ##           volumeClaimTemplate:
+  ##             spec:
+  ##               accessModes: [ "ReadWriteOnce" ]
+  ##               storageClassName: "local-path"
+  ##               resources:
+  ##                 requests:
+  ##                   storage: 1Gi
+  spec:
+    containers:
+      - name: runner
+        image: ghcr.io/actions/actions-runner:latest
+        command: ["/home/runner/run.sh"]
+        resources:
+          requests:
+            cpu: "4"
+            memory: "16Gi"
+          limits:
+            cpu: "6"
+            memory: "24Gi"
 
-  ## Defines a list of prefixes that should not be propagated to internal resources.
-  ## This is useful when you have labels that are used for internal purposes and should not be propagated to internal resources.
-  ## See https://github.com/actions/actions-runner-controller/issues/3533 for more information.
-  ##
-  ## By default, all labels are propagated to internal resources
-  ## Labels that match prefix specified in the list are excluded from propagation.
-  # excludeLabelPropagationPrefixes:
-  #   - "argocd.argoproj.io/instance"
+## Optional controller service account that needs to have required Role and RoleBinding
+## to operate this gha-runner-scale-set installation.
+## The helm chart will try to find the controller deployment and its service account at installation time.
+## In case the helm chart can't find the right service account, you can explicitly pass in the following value
+## to help it finish RoleBinding with the right service account.
+## Note: if your controller is installed to only watch a single namespace, you have to pass these values explicitly.
+controllerServiceAccount:
+  namespace: on-prem-gh-runners
+  name: on-prem-gh-runners-gha-rs-controller
