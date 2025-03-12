@@ -17,13 +17,13 @@ spec:
         valueFiles:
           - $values/gitops/on-prem-gh-runners/helm/values.controller.yaml
       repoURL: ghcr.io/actions/actions-runner-controller-charts
-      targetRevision: 0.9.3
+      targetRevision: 0.10.1
     - chart: gha-runner-scale-set
       helm:
         valueFiles:
           - $values/gitops/on-prem-gh-runners/helm/values.scaleset.yaml
       repoURL: ghcr.io/actions/actions-runner-controller-charts
-      targetRevision: 0.9.3
+      targetRevision: 0.10.1
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
@@ -34,6 +34,5 @@ spec:
     automated:
       selfHeal: true
     syncOptions:
-      - ServerSideApply=true
       - CreateNamespace=true
       - Replace=true
