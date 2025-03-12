@@ -57,8 +57,8 @@ spec:
             httpGet:
               path: /
               port: 5001
-            initialDelaySeconds: 60
-            periodSeconds: 10
+            initialDelaySeconds: 120
+            periodSeconds: 120
           resources:
             requests:
               cpu: "1"

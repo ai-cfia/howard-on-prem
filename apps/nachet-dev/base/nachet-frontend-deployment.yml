@@ -58,7 +58,7 @@ spec:
               path: /
               port: 3000
             initialDelaySeconds: 60
-            periodSeconds: 10
+            periodSeconds: 60
           resources:
             requests:
               cpu: "250m"
