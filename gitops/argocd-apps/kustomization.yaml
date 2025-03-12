@@ -24,8 +24,7 @@ resources:
 
   # Gitops applications
   - ../argocd/
-  - ../on-prem-gh-runners-controller/
-  - ../on-prem-gh-runners-scaleset/
+  - ../on-prem-gh-runners/
 
   # Security applications
   # - ../../security/cert-manager/

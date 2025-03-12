@@ -207,4 +207,4 @@ template:
 ## Note: if your controller is installed to only watch a single namespace, you have to pass these values explicitly.
 controllerServiceAccount:
   namespace: on-prem-gh-runners
-  name: on-prem-gh-runners-controller-gha-rs-controller
+  name: on-prem-gh-runners-gha-rs-controller
