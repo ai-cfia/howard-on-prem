@@ -15,20 +15,20 @@ spec:
     - chart: gha-runner-scale-set-controller
       helm:
         valueFiles:
-          - $values/gitops/acia-cfia-gh-runner/helm/values.controller.yaml
+          - $values/gitops/acia-cfia-gh-runners/helm/values.controller.yaml
       repoURL: ghcr.io/actions/actions-runner-controller-charts
       targetRevision: 0.9.3
     - chart: gha-runner-scale-set
       helm:
         valueFiles:
-          - $values/gitops/acia-cfia-gh-runner/helm/values.scaleset.yaml
+          - $values/gitops/acia-cfia-gh-runners/helm/values.scaleset.yaml
       repoURL: ghcr.io/actions/actions-runner-controller-charts
       targetRevision: 0.9.3
     - repoURL: https://github.com/ai-cfia/howard.git
       targetRevision: HEAD
       ref: values
     - repoURL: https://github.com/ai-cfia/howard.git
-      path: gitops/acia-cfia-gh-runner/base
+      path: gitops/acia-cfia-gh-runners/base
       targetRevision: HEAD
   syncPolicy:
     automated:
