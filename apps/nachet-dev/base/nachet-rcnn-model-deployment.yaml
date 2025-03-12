@@ -61,11 +61,11 @@ spec:
             periodSeconds: 120
           resources:
             requests:
-              cpu: "1"
-              memory: "4Gi"
+              cpu: "4"
+              memory: "12Gi"
             limits:
               cpu: "8"
-              memory: "16Gi"
+              memory: "24Gi"
           securityContext:
             runAsNonRoot: false
             runAsUser: 1000
