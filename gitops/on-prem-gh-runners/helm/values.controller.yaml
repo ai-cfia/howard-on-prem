@@ -136,5 +136,5 @@ flags:
   ##
   ## By default, all labels are propagated to internal resources
   ## Labels that match prefix specified in the list are excluded from propagation.
-  # excludeLabelPropagationPrefixes:
-  #   - "argocd.argoproj.io/instance"
+  excludeLabelPropagationPrefixes:
+    - "argocd.argoproj.io/instance"
