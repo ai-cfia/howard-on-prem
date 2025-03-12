@@ -2,7 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ailab-internal-ingress
-  namespace:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.8
     ingress.cilium.io/loadbalancer-mode: dedicated
