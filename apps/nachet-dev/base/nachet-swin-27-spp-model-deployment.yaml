@@ -59,7 +59,7 @@ spec:
           #   periodSeconds: 10
           resources:
             requests:
-              cpu: "20"
+              cpu: "18"
               memory: "24Gi"
             limits:
               memory: "32Gi"
