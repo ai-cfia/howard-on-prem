@@ -62,10 +62,10 @@ spec:
           resources:
             requests:
               cpu: "1"
-              memory: "1Gi"
+              memory: "2Gi"
             limits:
               cpu: "2"
-              memory: "2Gi"
+              memory: "8Gi"
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false

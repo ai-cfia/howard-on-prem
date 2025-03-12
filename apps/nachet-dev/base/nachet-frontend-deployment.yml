@@ -41,7 +41,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ai-lab-2
+                      - ai-lab-3
       containers:
         - name: nachet-frontend
           image: ghcr.io/ai-cfia/nachet-frontend:203-update-nachet-frontend-deployment

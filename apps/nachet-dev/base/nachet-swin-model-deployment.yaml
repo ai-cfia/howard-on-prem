@@ -36,7 +36,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ai-lab-2
+                      - ai-lab-3
       containers:
         - name: nachet-swin-classifier
           image: ghcr.io/ai-cfia/nachet-backend:29-azureml-swin-classifier
@@ -61,11 +61,11 @@ spec:
             periodSeconds: 120
           resources:
             requests:
-              cpu: "1"
-              memory: "1Gi"
+              cpu: "8"
+              memory: "12Gi"
             limits:
-              cpu: "2"
-              memory: "2Gi"
+              cpu: "12"
+              memory: "16Gi"
           securityContext:
             runAsNonRoot: false
             runAsUser: 1000

@@ -59,10 +59,10 @@ spec:
           #   periodSeconds: 10
           resources:
             requests:
-              cpu: "8"
+              cpu: "16"
               memory: "24Gi"
             limits:
-              cpu: "16"
+              cpu: "20"
               memory: "32Gi"
           securityContext:
             runAsNonRoot: false
