@@ -24,7 +24,7 @@ resources:
 
   # Gitops applications
   - ../argocd/
-  - ../acia-cfia-gh-runners/
+  - ../on-prem-gh-runners/
 
   # Security applications
   # - ../../security/cert-manager/
