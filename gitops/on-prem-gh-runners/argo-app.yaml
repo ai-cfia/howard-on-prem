@@ -33,5 +33,5 @@ spec:
   syncPolicy:
     automated:
       selfHeal: true
-    # syncOptions:
-    #   - Replace=true
+    syncOptions:
+      - ServerSideApply=true
