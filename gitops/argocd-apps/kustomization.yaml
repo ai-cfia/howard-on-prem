@@ -10,7 +10,7 @@ resources:
   - ../../apps/louis/
   - ../../apps/nachet-dev/
   # - ../../apps/nachet-prod/
-  - ../../apps/ragflow/
+  # - ../../apps/ragflow/
   - ../../apps/webtop/
   - ../../apps/ailab-website/
   - ../../apps/librechat/
