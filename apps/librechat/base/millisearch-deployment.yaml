@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meilisearch
+spec:
+  selector:
+    matchLabels:
+      app: meilisearch
+  replicas: 1
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      labels:
+        app: meilisearch
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+        - name: chat-meilisearch
+          image: getmeili/meilisearch:v1.7.3
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: meilisearch-secrets
+          ports:
+            - containerPort: 7700
+          volumeMounts:
+            - name: storage
+              mountPath: /meili_data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: librechat-meilisearch-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: librechat-meilisearch-pvc
+spec:
+  storageClassName: ceph-hot-block
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "10Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: meilisearch
+spec:
+  clusterIP: None
+  selector:
+    app: meilisearch
+  ports:
+    - port: 7700
+      targetPort: 7700

@@ -10,8 +10,10 @@ resources:
   - ../../apps/louis/
   - ../../apps/nachet-dev/
   # - ../../apps/nachet-prod/
-  - ../../apps/ragflow/
+  # - ../../apps/ragflow/
   - ../../apps/webtop/
+  - ../../apps/ailab-website/
+  # - ../../apps/librechat/
 
   # Example of deployment, ingress, pvc's, etc...
   # - ../../apps/examples/
@@ -22,6 +24,7 @@ resources:
 
   # Gitops applications
   - ../argocd/
+  - ../acia-cfia-gh-runners/
 
   # Security applications
   # - ../../security/cert-manager/
