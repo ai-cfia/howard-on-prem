@@ -24,3 +24,4 @@ spec:
   syncPolicy:
     automated:
       selfHeal: true
+    
