@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: on-prem-gh-runners
+  name: on-prem-gh-runners-scaleset
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -12,24 +12,15 @@ spec:
     namespace: on-prem-gh-runners
     server: https://kubernetes.default.svc
   sources:
-    - chart: gha-runner-scale-set-controller
-      helm:
-        valueFiles:
-          - $values/gitops/on-prem-gh-runners/helm/values.controller.yaml
-      repoURL: ghcr.io/actions/actions-runner-controller-charts
-      targetRevision: 0.10.1
     - chart: gha-runner-scale-set
       helm:
         valueFiles:
-          - $values/gitops/on-prem-gh-runners/helm/values.scaleset.yaml
+          - $values/gitops/on-prem-gh-runners-scaleset/helm/values.yaml
       repoURL: ghcr.io/actions/actions-runner-controller-charts
       targetRevision: 0.10.1
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
-    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      path: gitops/on-prem-gh-runners/base
-      targetRevision: HEAD
   syncPolicy:
     automated:
       selfHeal: true
