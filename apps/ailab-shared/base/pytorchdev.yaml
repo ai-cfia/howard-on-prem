@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pytorchdev
+  namespace: ailab-shared
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: pytorchdev
+  template:
+    metadata:
+      labels:
+        app: pytorchdev
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - ai-lab-1
+      containers:
+        - name: pytorchdev
+          image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:20250120
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args: ["tail -f /dev/null"]
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+          # envFrom:
+          #   - secretRef:
+          #       name: ailab-shared-secrets
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: ailab-shared-volume
+              mountPath: /ailab
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: ailab-shared-volume
+          persistentVolumeClaim:
+            claimName: ailab-shared-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pytorchdev-svc
+spec:
+  clusterIP: None
+  selector:
+    app: pytorchdev
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http
