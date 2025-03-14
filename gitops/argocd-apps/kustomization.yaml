@@ -27,7 +27,7 @@ resources:
   - ../on-prem-gh-runners/
 
   # Security applications
-  # - ../../security/cert-manager/
+  - ../../security/cert-manager/
   - ../../security/eso/
   - ../../security/vault/
 

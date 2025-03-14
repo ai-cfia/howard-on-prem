@@ -5,10 +5,16 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.8
     ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: cilium
+  tls:
+    - hosts:
+        - ailab-on-prem.inspection.alpha.canada.ca
+      secretName: ailab-on-prem-tls
   rules:
-    - http:
+    - host: ailab-on-prem.inspection.alpha.canada.ca
+      http:
         paths:
           - path: /
             pathType: Prefix
