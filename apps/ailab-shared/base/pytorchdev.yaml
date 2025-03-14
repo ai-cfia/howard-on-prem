@@ -25,11 +25,14 @@ spec:
                     - ai-lab-1
       containers:
         - name: pytorchdev
-          image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:20250120
+          image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025031401
           imagePullPolicy: Always
-          command: ["/bin/sh", "-c"]
-          args: ["tail -f /dev/null"]
+          # command: ["/bin/sh", "-c"]
+          # args: ["tail -f /dev/null"]
           resources:
+            requests:
+              cpu: 16
+              memory: 64Gi
             limits:
               nvidia.com/gpu: 1
           # envFrom:
@@ -71,3 +74,17 @@ spec:
       port: 80
       targetPort: 80
       name: http
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jsantos-webtop-config-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  storageClassName: ceph-cold-filesystem
+  resources:
+    requests:
+      storage: 200Gi
