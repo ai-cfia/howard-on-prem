@@ -9,6 +9,7 @@ resources:
   - database/fertiscan-preview.yaml
   - database/nachet-dev.yaml
   - database/finesse.yaml
+  - database/finesse-internal.yaml
 
   - acia-cfia-prod-cluster/cluster.yaml
   - acia-cfia-prod-cluster/secrets.yaml
