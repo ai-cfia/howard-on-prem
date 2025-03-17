@@ -37,18 +37,15 @@ spec:
                       - ai-worker
       containers:
         - name: litellm
-          image: ghcr.io/berriai/litellm:main-latest
-          env:
-            - name: LITELLM_MASTER_KEY
-              value: "sk-1234567"
+          image: ghcr.io/berriai/litellm:main-v1.63.11-stable
+          envFrom:
+            - secretRef:
+                name: litellm-secrets
           ports:
             - containerPort: 4000
-          args:
-            - "--config"
-            - "/app/config.yaml"
           volumeMounts:
             - name: config-volume
-              mountPath: /app/config.yaml
+              mountPath: /app/proxy_server_config.yaml
               subPath: config.yaml
       volumes:
         - name: config-volume
