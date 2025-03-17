@@ -1,0 +1,24 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: velero
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    namespace: velero
+    server: https://kubernetes.default.svc
+  sources:
+    - chart: velero
+      helm:
+        valueFiles:
+          - $values/storage/velero/helm/values.yaml
+      repoURL: https://vmware-tanzu.github.io/helm-charts
+      targetRevision: 8.5.0
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      path: storage/minio/base
+      targetRevision: HEAD
