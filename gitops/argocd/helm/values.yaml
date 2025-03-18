@@ -76,7 +76,7 @@ configs:
         - openid
         - profile
         - email
-        - argocd-groups
+        - groups
 
     # Extension Configuration
     ## Ref: https://argo-cd.readthedocs.io/en/latest/developer-guide/extensions/proxy-extensions/
@@ -217,7 +217,7 @@ configs:
 
     # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
     # The scope value can be a string, or a list of strings.
-    scopes: "[argocd-groups]"
+    scopes: "[groups]"
 
     # -- Matcher function for Casbin, `glob` for glob matcher and `regex` for regex matcher.
     policy.matchMode: "glob"
