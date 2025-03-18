@@ -37,7 +37,7 @@ spec:
                       - app-worker
       containers:
         - name: litellm
-          image: ghcr.io/berriai/litellm-non_root:main-v1.63.11-stable.patch1
+          image: ghcr.io/berriai/litellm:main-v1.63.11-stable
           envFrom:
             - secretRef:
                 name: litellm-secrets
@@ -61,8 +61,6 @@ spec:
               mountPath: /.cache
             - name: npm-volume
               mountPath: /.npm
-            # - name: prisma-volume
-            #   mountPath: /usr/local/lib/python3.13/site-packages/prisma/schema.prisma
 
       volumes:
         - name: config-volume
@@ -76,10 +74,6 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 200Mi
-        - name: prisma-volume
-          emptyDir:
-            medium: Memory
-            sizeLimit: 100Mi
 
 ---
 apiVersion: v1
