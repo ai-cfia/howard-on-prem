@@ -61,8 +61,8 @@ spec:
               mountPath: /.cache
             - name: npm-volume
               mountPath: /.npm
-            - name: prisma-volume
-              mountPath: /usr/local/lib/python3.13/site-packages/prisma/schema.prisma
+            # - name: prisma-volume
+            #   mountPath: /usr/local/lib/python3.13/site-packages/prisma/schema.prisma
 
       volumes:
         - name: config-volume
