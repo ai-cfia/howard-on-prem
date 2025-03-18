@@ -12,3 +12,4 @@ resources:
   - openwebui/ingress.yaml
   - openwebui/pvcs.yaml
   - openwebui/secrets.yaml
+  - openwebui/configmap.yaml

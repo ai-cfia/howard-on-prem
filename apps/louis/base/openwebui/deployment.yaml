@@ -19,8 +19,12 @@ spec:
           ports:
             - containerPort: 8080
           envFrom:
+            - configMapRef:
+                name: openwebui-configenv
             - secretRef:
                 name: openwebui-secrets
+            - secretRef:
+                name: openwebui-connection-string
           tty: true
           volumeMounts:
             - name: webui-volume
