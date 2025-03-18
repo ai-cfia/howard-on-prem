@@ -31,6 +31,7 @@ resources:
   - ../../security/cert-manager/
   - ../../security/eso/
   - ../../security/vault/
+  - ../../security/keycloak/
 
   # Storage applications
   - ../../storage/rook-ceph/operator/
