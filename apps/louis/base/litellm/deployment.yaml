@@ -61,6 +61,8 @@ spec:
               mountPath: /.cache
             - name: npm-volume
               mountPath: /.npm
+            - name: prisma-volume
+              mountPath: /usr/local/lib/python3.13/site-packages/prisma
 
       volumes:
         - name: config-volume
@@ -74,6 +76,10 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 200Mi
+        - name: prisma-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 100Mi
 
 ---
 apiVersion: v1
