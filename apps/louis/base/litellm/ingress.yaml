@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: litellm-ingress
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.9
+    ingress.cilium.io/loadbalancer-mode: dedicated
+spec:
+  ingressClassName: cilium
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: litellm-service
+                port:
+                  number: 4000
