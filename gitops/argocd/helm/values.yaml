@@ -76,7 +76,7 @@ configs:
         - openid
         - profile
         - email
-        - groups
+        - argocd-groups
 
     # Extension Configuration
     ## Ref: https://argo-cd.readthedocs.io/en/latest/developer-guide/extensions/proxy-extensions/
