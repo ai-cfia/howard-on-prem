@@ -43,10 +43,6 @@ spec:
                 name: litellm-secrets
             - secretRef:
                 name: litellm-connection-string
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 3000
-            fsGroup: 2000
           resources:
             requests:
               cpu: 1000m
