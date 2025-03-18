@@ -133,7 +133,7 @@ ingress:
   ##   cert-manager.io/cluster-issuer: cluster-issuer-name
   ##
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.9
+    lbipam.cilium.io/ips: 10.140.79.10
     ingress.cilium.io/loadbalancer-mode: dedicated
 ## Keycloak admin ingress parameters
 ## ref: https://kubernetes.io/docs/user-guide/ingress/
@@ -170,7 +170,7 @@ adminIngress:
   servicePort: http
   annotations:
     annotations:
-    lbipam.cilium.io/ips: 10.140.79.10
+    lbipam.cilium.io/ips: 10.140.79.11
     ingress.cilium.io/loadbalancer-mode: dedicated
 ## Keycloak Pod Disruption Budget configuration
 ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
