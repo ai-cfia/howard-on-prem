@@ -34,7 +34,7 @@ spec:
                   - key: type
                     operator: In
                     values:
-                      - ai-worker
+                      - app-worker
       containers:
         - name: litellm
           image: ghcr.io/berriai/litellm:main-v1.63.11-stable

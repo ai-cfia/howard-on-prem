@@ -37,7 +37,7 @@ spec:
                   - key: type
                     operator: In
                     values:
-                      - ai-worker
+                      - app-worker
       volumes:
         - name: webui-volume
           persistentVolumeClaim:

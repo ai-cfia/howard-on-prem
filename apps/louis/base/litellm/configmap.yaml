@@ -30,3 +30,6 @@ data:
             model: azure/o3-mini
             api_base: os.environ/AZURE_OPENAI_O3_MINI_API_ENDPOINT
             api_key: os.environ/AZURE_OPENAI_O3_MINI_API_KEY
+  
+      litellm_settings:
+        cache: false
