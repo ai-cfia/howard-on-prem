@@ -73,9 +73,6 @@ data:
       termsOfService:
         externalUrl: 'https://librechat.ai/tos'
         openNewTab: true
-    registration:
-      allowedDomains:
-      - *
     endpoints:
       azureOpenAI:
         titleModel: "current_model"
