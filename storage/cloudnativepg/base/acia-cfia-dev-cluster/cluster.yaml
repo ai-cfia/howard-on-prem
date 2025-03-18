@@ -52,6 +52,19 @@ spec:
         connectionLimit: 10
         passwordSecret:
           name: nachet-dev-user-creds
+      
+      - name: bn_keycloak
+        ensure: present
+        comment: "Owner of keycloak database"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: bn-keycloak-dev-user-creds
 
   backup:
     barmanObjectStore:
