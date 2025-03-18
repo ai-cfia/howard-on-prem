@@ -66,36 +66,17 @@ configs:
     ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/status-badge/
     statusbadge.enabled: true
 
-    # Dex configuration
-    # dex.config: |
-    #   connectors:
-    #     # GitHub example
-    #     - type: github
-    #       id: github
-    #       name: GitHub
-    #       config:
-    #         clientID: aabbccddeeff00112233
-    #         clientSecret: $dex.github.clientSecret # Alternatively $<some_K8S_secret>:dex.github.clientSecret
-    #         orgs:
-    #         - name: your-github-org
-
     # OIDC configuration as an alternative to dex (optional).
-    # oidc.config: |
-    #   name: AzureAD
-    #   issuer: https://login.microsoftonline.com/TENANT_ID/v2.0
-    #   clientID: CLIENT_ID
-    #   clientSecret: $oidc.azuread.clientSecret
-    #   rootCA: |
-    #     -----BEGIN CERTIFICATE-----
-    #     ... encoded certificate data here ...
-    #     -----END CERTIFICATE-----
-    #   requestedIDTokenClaims:
-    #     groups:
-    #       essential: true
-    #   requestedScopes:
-    #     - openid
-    #     - profile
-    #     - email
+    oidc.config: |
+      name: Keycloak
+      issuer: http://10.140.79.10/realms/main
+      clientID: argocd
+      clientSecret: $argocd-config:oidc.keycloak.clientSecret
+      requestedScopes:
+        - openid
+        - profile
+        - email
+        - groups
 
     # Extension Configuration
     ## Ref: https://argo-cd.readthedocs.io/en/latest/developer-guide/extensions/proxy-extensions/
@@ -184,6 +165,62 @@ configs:
     ## If you encounter a "JQ patch execution timed out" error message due to a complex JQPathExpression
     ## that requires more time to evaluate, you can extend the timeout period.
     controller.ignore.normalizer.jq.timeout: "1s"
+
+  # Argo CD RBAC policy configuration
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
+  rbac:
+    # -- Create the argocd-rbac-cm configmap with ([Argo CD RBAC policy]) definitions.
+    # If false, it is expected the configmap will be created by something else.
+    # Argo CD will not work if there is no configmap created with the name above.
+    create: true
+
+    # -- Annotations to be added to argocd-rbac-cm configmap
+    annotations: {}
+
+    # -- The name of the default role which Argo CD will falls back to, when authorizing API requests (optional).
+    # If omitted or empty, users may be still be able to login, but will see no apps, projects, etc...
+    policy.default: role:readonly
+
+    # -- File containing user-defined policies and role definitions.
+    # @default -- `''` (See [values.yaml])
+    policy.csv: |
+      p, role:finesse, applications, create, default/finesse, allow
+      p, role:finesse, applications, update, default/finesse, allow
+      p, role:finesse, applications, delete, default/finesse, allow
+      p, role:finesse, applications, sync, default/finesse, allow
+      p, role:finesse, applications, override, default/finesse, allow
+
+      p, role:nachet, applications, create, default/nachet-dev, allow
+      p, role:nachet, applications, update, default/nachet-dev, allow
+      p, role:nachet, applications, delete, default/nachet-dev, allow
+      p, role:nachet, applications, sync, default/nachet-dev, allow
+      p, role:nachet, applications, override, default/nachet-dev, allow
+
+      p, role:fertiscan, applications, create, default/fertiscan, allow
+      p, role:fertiscan, applications, update, default/fertiscan, allow
+      p, role:fertiscan, applications, delete, default/fertiscan, allow
+      p, role:fertiscan, applications, sync, default/fertiscan, allow
+      p, role:fertiscan, applications, override, default/fertiscan, allow
+
+      p, role:fertiscan, applications, create, default/fertiscan-preview, allow
+      p, role:fertiscan, applications, update, default/fertiscan-preview, allow
+      p, role:fertiscan, applications, delete, default/fertiscan-preview, allow
+      p, role:fertiscan, applications, sync, default/fertiscan-preview, allow
+      p, role:fertiscan, applications, override, default/fertiscan-preview, allow
+
+      p, role:admin, exec, create, */*, allow
+      
+      g, devsecops, role:admin
+      g, finesse, role:finesse
+      g, nachet, role:nachet
+      g, fertiscan, role:fertiscan
+
+    # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
+    # The scope value can be a string, or a list of strings.
+    scopes: "[argocd-groups]"
+
+    # -- Matcher function for Casbin, `glob` for glob matcher and `regex` for regex matcher.
+    policy.matchMode: "glob"
 
 ## Dex
 dex:
