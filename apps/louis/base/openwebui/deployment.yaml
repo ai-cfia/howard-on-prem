@@ -19,6 +19,8 @@ spec:
           ports:
             - containerPort: 8080
           envFrom:
+            - configMapRef:
+                name: openwebui-configenv
             - secretRef:
                 name: openwebui-secrets
           tty: true

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openwebui-configenv
+data:
+  ENV: "dev"
+  WEBUI_NAME: "AI LAb"
+  ADMIN_EMAIL: "thomas.cardin@inspection.gc.ca"
+  DEFAULT_USER_ROLE: "user"
+  
