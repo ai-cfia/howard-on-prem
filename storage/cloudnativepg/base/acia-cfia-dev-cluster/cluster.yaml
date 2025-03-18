@@ -53,6 +53,19 @@ spec:
         passwordSecret:
           name: nachet-dev-user-creds
 
+      - name: finesse-internal
+        ensure: present
+        comment: "Owner of finesse-internal databases"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: finesse-internal-user-creds
+
   backup:
     barmanObjectStore:
       destinationPath: s3://acia-cfia-dev-cluster-backup/
