@@ -48,7 +48,7 @@ spec:
           resources:
             requests:
               cpu: 1000m
-              memory: 2G
+              memory: 8G
           ports:
             - containerPort: 4000
           volumeMounts:

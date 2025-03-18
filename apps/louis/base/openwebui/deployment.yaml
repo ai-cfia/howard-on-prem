@@ -19,7 +19,7 @@ spec:
           resources:
             requests:
               cpu: 2
-              memory: 4G
+              memory: 8G
           ports:
             - containerPort: 8080
           envFrom:
