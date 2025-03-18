@@ -14,7 +14,7 @@ resources:
   # - ../../apps/ragflow/
   - ../../apps/webtop/
   - ../../apps/ailab-website/
-  # - ../../apps/librechat/
+  - ../../apps/librechat/
 
   # Example of deployment, ingress, pvc's, etc...
   # - ../../apps/examples/

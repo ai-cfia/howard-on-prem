@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: librechat-internal-ingress
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.9
+    lbipam.cilium.io/ips: 10.140.79.13
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
