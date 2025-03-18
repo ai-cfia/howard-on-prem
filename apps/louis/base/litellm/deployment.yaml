@@ -38,15 +38,13 @@ spec:
       containers:
         - name: litellm
           image: ghcr.io/berriai/litellm-non_root:main-v1.63.11-stable.patch1
+          command: ["/usr/local/bin/python"]
+          args: ["/usr/local/bin/litellm", "--port", "4000", "--config", "/app/proxy_server_config.yaml"]
           envFrom:
             - secretRef:
                 name: litellm-secrets
             - secretRef:
                 name: litellm-connection-string
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 3000
-            fsGroup: 2000
           resources:
             requests:
               cpu: 1000m
@@ -61,8 +59,6 @@ spec:
               mountPath: /.cache
             - name: npm-volume
               mountPath: /.npm
-            # - name: prisma-volume
-            #   mountPath: /usr/local/lib/python3.13/site-packages/prisma/schema.prisma
 
       volumes:
         - name: config-volume
@@ -76,10 +72,6 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 200Mi
-        - name: prisma-volume
-          emptyDir:
-            medium: Memory
-            sizeLimit: 100Mi
 
 ---
 apiVersion: v1
