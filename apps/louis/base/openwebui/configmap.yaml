@@ -7,4 +7,6 @@ data:
   WEBUI_NAME: "AI LAb"
   ADMIN_EMAIL: "thomas.cardin@inspection.gc.ca"
   DEFAULT_USER_ROLE: "user"
+  ENABLE_SIGNUP: "true"
+  ENABLE_LOGIN_FORM: "true"
   
