@@ -43,16 +43,27 @@ spec:
                 name: litellm-secrets
             - secretRef:
                 name: litellm-connection-string
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 2G
           ports:
             - containerPort: 4000
           volumeMounts:
             - name: config-volume
               mountPath: /app/proxy_server_config.yaml
               subPath: config.yaml
+            - name: cache-volume
+              mountPath: /.cache
+
       volumes:
         - name: config-volume
           configMap:
             name: litellm-config-file
+        - name: cache-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1G
 
 ---
 apiVersion: v1
