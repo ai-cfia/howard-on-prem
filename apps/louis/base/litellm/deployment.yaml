@@ -37,7 +37,7 @@ spec:
                       - app-worker
       containers:
         - name: litellm
-          image: ghcr.io/berriai/litellm:main-v1.63.11-stable
+          image: ghcr.io/berriai/litellm-non_root:main-v1.63.11-stable.patch1
           envFrom:
             - secretRef:
                 name: litellm-secrets
