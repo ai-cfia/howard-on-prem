@@ -15,12 +15,12 @@ spec:
     spec:
       containers:
         - name: open-webui
-          image: ghcr.io/open-webui/open-webui:main
+          image: ghcr.io/open-webui/open-webui:git-7560754
           ports:
             - containerPort: 8080
-          env:
-            - name: OLLAMA_BASE_URL
-              value: "http://ollama-service.louis.svc.cluster.local:11434"
+          envFrom:
+            - secretRef:
+                name: openwebui-secrets
           tty: true
           volumeMounts:
             - name: webui-volume

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litellm-config-file
+data:
+  config.yaml: |
+      model_list:
+        - model_name: gpt-4
+          litellm_params:
+            model: openai/gpt-4
+            api_base: os.environ/OPENAI_GPT4_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT4_API_KEY
+        - model_name: gpt-4o
+          litellm_params:
+            model: azure/gpt-4o
+            api_base: os.environ/AZURE_OPENAI_GPT4O_API_ENDPOINT
+            api_key: os.environ/AZURE_OPENAI_GPT4O_API_KEY
+        - model_name: o1
+          litellm_params:
+            model: azure/o1
+            api_base: os.environ/AZURE_OPENAI_O1_API_ENDPOINT
+            api_key: os.environ/AZURE_OPENAI_O1_API_KEY
+        - model_name: o1-mini
+          litellm_params:
+            model: azure/o1-mini
+            api_base: os.environ/AZURE_OPENAI_O1_MINI_API_ENDPOINT
+            api_key: os.environ/AZURE_OPENAI_O1_MINI_API_KEY
+        - model_name: o3-mini
+          litellm_params:
+            model: azure/o3-mini
+            api_base: os.environ/AZURE_OPENAI_O3_MINI_API_ENDPOINT
+            api_key: os.environ/AZURE_OPENAI_O3_MINI_API_KEY
