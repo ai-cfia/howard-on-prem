@@ -234,5 +234,5 @@ externalDatabase:
   existingSecretPortKey: ""
   existingSecretUserKey: ""
   existingSecretDatabaseKey: ""
-  existingSecretPasswordKey: "pgsql-password"
+  existingSecretPasswordKey: "password"
   annotations: {}
