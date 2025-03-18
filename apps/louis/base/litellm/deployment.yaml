@@ -41,6 +41,8 @@ spec:
           envFrom:
             - secretRef:
                 name: litellm-secrets
+            - secretRef:
+                name: litellm-connection-string
           ports:
             - containerPort: 4000
           volumeMounts:

@@ -23,6 +23,8 @@ spec:
                 name: openwebui-configenv
             - secretRef:
                 name: openwebui-secrets
+            - secretRef:
+                name: openwebui-connection-string
           tty: true
           volumeMounts:
             - name: webui-volume
