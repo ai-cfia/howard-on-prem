@@ -13,7 +13,7 @@ crds:
 global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
-  domain:
+  domain: argocd.inspection.alpha.canada.ca
 
   # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
   revisionHistoryLimit: 3
@@ -66,7 +66,7 @@ configs:
     statusbadge.enabled: true
 
     # OIDC configuration as an alternative to dex (optional).
-    url: http://10.140.79.3
+    url: http://argocd.inspection.alpha.canada.ca
     oidc.config: |
       name: Keycloak
       issuer: http://10.140.79.10/realms/main

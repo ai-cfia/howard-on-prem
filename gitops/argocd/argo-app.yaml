@@ -24,3 +24,7 @@ spec:
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       path: gitops/argocd/base
       targetRevision: HEAD
+  syncPolicy:
+    automated:
+      selfHeal: true
+        
