@@ -27,7 +27,7 @@ spec:
                 name: openwebui-connection-string
           tty: true
           volumeMounts:
-            - name: webui-volume
+            - name: openwebui-volume
               mountPath: /app/backend/data
       affinity:
         nodeAffinity:
@@ -39,9 +39,9 @@ spec:
                     values:
                       - app-worker
       volumes:
-        - name: webui-volume
+        - name: openwebui-volume
           persistentVolumeClaim:
-            claimName: open-webui-pvc
+            claimName: openwebui-pvc
 
 ---
 apiVersion: v1
