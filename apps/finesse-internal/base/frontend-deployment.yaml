@@ -24,7 +24,7 @@ spec:
                       - app-worker
       containers:
         - name: finesse-internal-frontend
-          image: ghcr.io/ai-cfia/finesse-frontend:main
+          image: ghcr.io/ai-cfia/finesse-frontend:finesse-internal
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
