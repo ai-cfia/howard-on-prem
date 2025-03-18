@@ -14,7 +14,7 @@ global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
   # domain: argocd.onprem.inspection.alpha.canada.ca
-  domain: ""
+  domain: 10.140.79.3
 
   # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
   revisionHistoryLimit: 3
