@@ -24,7 +24,7 @@ spec:
                       - app-worker
       containers:
         - name: finesse-internal-backend
-          image: ghcr.io/ai-cfia/finesse-internal-backend:main
+          image: ghcr.io/ai-cfia/finesse-backend:main
           imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args:
