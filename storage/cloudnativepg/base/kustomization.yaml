@@ -10,6 +10,8 @@ resources:
   - database/nachet-dev.yaml
   - database/finesse.yaml
   - database/finesse-internal.yaml
+  - database/litellm.yaml
+  - database/openwebui.yaml
 
   - acia-cfia-prod-cluster/cluster.yaml
   - acia-cfia-prod-cluster/secrets.yaml
