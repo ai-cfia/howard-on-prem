@@ -45,7 +45,7 @@ data:
   ALLOW_REGISTRATION: "true"
   ALLOW_SOCIAL_LOGIN: "false"
   ALLOW_SOCIAL_REGISTRATION: "false"
-  # OLLAMA_BASE_URL: http://ollama-service.louis.svc.cluster.local:11434
+  OLLAMA_BASE_URL: http://ollama-service.louis.svc.cluster.local:11434
   SESSION_EXPIRY: "900000"  # 1000 * 60 * 15
   REFRESH_TOKEN_EXPIRY: "604800000"  # (1000 * 60 * 60 * 24) * 7
   APP_TITLE: "LibreChat"
