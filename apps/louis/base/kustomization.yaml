@@ -4,7 +4,11 @@ kind: Kustomization
 
 resources:
   - litellm/deployment.yaml
+  - litellm/configmap.yaml
+  - litellm/secrets.yaml
+  - litellm/ingress.yaml
   - ollama/deployment.yaml
   - openwebui/deployment.yaml
   - openwebui/ingress.yaml
   - openwebui/pvcs.yaml
+  - openwebui/secrets.yaml
