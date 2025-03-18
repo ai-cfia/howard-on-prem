@@ -59,6 +59,8 @@ spec:
               subPath: config.yaml
             - name: cache-volume
               mountPath: /.cache
+            - name: npm-volume
+              mountPath: /.npm
 
       volumes:
         - name: config-volume
@@ -68,6 +70,10 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 1G
+        - name: npm-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 200Mi
 
 ---
 apiVersion: v1
