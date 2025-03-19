@@ -120,7 +120,7 @@ hubble:
     # -- Whether to enable the Hubble UI.
     enabled: true
     ingress:
-      enabled: true
+      enabled: false
       annotations:
         lbipam.cilium.io/ips: 10.140.79.33
         ingress.cilium.io/loadbalancer-mode: dedicated
