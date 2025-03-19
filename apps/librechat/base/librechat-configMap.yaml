@@ -53,7 +53,7 @@ data:
   RAG_HOST: "rag-api.librechat.svc.cluster.local"
   RAG_API_URL: "http://rag-api.librechat.svc.cluster.local:8000"
   RAG_PORT: "8000"
-  ENDPOINTS: "azureOpenAI"
+  ENDPOINTS: "azureOpenAI,agents"
   # GOOGLE_MODELS: "gemini-1.0-pro,gemini-1.0-pro-001,gemini-1.0-pro-latest,gemini-1.0-pro-vision-latest,gemini-1.5-pro-latest,gemini-pro,gemini-pro-vision"
 ---
 apiVersion: v1
