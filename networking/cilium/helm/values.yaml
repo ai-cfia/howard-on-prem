@@ -127,7 +127,7 @@ hubble:
         ingress.cilium.io/loadbalancer-mode: dedicated
       className: "cilium"
       hosts:
-        - ""
+        - hubble.inspection.alpha.canada.ca
       labels: {}
       tls: []
 
