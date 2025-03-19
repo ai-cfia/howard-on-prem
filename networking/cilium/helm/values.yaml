@@ -126,7 +126,7 @@ hubble:
           ingress.cilium.io/loadbalancer-mode: dedicated
         className: "cilium"
         hosts:
-          - *
+          - ""
         labels: {}
         tls: []
 
