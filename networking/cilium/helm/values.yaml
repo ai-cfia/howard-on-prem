@@ -121,7 +121,7 @@ hubble:
     enabled: true
     baseUrl: ""
     ingress:
-      enabled: false
+      enabled: true
       annotations:
         lbipam.cilium.io/ips: 10.140.79.36
         ingress.cilium.io/loadbalancer-mode: dedicated
