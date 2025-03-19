@@ -119,7 +119,7 @@ hubble:
   ui:
     # -- Whether to enable the Hubble UI.
     enabled: true
-    baseUrl: ""
+    baseUrl: "/"
     ingress:
       enabled: true
       annotations:
