@@ -119,6 +119,16 @@ hubble:
   ui:
     # -- Whether to enable the Hubble UI.
     enabled: true
+    ingress:
+        enabled: true
+        annotations:
+          lbipam.cilium.io/ips: 10.140.79.36
+          ingress.cilium.io/loadbalancer-mode: dedicated
+        className: "cilium"
+        hosts:
+          - *
+        labels: {}
+        tls: []
 
 ipv4:
   # -- Enable IPv4 support.
