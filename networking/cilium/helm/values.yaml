@@ -122,7 +122,7 @@ hubble:
     ingress:
       enabled: true
       annotations:
-        lbipam.cilium.io/ips: 10.140.79.32
+        lbipam.cilium.io/ips: 10.140.79.33
         ingress.cilium.io/loadbalancer-mode: dedicated
       className: "cilium"
       hosts:
