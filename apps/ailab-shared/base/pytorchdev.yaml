@@ -39,7 +39,7 @@ spec:
           #   - secretRef:
           #       name: ailab-shared-secrets
           ports:
-            - containerPort: 80
+            - containerPort: 22
           volumeMounts:
             - name: tmp
               mountPath: /tmp
@@ -72,7 +72,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 22
       name: http
 
 ---
