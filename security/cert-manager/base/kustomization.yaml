@@ -5,4 +5,3 @@ resources:
   - cluster-issuer.yaml
   - self-signed-issuer.yaml
   - internal-ca-certificate.yaml
-  - example-certificate.yaml
