@@ -44,20 +44,20 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: nachet-azurite-tls
+  name: nachet-blob-tls
   namespace: nachet-dev
 spec:
-  secretName: nachet-azurite-tls
+  secretName: nachet-blob-tls
   duration: 2160h  # 90 days
   renewBefore: 360h  # 15 days
   subject:
     organizations:
       - ACIA CFIA AI Lab
-  commonName: nachet-azurite.inspection.alpha.canada.ca
+  commonName: nachet-blob.inspection.alpha.canada.ca
   dnsNames:
-    - nachet-azurite.inspection.alpha.canada.ca
-    - nachet-azurite
-    - nachet-azurite.nachet-dev.svc.cluster.local
+    - nachet-blob.inspection.alpha.canada.ca
+    - nachet-blob
+    - nachet-blob.nachet-dev.svc.cluster.local
   issuerRef:
     name: internal-ca-issuer
     kind: ClusterIssuer
