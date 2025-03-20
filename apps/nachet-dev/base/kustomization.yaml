@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nachet-dev
+
+resources:
+  - nachet-backend-deployment.yml
+  - nachet-swin-27-spp-model-deployment.yaml
+  - nachet-rcnn-model-deployment.yaml
+  - nachet-blob-storage-mock.yml
+  - nachet-frontend-deployment.yml
+  - nachet-swin-22-spp-model-deployment.yaml
+  - nachet-swin-model-deployment.yaml
+  - ingress.yaml
+  - secrets.yaml
+  - landing-403-nachet.yaml
+  - certificates.yaml 
