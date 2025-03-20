@@ -3,3 +3,4 @@ kind: Kustomization
 
 resources:
  - argo-app.yaml
+ - base
