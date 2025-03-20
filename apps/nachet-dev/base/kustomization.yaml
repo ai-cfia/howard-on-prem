@@ -14,4 +14,4 @@ resources:
   - ingress.yaml
   - secrets.yaml
   - landing-403-nachet.yaml
-  - certificates.yaml 
+  - certificates.yaml

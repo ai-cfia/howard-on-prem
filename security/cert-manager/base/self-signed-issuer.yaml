@@ -12,4 +12,4 @@ metadata:
   name: internal-ca-issuer
 spec:
   ca:
-    secretName: internal-ca-tls 
+    secretName: internal-ca-tls
