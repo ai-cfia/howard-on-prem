@@ -6,16 +6,10 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.16
     ingress.cilium.io/loadbalancer-mode: dedicated
-    cert-manager.io/cluster-issuer: "internal-ca-issuer"
 spec:
   ingressClassName: cilium
-  tls:
-  - hosts:
-    - nachet-backend.inspection.alpha.canada.ca
-    secretName: nachet-backend-tls
   rules:
-    - host: nachet-backend.inspection.alpha.canada.ca
-      http:
+     - http:
         paths:
           - path: /
             pathType: Prefix
@@ -62,16 +56,10 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.15
     ingress.cilium.io/loadbalancer-mode: dedicated
-    cert-manager.io/cluster-issuer: "internal-ca-issuer"
 spec:
   ingressClassName: cilium
-  tls:
-  - hosts:
-    - nachet-azurite.inspection.alpha.canada.ca
-    secretName: nachet-azurite-tls
   rules:
-    - host: nachet-azurite.inspection.alpha.canada.ca
-      http:
+     - http:
         paths:
           - path: /
             pathType: Prefix
