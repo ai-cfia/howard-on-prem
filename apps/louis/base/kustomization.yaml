@@ -8,6 +8,7 @@ resources:
   - litellm/secrets.yaml
   - litellm/ingress.yaml
   - ollama/deployment.yaml
+  - ollama/ingress.yaml
   - openwebui/deployment.yaml
   - openwebui/ingress.yaml
   - openwebui/pvcs.yaml
