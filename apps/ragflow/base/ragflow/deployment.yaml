@@ -25,7 +25,7 @@ spec:
                       - app-worker
       containers:
       - name: ragflow
-        image: infiniflow/ragflow:v0.17.0-slim
+        image: infiniflow/ragflow:v0.17.0
         ports:
           - containerPort: 80
             name: http
