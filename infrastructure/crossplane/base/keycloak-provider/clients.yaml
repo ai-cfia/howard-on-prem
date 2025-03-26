@@ -1,0 +1,23 @@
+apiVersion: openidclient.keycloak.crossplane.io/v1alpha1
+kind: Client
+metadata:
+  name: vault-oidc-client
+spec:
+  providerConfigRef:
+    name: keycloak-provider
+  forProvider:
+    realm: "vault"
+    clientId: "vault-oidc"
+    name: "vault-oidc"
+    realmIdRef:
+      name: vault
+    secret: "generated-by-keycloak"
+    # Définir si c’est un client "public" ou "confidential"
+    publicClient: false
+    # Activer l’authentification standard OIDC
+    directAccessGrantsEnabled: true
+    serviceAccountsEnabled: true
+    standardFlowEnabled: true
+    redirectUris:
+      - "http://10.140.79.12/ui/vault/auth/oidc/oidc/callback"
+      - "http://10.140.79.12/oidc/oidc/callback"

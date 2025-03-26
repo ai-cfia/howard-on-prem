@@ -1,0 +1,11 @@
+apiVersion: realm.keycloak.crossplane.io/v1alpha1
+kind: Realm
+metadata:
+  name: vault
+spec:
+  forProvider:
+    realm: "vault"
+    enabled: true
+    displayName: "Vault Realm via Crossplane"
+  providerConfigRef:
+    name: keycloak-provider
