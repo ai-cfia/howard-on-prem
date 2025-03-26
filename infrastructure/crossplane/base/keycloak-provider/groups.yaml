@@ -1,0 +1,11 @@
+apiVersion: group.keycloak.crossplane.io/v1alpha1
+kind: Group
+metadata:
+  name: devsecops-group
+spec:
+  providerConfigRef:
+    name: keycloak-provider
+  forProvider:
+    realmIdRef:
+      name: infra-realm
+    name: devsecops
