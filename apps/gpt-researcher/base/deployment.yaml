@@ -31,6 +31,25 @@ spec:
                 name: gpt-researcher-secrets
           ports:
             - containerPort: 8000
+          volumeMounts:
+            - name: docs-pvc
+              mountPath: /usr/src/app/my-docs
+      volumes:
+        - name: docs-pvc
+          persistentVolumeClaim:
+            claimName: gptresearcher-my-docs-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gptresearcher-my-docs-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ceph-hot-block
+  resources:
+    requests:
+      storage: 50Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
