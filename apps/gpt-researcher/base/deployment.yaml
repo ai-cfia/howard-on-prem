@@ -98,7 +98,7 @@ kind: Ingress
 metadata:
   name: gpt-researcher-ingress
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.39
+    lbipam.cilium.io/ips: 10.140.79.11
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
