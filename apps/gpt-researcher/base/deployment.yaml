@@ -22,6 +22,10 @@ spec:
                     operator: In
                     values:
                       - app-worker
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
         - name: gpt-researcher-backend
           image: ghcr.io/ai-cfia/gpt-researcher:v3.2.5
