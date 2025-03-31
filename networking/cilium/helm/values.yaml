@@ -106,6 +106,50 @@ ingressController:
       #   kubernetes.io/hostname: kind-worker
       matchLabels: {}
 
+gatewayAPI:
+  # -- Enable support for Gateway API in cilium
+  # This will automatically set enable-envoy-config as well.
+  enabled: true
+  # -- Enable proxy protocol for all GatewayAPI listeners. Note that _only_ Proxy protocol traffic will be accepted once this is enabled.
+  enableProxyProtocol: false
+  # -- Enable Backend Protocol selection support (GEP-1911) for Gateway API via appProtocol.
+  enableAppProtocol: false
+  # -- Enable ALPN for all listeners configured with Gateway API. ALPN will attempt HTTP/2, then HTTP 1.1.
+  # Note that this will also enable `appProtocol` support, and services that wish to use HTTP/2 will need to indicate that via their `appProtocol`.
+  enableAlpn: false
+  # -- The number of additional GatewayAPI proxy hops from the right side of the HTTP header to trust when determining the origin client's IP address.
+  xffNumTrustedHops: 0
+  # -- Control how traffic from external sources is routed to the LoadBalancer Kubernetes Service for all Cilium GatewayAPI Gateway instances. Valid values are "Cluster" and "Local".
+  # Note that this value will be ignored when `hostNetwork.enabled == true`.
+  # ref: https://kubernetes.io/docs/reference/networking/virtual-ips/#external-traffic-policy
+  externalTrafficPolicy: Cluster
+  gatewayClass:
+    # -- Enable creation of GatewayClass resource
+    # The default value is 'auto' which decides according to presence of gateway.networking.k8s.io/v1/GatewayClass in the cluster.
+    # Other possible values are 'true' and 'false', which will either always or never create the GatewayClass, respectively.
+    create: auto
+  # -- SecretsNamespace is the namespace in which envoy SDS will retrieve TLS secrets from.
+  secretsNamespace:
+    # -- Create secrets namespace for Gateway API.
+    create: true
+    # -- Name of Gateway API secret namespace.
+    name: cilium-secrets
+    # -- Enable secret sync, which will make sure all TLS secrets used by Ingress are synced to secretsNamespace.name.
+    # If disabled, TLS secrets must be maintained externally.
+    sync: true
+  # Host Network related configuration
+  hostNetwork:
+    # -- Configure whether the Envoy listeners should be exposed on the host network.
+    enabled: false
+    # Specify the nodes where the Ingress listeners should be exposed
+    nodes:
+      # -- Specify the labels of the nodes where the Ingress listeners should be exposed
+      #
+      # matchLabels:
+      #   kubernetes.io/os: linux
+      #   kubernetes.io/hostname: kind-worker
+      matchLabels: {}
+
 externalIPs:
   # -- Enable ExternalIPs service support.
   enabled: true
@@ -125,11 +169,15 @@ hubble:
       annotations:
         lbipam.cilium.io/ips: 10.140.79.36
         ingress.cilium.io/loadbalancer-mode: dedicated
+        cert-manager.io/cluster-issuer: "internal-ca-issuer"
       className: "cilium"
       hosts:
         - hubble.inspection.alpha.canada.ca
       labels: {}
-      tls: []
+      tls:
+        - hosts:
+            - hubble.inspection.alpha.canada.ca
+          secretName: hubble-tls
 
 ipv4:
   # -- Enable IPv4 support.
