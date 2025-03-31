@@ -2,7 +2,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: nachet-backend-tls
-  namespace: nachet-dev
 spec:
   secretName: nachet-backend-tls
   duration: 2160h  # 90 days
@@ -24,7 +23,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: nachet-frontend-tls
-  namespace: nachet-dev
 spec:
   secretName: nachet-frontend-tls
   duration: 2160h  # 90 days
@@ -46,7 +44,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: nachet-blob-tls
-  namespace: nachet-dev
 spec:
   secretName: nachet-blob-tls
   duration: 2160h  # 90 days

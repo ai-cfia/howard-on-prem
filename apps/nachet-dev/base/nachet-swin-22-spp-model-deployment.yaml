@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nachet-swin-classifier-22-spp
-  namespace: nachet-dev
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -89,7 +88,6 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: nachet-swin-classifier-22-spp-pdb
-  namespace: nachet-dev
 spec:
   minAvailable: 1
   selector:
@@ -100,7 +98,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nachet-swin-classifier-22-spp-svc
-  namespace: nachet-dev
 spec:
   clusterIP: None
   selector:
