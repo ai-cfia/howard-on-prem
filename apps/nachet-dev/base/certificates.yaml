@@ -32,10 +32,11 @@ spec:
   subject:
     organizations:
       - ACIA CFIA AI Lab
-  commonName: nachet-on-prem.inspection.alpha.canada.ca
+  commonName: nachet.inspection.alpha.canada.ca
   dnsNames:
-    - nachet-on-prem.inspection.alpha.canada.ca
-    - nachet-on-prem
+    - nachet.inspection.alpha.canada.ca
+    - nachet
+    - nachet.nachet-dev.svc.cluster.local
   issuerRef:
     name: internal-ca-issuer
     kind: ClusterIssuer
