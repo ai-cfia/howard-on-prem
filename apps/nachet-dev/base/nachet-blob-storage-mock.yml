@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nachet-azurite
+  namespace: nachet-dev
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -81,6 +82,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: nachet-azurite-pdb
+  namespace: nachet-dev
 spec:
   minAvailable: 1
   selector:
@@ -92,6 +94,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nachet-azurite-svc
+  namespace: nachet-dev
 spec:
   clusterIP: None
   selector:
