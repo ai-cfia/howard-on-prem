@@ -39,10 +39,10 @@ spec:
   ingressClassName: cilium
   tls:
   - hosts:
-    - nachet-on-prem.inspection.alpha.canada.ca
+    - nachet.inspection.alpha.canada.ca
     secretName: nachet-frontend-tls
   rules:
-    - host: nachet-on-prem.inspection.alpha.canada.ca
+    - host: nachet.inspection.alpha.canada.ca
       http:
         paths:
           - path: /
