@@ -152,6 +152,27 @@ consoleIngress:
   hosts:
     - ""
 
+
+## OpenID Identity Management
+## The following section documents environment variables for enabling external identity management using an OpenID Connect (OIDC)-compatible provider.
+## See https://min.io/docs/minio/linux/operations/external-iam/configure-openid-external-identity-management.html for a tutorial on using these variables.
+oidc:
+  enabled: true
+  configUrl: "http://10.140.79.10/realms/infra"
+  clientId: "minio"
+  clientSecret: ""
+  # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientId` and/or `clientSecret``
+  existingClientSecretName: "minio-secret"
+  existingClientIdKey: ""
+  existingClientSecretKey: "keycloak-secret"
+  claimName: "policy"
+  scopes: "openid,profile,email"
+  redirectUri: "http://10.140.79.26/oauth_callback"
+  # Can leave empty
+  claimPrefix: ""
+  comment: ""
+  displayName: ""
+
 ## Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
 ##

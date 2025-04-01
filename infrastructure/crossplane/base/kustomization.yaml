@@ -4,6 +4,6 @@ kind: Kustomization
 resources:
 # Keycloak configuration
  - keycloak-provider/secret.yaml
-
-# Vault configuration
- - vault-provider/secret.yaml
+ - keycloak-provider/client.yaml
+ - keycloak-provider/realms.yaml
+ - keycloak-provider/providerconfig.yaml

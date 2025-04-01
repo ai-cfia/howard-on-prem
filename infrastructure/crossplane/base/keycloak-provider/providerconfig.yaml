@@ -7,3 +7,5 @@ spec:
     source: Secret
     secretRef:
       name: keycloak-crossplane-credentials
+      key: credentials
+      namespace: crossplane
