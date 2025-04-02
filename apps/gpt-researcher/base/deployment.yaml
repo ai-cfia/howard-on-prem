@@ -150,10 +150,16 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.18
     ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: "internal-ca-issuer"
 spec:
   ingressClassName: cilium
+  tls:
+  - hosts:
+      - gptr-b.inspection.alpha.canada.ca
+    secretName: gptr-tls
   rules:
-    - http:
+    - host: gptr-b.inspection.alpha.canada.ca
+      http:
         paths:
           - path: /
             pathType: Prefix
