@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gpt-researcher-tls
+  namespace: louis
+spec:
+  secretName: gpt-researcher-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: gptr-mcp.inspection.alpha.canada.ca
+  dnsNames:
+    - gptr-mcp.inspection.alpha.canada.ca
+  issuerRef:
+    name: internal-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
