@@ -91,7 +91,7 @@ kind: Service
 metadata:
   name: gpt-researcher-frontend-svc
 spec:
-  clusterIP: None
+  clusterIP: ClusterIP
   selector:
     app: gpt-researcher-frontend
   ports:
@@ -104,7 +104,7 @@ kind: Service
 metadata:
   name: gpt-researcher-backend-svc
 spec:
-  clusterIP: None
+  clusterIP: ClusterIP
   selector:
     app: gpt-researcher-backend
   ports:
@@ -120,6 +120,8 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.11
     ingress.cilium.io/loadbalancer-mode: dedicated
+    ingress.cilium.io/service-type: LoadBalancer
+    ingress.cilium.io/service-external-traffic-policy: Cluster
 spec:
   ingressClassName: cilium
   tls:
@@ -146,6 +148,8 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.18
     ingress.cilium.io/loadbalancer-mode: dedicated
+    ingress.cilium.io/service-type: LoadBalancer
+    ingress.cilium.io/service-external-traffic-policy: Cluster
 spec:
   ingressClassName: cilium
   tls:
