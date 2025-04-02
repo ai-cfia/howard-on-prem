@@ -41,5 +41,9 @@ data:
             api_base: os.environ/OPENAI_O3_MINI_API_ENDPOINT
             api_key: os.environ/OPENAI_O3_MINI_API_KEY
             api_version: os.environ/OPENAI_O3_MINI_API_VERSION
+      mcp_servers:
+        {
+          "gpt-researcher-mcp": "http://gpt-researcher-service.louis.svc.cluster.local:4000"
+        }
       litellm_settings:
         cache: false
