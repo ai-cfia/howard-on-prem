@@ -81,7 +81,7 @@ spec:
                       - app-worker
       containers:
         - name: gpt-researcher-frontend
-          image: ghcr.io/ai-cfia/gpt-researcher-ui-prod@sha256:f6de93f17a4e22cec33fa7107c0bf830ea1f29396a45fd1b8eb289f0f265e378
+          image: ghcr.io/ai-cfia/gpt-researcher-frontend-prod@sha256:f6de93f17a4e22cec33fa7107c0bf830ea1f29396a45fd1b8eb289f0f265e378
           imagePullPolicy: Always
           env:
             - name: NEXT_PUBLIC_GPTR_API_URL
