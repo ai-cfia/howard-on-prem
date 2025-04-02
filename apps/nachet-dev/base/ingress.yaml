@@ -12,8 +12,7 @@ spec:
   - hosts:
     secretName: nachet-backend-tls
   rules:
-    - host: nachet-backend.inspection.alpha.canada.ca
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
@@ -38,8 +37,7 @@ spec:
   - hosts:
     secretName: nachet-frontend-tls
   rules:
-    - host: nachet.inspection.alpha.canada.ca
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
