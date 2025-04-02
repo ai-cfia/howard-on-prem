@@ -81,11 +81,8 @@ spec:
                       - app-worker
       containers:
         - name: gpt-researcher-frontend
-          image: ghcr.io/ai-cfia/gpt-researcher-frontend-prod@sha256:4909feb748d432b61911e5f64173278a7be5d78c63c9a0d830380fbf3e0bfef7
+          image: ghcr.io/ai-cfia/gpt-researcher-frontend-prod@sha256:bb5b54505fc7111a3b5d9d3886a0e343c435cf4b633fef3e36e323daacaa2a93
           imagePullPolicy: Always
-          env:
-            - name: NEXT_PUBLIC_GPTR_API_URL
-              value: https://gptr-b.inspection.alpha.canada.ca
           ports:
             - containerPort: 3000
 ---
@@ -123,13 +120,10 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.11
     ingress.cilium.io/loadbalancer-mode: dedicated
-    cert-manager.io/cluster-issuer: "internal-ca-issuer"
 spec:
   ingressClassName: cilium
   tls:
-  - hosts:
-      - gptr.inspection.alpha.canada.ca
-    secretName: gptr-tls
+    secretName: gpt-researcher-tls
   rules:
     - host: gptr.inspection.alpha.canada.ca
       http:
@@ -150,13 +144,10 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.18
     ingress.cilium.io/loadbalancer-mode: dedicated
-    cert-manager.io/cluster-issuer: "internal-ca-issuer"
 spec:
   ingressClassName: cilium
   tls:
-  - hosts:
-      - gptr-b.inspection.alpha.canada.ca
-    secretName: gptr-tls
+    secretName: gpt-researcher-tls
   rules:
     - host: gptr-b.inspection.alpha.canada.ca
       http:
