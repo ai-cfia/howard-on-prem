@@ -81,11 +81,11 @@ spec:
                       - app-worker
       containers:
         - name: gpt-researcher-frontend
-          image: ghcr.io/ai-cfia/gpt-researcher-frontend-prod@sha256:5fea230c75ddf98bffced6946022a889d07b720ddcb5e595df4c4e015505dc98
+          image: ghcr.io/ai-cfia/gpt-researcher-frontend-prod@sha256:4909feb748d432b61911e5f64173278a7be5d78c63c9a0d830380fbf3e0bfef7
           imagePullPolicy: Always
           env:
             - name: NEXT_PUBLIC_GPTR_API_URL
-              value: http://gpt-researcher-backend-svc.gpt-researcher:8000
+              value: https://gptr-b.inspection.alpha.canada.ca
           ports:
             - containerPort: 3000
 ---
