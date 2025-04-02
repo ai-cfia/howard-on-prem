@@ -10,9 +10,11 @@ spec:
   ingressClassName: cilium
   tls:
   - hosts:
+    - nachet-backend.inspection.alpha.canada.ca
     secretName: nachet-backend-tls
   rules:
-    - http:
+    - host: nachet-backend.inspection.alpha.canada.ca
+      http:
         paths:
           - path: /
             pathType: Prefix
@@ -35,9 +37,11 @@ spec:
   ingressClassName: cilium
   tls:
   - hosts:
+    - nachet.inspection.alpha.canada.ca
     secretName: nachet-frontend-tls
   rules:
-    - http:
+    - host: nachet.inspection.alpha.canada.ca
+      http:
         paths:
           - path: /
             pathType: Prefix
