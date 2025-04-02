@@ -91,7 +91,7 @@ kind: Service
 metadata:
   name: gpt-researcher-frontend-svc
 spec:
-  clusterIP: ClusterIP
+  type: ClusterIP
   selector:
     app: gpt-researcher-frontend
   ports:
@@ -104,7 +104,7 @@ kind: Service
 metadata:
   name: gpt-researcher-backend-svc
 spec:
-  clusterIP: ClusterIP
+  type: ClusterIP
   selector:
     app: gpt-researcher-backend
   ports:
