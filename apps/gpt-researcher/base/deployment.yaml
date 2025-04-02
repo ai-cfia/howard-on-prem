@@ -123,6 +123,8 @@ metadata:
 spec:
   ingressClassName: cilium
   tls:
+  - hosts:
+    - gptr.inspection.alpha.canada.ca
     secretName: gpt-researcher-tls
   rules:
     - host: gptr.inspection.alpha.canada.ca
@@ -147,6 +149,8 @@ metadata:
 spec:
   ingressClassName: cilium
   tls:
+  - hosts:
+    - gptr-b.inspection.alpha.canada.ca
     secretName: gpt-researcher-tls
   rules:
     - host: gptr-b.inspection.alpha.canada.ca
