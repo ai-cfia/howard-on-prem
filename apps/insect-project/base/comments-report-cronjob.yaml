@@ -37,13 +37,20 @@ spec:
                   memory: "1Gi"
                 limits:
                   memory: "2Gi"
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
               securityContext:
-                runAsNonRoot: true
+                runAsNonRoot: false
                 runAsUser: 1000
                 runAsGroup: 1000
-                readOnlyRootFilesystem: true
+                readOnlyRootFilesystem: false
                 allowPrivilegeEscalation: false
                 capabilities:
                   drop:
                     - ALL
+          volumes:
+            - name: tmp
+              emptyDir: {}
+
           restartPolicy: Never
