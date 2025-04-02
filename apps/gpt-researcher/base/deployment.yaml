@@ -125,9 +125,12 @@ metadata:
 spec:
   ingressClassName: cilium
   tls:
-  - hosts:
-    - gptr.inspection.alpha.canada.ca
-    secretName: gpt-researcher-tls
+    - hosts:
+        - gptr.inspection.alpha.canada.ca
+      secretName: gpt-researcher-tls
+    - hosts:
+        - gptr-b.inspection.alpha.canada.ca
+      secretName: gpt-researcher-tls
   rules:
     - host: gptr.inspection.alpha.canada.ca
       http:
@@ -139,24 +142,6 @@ spec:
                 name: gpt-researcher-frontend-svc
                 port:
                   number: 3000
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: gpt-researcher-backend-ingress
-  annotations:
-    lbipam.cilium.io/ips: 10.140.79.18
-    ingress.cilium.io/loadbalancer-mode: dedicated
-    ingress.cilium.io/service-type: LoadBalancer
-    ingress.cilium.io/service-external-traffic-policy: Cluster
-spec:
-  ingressClassName: cilium
-  tls:
-  - hosts:
-    - gptr-b.inspection.alpha.canada.ca
-    secretName: gpt-researcher-tls
-  rules:
     - host: gptr-b.inspection.alpha.canada.ca
       http:
         paths:
@@ -167,3 +152,31 @@ spec:
                 name: gpt-researcher-backend-svc
                 port:
                   number: 8000
+
+---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: gpt-researcher-backend-ingress
+#   annotations:
+#     lbipam.cilium.io/ips: 10.140.79.18
+#     ingress.cilium.io/loadbalancer-mode: dedicated
+#     ingress.cilium.io/service-type: LoadBalancer
+#     ingress.cilium.io/service-external-traffic-policy: Cluster
+# spec:
+#   ingressClassName: cilium
+#   tls:
+#   - hosts:
+#     - gptr-b.inspection.alpha.canada.ca
+#     secretName: gpt-researcher-tls
+#   rules:
+#     - host: gptr-b.inspection.alpha.canada.ca
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: gpt-researcher-backend-svc
+#                 port:
+#                   number: 8000
