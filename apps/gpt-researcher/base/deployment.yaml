@@ -28,7 +28,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: gpt-researcher-backend
-          image: ghcr.io/ai-cfia/gpt-researcher:v3.2.5
+          image: ghcr.io/ai-cfia/gpt-researcher@sha256:48565f89d21795f3e101e2ca30e8707d6868d2ccb87ac51afb81b8068afc74e8 # latest
           imagePullPolicy: Always
           envFrom:
             - secretRef:
@@ -81,7 +81,7 @@ spec:
                       - app-worker
       containers:
         - name: gpt-researcher-frontend
-          image: ghcr.io/ai-cfia/gpt-researcher-ui-prod:v3.2.5
+          image: ghcr.io/ai-cfia/gpt-researcher-ui-prod@sha256:f6de93f17a4e22cec33fa7107c0bf830ea1f29396a45fd1b8eb289f0f265e378
           imagePullPolicy: Always
           env:
             - name: NEXT_PUBLIC_GPTR_API_URL
