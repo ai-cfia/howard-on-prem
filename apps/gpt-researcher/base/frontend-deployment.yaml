@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpt-researcher-frontend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: gpt-researcher-frontend
+  template:
+    metadata:
+      labels:
+        app: gpt-researcher-frontend
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+        - name: gpt-researcher-frontend
+          image: ghcr.io/ai-cfia/gpt-researcher-frontend-prod@sha256:a964e0b7b7e512279d226156d184bcded91aa896cb62ec4ee9c4e66c81e02ed0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gpt-researcher-frontend-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: gpt-researcher-frontend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

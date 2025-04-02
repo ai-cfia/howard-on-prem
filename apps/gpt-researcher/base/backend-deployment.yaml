@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpt-researcher-backend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: gpt-researcher-backend
+  template:
+    metadata:
+      labels:
+        app: gpt-researcher-backend
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: gpt-researcher-backend
+          image: ghcr.io/ai-cfia/gpt-researcher@sha256:48565f89d21795f3e101e2ca30e8707d6868d2ccb87ac51afb81b8068afc74e8 # latest
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: gpt-researcher-secrets
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: docs-pvc
+              mountPath: /usr/src/app/my-docs
+      volumes:
+        - name: docs-pvc
+          persistentVolumeClaim:
+            claimName: gptresearcher-my-docs-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gpt-researcher-backend-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: gpt-researcher-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gptresearcher-my-docs-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ceph-hot-block
+  resources:
+    requests:
+      storage: 50Gi
