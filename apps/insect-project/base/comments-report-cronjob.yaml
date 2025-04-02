@@ -23,7 +23,7 @@ spec:
                           - app-worker
           containers:
             - name: insect-project-comments-report
-              image: ghcr.io/ai-cfia/insect-project:4f976e572223d46cd0b5c7cb0991a288341204a7
+              image: ghcr.io/ai-cfia/insect-project:506a81d4aa7b7da5cb5d993bfbc9953b0332ec71
               args: ["comments"]
               imagePullPolicy: Always
               envFrom:
