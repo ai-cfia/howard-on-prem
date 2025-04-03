@@ -24,7 +24,7 @@ spec:
                       - app-worker
       containers:
         - name: gpt-researcher-frontend
-          image: ghcr.io/ai-cfia/gpt-researcher-frontend-prod@sha256:a964e0b7b7e512279d226156d184bcded91aa896cb62ec4ee9c4e66c81e02ed0
+          image: ghcr.io/ai-cfia/gpt-researcher-frontend-prod@sha256:5fb670d7d90070a7e1ffac38b9a84f7cbc59058361d822a0cf784005a26dce79
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
