@@ -9,3 +9,4 @@ data:
   DEFAULT_USER_ROLE: "user"
   ENABLE_SIGNUP: "true"
   ENABLE_LOGIN_FORM: "true"
+  ENABLE_ADMIN_CHAT_ACCESS: "false"
