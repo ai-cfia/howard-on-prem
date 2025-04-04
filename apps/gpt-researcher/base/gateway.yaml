@@ -3,9 +3,9 @@ kind: Gateway
 metadata:
   name: gpt-researcher-gateway
 spec:
-  infrastructure:
-    annotations:
-      io.cilium/lb-ipam-ips: 10.140.79.11
+  addresses:
+    - type: IPAddress
+      value: 10.140.79.11
   gatewayClassName: cilium
   listeners:
     - name: https-gptr
