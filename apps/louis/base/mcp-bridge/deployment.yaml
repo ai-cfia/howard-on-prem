@@ -22,10 +22,6 @@ spec:
                     operator: In
                     values:
                       - app-worker
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
       containers:
         - name: mcp-bridge
           image: ghcr.io/secretiveshell/mcp-bridge/mcp-bridge:0.5.1
