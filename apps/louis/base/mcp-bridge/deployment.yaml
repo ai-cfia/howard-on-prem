@@ -28,7 +28,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: mcp-bridge
-          image: ghcr.io/ai-cfia/louis/mcp-bridge:louis-3e891a1
+          image: ghcr.io/secretiveshell/mcp-bridge/mcp-bridge:0.5.1
           imagePullPolicy: Always
           envFrom:
             - secretRef:
