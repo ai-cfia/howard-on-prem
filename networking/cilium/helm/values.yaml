@@ -185,7 +185,7 @@ ipv4:
 
 ipv6:
   # -- Enable IPv6 support.
-  enabled: true
+  enabled: false
 
 # -- Enable Layer 7 network policy.
 l7Proxy: true
