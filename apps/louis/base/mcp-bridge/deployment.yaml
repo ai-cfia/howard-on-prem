@@ -36,7 +36,16 @@ spec:
                 name: mcp-bridge-secrets
           ports:
             - containerPort: 8000
-          volumeMounts:
-            - name: config-volume
-              mountPath: /app/config.json
-              subPath: config.json
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-bridge-service
+spec:
+  selector:
+    app: mcp-bridge
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
