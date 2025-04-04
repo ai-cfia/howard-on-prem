@@ -18,5 +18,6 @@ resources:
   - gptresearcher/deployment.yaml
   - gptresearcher/configmap.yaml
   - gptresearcher/secrets.yaml
-  - gptresearcher/certificates.yaml
+  # - gptresearcher/certificates.yaml
   - mcp-bridge/deployment.yaml
+  - mcp-bridge/secrets.yaml

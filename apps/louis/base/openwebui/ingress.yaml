@@ -11,9 +11,9 @@ spec:
   - hosts:
     - louis.inspection.alpha.canada.ca
     secretName: openwebui-tls
-  - hosts:
-    - gptr-mcp.inspection.alpha.canada.ca
-    secretName: gpt-researcher-tls
+  # - hosts:
+  #   - gptr-mcp.inspection.alpha.canada.ca
+  #   secretName: gpt-researcher-tls
   rules:
     - host: louis.inspection.alpha.canada.ca
       http:
@@ -25,13 +25,13 @@ spec:
                 name: open-webui-service
                 port:
                   number: 8080
-    - host: gptr-mcp.inspection.alpha.canada.ca
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: gpt-researcher-service
-                port:
-                  number: 8000
+    # - host: gptr-mcp.inspection.alpha.canada.ca
+    #   http:
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: gpt-researcher-service
+    #             port:
+    #               number: 8000
