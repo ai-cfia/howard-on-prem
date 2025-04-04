@@ -41,6 +41,8 @@ spec:
               subPath: config.json
             - name: docs-pvc
               mountPath: /usr/src/app/my-docs
+            - name: logs-volume
+              mountPath: /app/logs
       volumes:
         - name: config-volume
           configMap:
@@ -48,6 +50,10 @@ spec:
         - name: docs-pvc
           persistentVolumeClaim:
             claimName: gpt-researcher-pvc
+        - name: logs-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 500Mi
 
 ---
 apiVersion: v1
