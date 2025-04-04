@@ -14,3 +14,10 @@ resources:
   - openwebui/pvcs.yaml
   - openwebui/secrets.yaml
   - openwebui/configmap.yaml
+  - openwebui/certificates.yaml
+  - gptresearcher/deployment.yaml
+  - gptresearcher/configmap.yaml
+  - gptresearcher/secrets.yaml
+  # - gptresearcher/certificates.yaml
+  - mcp-bridge/deployment.yaml
+  - mcp-bridge/secrets.yaml
