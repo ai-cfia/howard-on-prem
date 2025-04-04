@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mcp-bridge-deployment
+  name: bridge-gptr-deployment
 spec:
   replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: mcp-bridge
+      app: bridge-gptr
   template:
     metadata:
       labels:
-        app: mcp-bridge
+        app: bridge-gptr
     spec:
       affinity:
         nodeAffinity:
@@ -23,12 +23,12 @@ spec:
                     values:
                       - app-worker
       containers:
-        - name: mcp-bridge
-          image: ghcr.io/secretiveshell/mcp-bridge/mcp-bridge:0.5.1
+        - name: bridge-gptr
+          image: ghcr.io/ai-cfia/louis/bridge-gptr:louis-f2c8196
           imagePullPolicy: Always
           envFrom:
             - secretRef:
-                name: mcp-bridge-secrets
+                name: bridge-gptr-secrets
           ports:
             - containerPort: 9090
           volumeMounts:
