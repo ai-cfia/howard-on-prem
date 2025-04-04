@@ -51,7 +51,9 @@ data:
             mode: embedding
       mcp_servers:
         {
-          "gpt-researcher-mcp": "http://gpt-researcher-service.louis.svc.cluster.local:8000"
+          "gpt-researcher-mcp": {
+            "url": "http://gpt-researcher-service.louis.svc.cluster.local:8000"
+          }
         }
       litellm_settings:
         cache: false
