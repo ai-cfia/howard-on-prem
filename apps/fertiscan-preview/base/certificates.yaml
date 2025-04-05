@@ -1,0 +1,43 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: fertiscan-backend-preview-tls
+  namespace: fertiscan-preview
+spec:
+  secretName: fertiscan-backend-preview-tls
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: fertiscan-backend-preview.inspection.alpha.canada.ca
+  dnsNames:
+    - fertiscan-backend-preview.inspection.alpha.canada.ca
+    - fertiscan-backend-preview
+    - fertiscan-backend-preview.fertiscan-preview.svc.cluster.local
+  issuerRef:
+    name: internal-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: fertiscan-frontend-preview-tls
+  namespace: fertiscan-preview
+spec:
+  secretName: fertiscan-frontend-preview-tls
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: fertiscan-preview.inspection.alpha.canada.ca
+  dnsNames:
+    - fertiscan-preview.inspection.alpha.canada.ca
+    - fertiscan-preview
+    - fertiscan-preview.fertiscan-preview.svc.cluster.local
+  issuerRef:
+    name: internal-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

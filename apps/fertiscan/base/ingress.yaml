@@ -7,8 +7,13 @@ metadata:
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
+  tls:
+    - hosts:
+        - fertiscan-backend.inspection.alpha.canada.ca
+      secretName: fertiscan-backend-tls
   rules:
-    - http:
+    - host: fertiscan-backend.inspection.alpha.canada.ca
+      http:
         paths:
           - path: /api(/|$)(.*)
             pathType: ImplementationSpecific
@@ -28,8 +33,13 @@ metadata:
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
+  tls:
+    - hosts:
+        - fertiscan.inspection.alpha.canada.ca
+      secretName: fertiscan-frontend-tls
   rules:
-    - http:
+    - host: fertiscan.inspection.alpha.canada.ca
+      http:
         paths:
           - path: /
             pathType: Prefix
