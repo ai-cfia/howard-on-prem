@@ -4,6 +4,7 @@ metadata:
   name: insect-project-comments-report
 spec:
   schedule: "0 13 * * 1" # Run at 9:00 AM Eastern Time (UTC-4) on Mondays only
+  suspend: true
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 1
@@ -12,7 +13,6 @@ spec:
       ttlSecondsAfterFinished: 172800
       template:
         spec:
-          suspend: true
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -53,5 +53,4 @@ spec:
           volumes:
             - name: tmp
               emptyDir: {}
-
           restartPolicy: Never
