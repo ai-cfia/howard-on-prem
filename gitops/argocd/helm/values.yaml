@@ -293,7 +293,7 @@ notifications:
   notifiers:
     service.github: |
       appID: 1206896
-      installationID: Iv23liVuN3NgS0SiJZ8h
+      installationID: 64077645
       privateKey: $github-privateKey
   
   # Notification controller container ports
