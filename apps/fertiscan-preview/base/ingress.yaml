@@ -7,13 +7,8 @@ metadata:
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
-  tls:
-    - hosts:
-        - fertiscan-backend-preview.inspection.alpha.canada.ca
-      secretName: fertiscan-backend-preview-tls
   rules:
-    - host: fertiscan-backend-preview.inspection.alpha.canada.ca
-      http:
+    - http:
         paths:
           - path: /api(/|$)(.*)
             pathType: ImplementationSpecific
@@ -22,7 +17,6 @@ spec:
                 name: fertiscan-backend-preview-svc
                 port:
                   number: 5000
-
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -33,13 +27,9 @@ metadata:
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
-  tls:
-    - hosts:
-        - fertiscan-preview.inspection.alpha.canada.ca
-      secretName: fertiscan-frontend-preview-tls
   rules:
-    - host: fertiscan-preview.inspection.alpha.canada.ca
-      http:
+    - http:
+
         paths:
           - path: /
             pathType: Prefix
