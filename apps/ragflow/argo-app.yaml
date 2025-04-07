@@ -6,7 +6,6 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
     notifications.argoproj.io/subscribe.on-deployed.github: ""
-
 spec:
   project: default
   destination:
