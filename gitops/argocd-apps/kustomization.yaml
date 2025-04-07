@@ -16,7 +16,7 @@ resources:
   - ../../apps/ailab-website/
   - ../../apps/librechat/
   - ../../apps/gpt-researcher/
-  - ../../apps/insect-project/
+  # - ../../apps/insect-project/
 
   # Example of deployment, ingress, pvc's, etc...
   # - ../../apps/examples/
