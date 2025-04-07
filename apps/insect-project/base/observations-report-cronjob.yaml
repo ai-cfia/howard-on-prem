@@ -4,6 +4,7 @@ metadata:
   name: insect-project-observations-report
 spec:
   schedule: "30 7 * * *" # Run at 7:30 AM UTC every day
+  suspend: true
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 1
@@ -12,7 +13,6 @@ spec:
       ttlSecondsAfterFinished: 172800
       template:
         spec:
-          suspend: true
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
