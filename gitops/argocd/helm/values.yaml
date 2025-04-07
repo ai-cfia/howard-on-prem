@@ -531,26 +531,26 @@ server:
     # -- Enable TLS configuration for the hostname defined at `server.ingress.hostname`
     ## TLS certificate will be retrieved from a TLS secret `argocd-server-tls`
     ## You can create this secret via `certificate` or `certificateSecret` option
-    tls: false
+    tls: true
 
   # TLS certificate configuration via cert-manager
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
-    enabled: false
+    enabled: true
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
-    domain: ""
+    domain: "argocd.inspection.alpha.canada.ca"
     # -- Certificate Subject Alternate Names (SANs)
     additionalHosts: []
     # -- The requested 'duration' (i.e. lifetime) of the certificate.
     # @default -- `""` (defaults to 2160h = 90d if not specified)
     ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
-    duration: ""
+    duration: "2160h"
     # -- How long before the expiry a certificate should be renewed.
     # @default -- `""` (defaults to 360h = 15d if not specified)
     ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
-    renewBefore: ""
+    renewBefore: "360h"
     # Certificate issuer
     ## Ref: https://cert-manager.io/docs/concepts/issuer
     issuer:
@@ -559,7 +559,7 @@ server:
       # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
       kind: "ClusterIssuer"
       # -- Certificate issuer name. Eg. `letsencrypt`
-      name: "letsencrypt-prod"
+      name: "internal-ca-issuer"
     # Private key of the certificate
     privateKey:
       # -- Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always`
