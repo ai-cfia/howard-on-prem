@@ -12,6 +12,7 @@ spec:
       ttlSecondsAfterFinished: 172800
       template:
         spec:
+          suspend: true
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
