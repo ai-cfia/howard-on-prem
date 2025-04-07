@@ -285,11 +285,7 @@ notifications:
     # -- Generic key:value pairs to be inserted into the secret
     ## Can be used for templates, notification services etc. Some examples given below.
     ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/overview/
-    items:
-      github-privateKey:
-        secretKeyRef:
-          name: argocd-config
-          key: github-privateKey
+    items: []
 
   # -- Configures notification services such as slack, email or custom webhook
   # @default -- See [values.yaml]
@@ -298,7 +294,7 @@ notifications:
     service.github: |
       appID: 1206896
       installationID: Iv23liVuN3NgS0SiJZ8h
-      privateKey: $github-privateKey
+      privateKey: $argocd-config:github-privateKey
   
   # Notification controller container ports
   containerPorts:
