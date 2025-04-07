@@ -266,7 +266,7 @@ notifications:
 
   cm:
     # -- Whether helm chart creates notifications controller config map
-    create: true
+    create: false
 
   secret:
     # -- Whether helm chart creates notifications controller secret
