@@ -13,7 +13,7 @@ crds:
 global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
-  domain:
+  domain: argocd.inspection.alpha.canada.ca
 
   # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
   revisionHistoryLimit: 3
@@ -66,10 +66,10 @@ configs:
     statusbadge.enabled: true
 
     # OIDC configuration as an alternative to dex (optional).
-    url: http://10.140.79.3
+    url: http://argocd.inspection.alpha.canada.ca
     oidc.config: |
       name: Keycloak
-      issuer: http://10.140.79.3/realms/main
+      issuer: http://10.140.79.10/realms/main
       clientID: argocd
       clientSecret: $argocd-config:oidc.keycloak.clientSecret
       requestedScopes:
@@ -531,13 +531,13 @@ server:
     # -- Enable TLS configuration for the hostname defined at `server.ingress.hostname`
     ## TLS certificate will be retrieved from a TLS secret `argocd-server-tls`
     ## You can create this secret via `certificate` or `certificateSecret` option
-    tls: false
+    tls: true
 
   # TLS certificate configuration via cert-manager
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
-    enabled: false
+    enabled: true
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
     domain: "argocd.inspection.alpha.canada.ca"
