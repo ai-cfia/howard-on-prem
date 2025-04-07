@@ -264,6 +264,10 @@ notifications:
     # - secretRef:
     #     name: secret-name
 
+  cm:
+    # -- Whether helm chart creates notifications controller config map
+    create: true
+
   secret:
     # -- Whether helm chart creates notifications controller secret
     ## If true, will create a secret with the name below. Otherwise, will assume existence of a secret with that name.
@@ -295,6 +299,7 @@ notifications:
       appID: 1206896
       installationID: Iv23liVuN3NgS0SiJZ8h
       privateKey: $github-privateKey
+  
   # Notification controller container ports
   containerPorts:
     # -- Metrics container port
@@ -344,7 +349,7 @@ notifications:
           content: |
             Application {{.app.metadata.name}} is now running new version of deployments manifests.
             See more here: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true
-  triggers: {]}
+  triggers: {}
 
 ## Dex
 dex:
