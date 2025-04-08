@@ -512,6 +512,7 @@ server:
     annotations:
       lbipam.cilium.io/ips: 10.140.79.3
       ingress.cilium.io/loadbalancer-mode: dedicated
+      cert-manager.io/cluster-issuer: letsencrypt-prod
       # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
 
@@ -559,7 +560,7 @@ server:
       # -- Certificate issuer kind. Either `Issuer` or `ClusterIssuer`
       kind: "ClusterIssuer"
       # -- Certificate issuer name. Eg. `letsencrypt`
-      name: "internal-ca-issuer"
+      name: "letsencrypt-prod"
     # Private key of the certificate
     privateKey:
       # -- Rotation policy of private key when certificate is re-issued. Either: `Never` or `Always`

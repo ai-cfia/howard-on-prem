@@ -14,7 +14,6 @@ spec:
   dnsNames:
     - nachet-backend.inspection.alpha.canada.ca
     - nachet-backend
-    - nachet-backend.nachet-dev.svc.cluster.local
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
@@ -36,7 +35,6 @@ spec:
   dnsNames:
     - nachet.inspection.alpha.canada.ca
     - nachet
-    - nachet.nachet-dev.svc.cluster.local
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer

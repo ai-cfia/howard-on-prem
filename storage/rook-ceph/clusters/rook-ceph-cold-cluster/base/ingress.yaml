@@ -9,8 +9,13 @@ metadata:
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
+  tls:
+    - hosts:
+        - rook-c.inspection.alpha.canada.ca
+      secretName: rook-c-tls
   rules:
-    - http:
+    - host: rook-c.inspection.alpha.canada.ca
+      http:
         paths:
         - path: /
           pathType: Prefix

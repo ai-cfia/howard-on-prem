@@ -14,9 +14,8 @@ spec:
   dnsNames:
     - fertiscan-backend.inspection.alpha.canada.ca
     - fertiscan-backend
-    - fertiscan-backend.fertiscan.svc.cluster.local
   issuerRef:
-    name: internal-ca-issuer
+    name: letsencrypt-prod
     kind: ClusterIssuer
     group: cert-manager.io
 ---
@@ -36,8 +35,7 @@ spec:
   dnsNames:
     - fertiscan.inspection.alpha.canada.ca
     - fertiscan
-    - fertiscan.fertiscan.svc.cluster.local
   issuerRef:
-    name: internal-ca-issuer
+    name: letsencrypt-prod
     kind: ClusterIssuer
     group: cert-manager.io

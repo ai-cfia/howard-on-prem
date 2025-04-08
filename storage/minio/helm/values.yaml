@@ -117,9 +117,14 @@ ingress:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.25
     ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   path: /
   hosts:
-    - ""
+    - minio.inspection.alpha.canada.ca
+  tls:
+    - hosts:
+        - minio.inspection.alpha.canada.ca
+      secretName: minio-tls
 
 consoleService:
   type: ClusterIP

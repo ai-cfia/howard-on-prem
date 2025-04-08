@@ -5,10 +5,16 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.10
     ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
+  tls:
+    - hosts:
+        - keycloak.inspection.alpha.canada.ca
+      secretName: keycloak-tls
   ingressClassName: cilium
   rules:
-    - http:
+    - host: keycloak.inspection.alpha.canada.ca
+      http:
         paths:
           - path: /
             pathType: Prefix
