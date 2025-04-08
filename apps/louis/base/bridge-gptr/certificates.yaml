@@ -10,10 +10,10 @@ spec:
   subject:
     organizations:
       - ACIA CFIA AI Lab
-  commonName: louis.inspection.alpha.canada.ca
+  commonName: gptr-mcp.inspection.alpha.canada.ca
   dnsNames:
     - gptr-mcp.inspection.alpha.canada.ca
   issuerRef:
-    name: internal-ca-issuer
+    name: letsencrypt-prod
     kind: ClusterIssuer
     group: cert-manager.io

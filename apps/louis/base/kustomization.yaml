@@ -6,11 +6,10 @@ resources:
   - litellm/deployment.yaml
   - litellm/configmap.yaml
   - litellm/secrets.yaml
-  - litellm/ingress.yaml
+  - litellm/certificates.yaml
   - ollama/deployment.yaml
-  - ollama/ingress.yaml
+  - ollama/certificates.yaml
   - openwebui/deployment.yaml
-  # - openwebui/ingress.yaml
   - openwebui/pvcs.yaml
   - openwebui/secrets.yaml
   - openwebui/configmap.yaml
