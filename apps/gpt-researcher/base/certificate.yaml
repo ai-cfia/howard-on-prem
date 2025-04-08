@@ -14,6 +14,6 @@ spec:
     - gptr-b.inspection.alpha.canada.ca
     - gptr.inspection.alpha.canada.ca
   issuerRef:
-    name: internal-ca-issuer
+    name: letsencrypt-prod
     kind: ClusterIssuer
     group: cert-manager.io

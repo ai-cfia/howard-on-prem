@@ -16,7 +16,7 @@ spec:
     - nachet-backend
     - nachet-backend.nachet-dev.svc.cluster.local
   issuerRef:
-    name: internal-ca-issuer
+    name: letsencrypt-prod
     kind: ClusterIssuer
     group: cert-manager.io
 ---
@@ -38,7 +38,7 @@ spec:
     - nachet
     - nachet.nachet-dev.svc.cluster.local
   issuerRef:
-    name: internal-ca-issuer
+    name: letsencrypt-prod
     kind: ClusterIssuer
     group: cert-manager.io
 ---
