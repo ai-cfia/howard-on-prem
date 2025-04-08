@@ -10,10 +10,10 @@ spec:
   ingressClassName: cilium
   tls:
     - hosts:
-        - ailab-on-prem.inspection.alpha.canada.ca
+        - ailab.inspection.alpha.canada.ca
       secretName: ailab-on-prem-tls
   rules:
-    - host: ailab-on-prem.inspection.alpha.canada.ca
+    - host: ailab.inspection.alpha.canada.ca
       http:
         paths:
           - path: /
