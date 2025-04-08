@@ -38,7 +38,7 @@ approveSignerNames:
 extraArgs:
   - --enable-certificate-owner-ref=true
   - --dns01-recursive-nameservers-only
-  - --dns01-recursive-nameservers=8.8.8.8:53
+  - --dns01-recursive-nameservers=kube-dns.kube-system.svc.cluster.local:53
 
 prometheus:
   # Enable Prometheus monitoring for the cert-manager controller and webhook.
