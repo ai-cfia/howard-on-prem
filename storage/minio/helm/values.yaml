@@ -153,6 +153,7 @@ consoleIngress:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.26
     ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   path: /
   hosts:
     - minio-console.inspection.alpha.canada.ca
