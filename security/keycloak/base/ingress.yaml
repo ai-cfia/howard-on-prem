@@ -22,4 +22,4 @@ spec:
               service:
                 name: keycloak
                 port:
-                  name: http
+                  name: https
