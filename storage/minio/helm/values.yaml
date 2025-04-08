@@ -155,7 +155,11 @@ consoleIngress:
     ingress.cilium.io/loadbalancer-mode: dedicated
   path: /
   hosts:
-    - ""
+    - minio-console.inspection.alpha.canada.ca
+  tls:
+    - hosts:
+        - minio-console.inspection.alpha.canada.ca
+      secretName: minio-console-tls
 
 ## Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
