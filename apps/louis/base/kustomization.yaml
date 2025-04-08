@@ -10,7 +10,7 @@ resources:
   - ollama/deployment.yaml
   - ollama/ingress.yaml
   - openwebui/deployment.yaml
-  - openwebui/ingress.yaml
+  # - openwebui/ingress.yaml
   - openwebui/pvcs.yaml
   - openwebui/secrets.yaml
   - openwebui/configmap.yaml
@@ -21,3 +21,5 @@ resources:
   # - gptresearcher/certificates.yaml
   - bridge-gptr/deployment.yaml
   - bridge-gptr/secrets.yaml
+  - gateway.yaml
+  - httproute.yaml
