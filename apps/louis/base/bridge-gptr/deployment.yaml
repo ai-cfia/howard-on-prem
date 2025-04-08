@@ -24,13 +24,13 @@ spec:
                       - app-worker
       containers:
         - name: bridge-gptr
-          image: ghcr.io/ai-cfia/louis/bridge-gptr:louis-f2c8196
+          image: ghcr.io/ai-cfia/louis/mcpo-gptr:louis-3e891a1
           imagePullPolicy: Always
           envFrom:
             - secretRef:
                 name: bridge-gptr-secrets
           ports:
-            - containerPort: 9090
+            - containerPort: 8000
           volumeMounts:
             - name: cache-volume
               mountPath: /.cache/
@@ -57,5 +57,5 @@ spec:
     app: mcp-bridge
   ports:
     - protocol: TCP
-      port: 9090
-      targetPort: 9090
+      port: 8000
+      targetPort: 8000
