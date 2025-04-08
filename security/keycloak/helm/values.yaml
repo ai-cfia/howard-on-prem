@@ -118,7 +118,7 @@ ingress:
   controller: default
   ## @param ingress.hostname Default host for the ingress record (evaluated as template)
   ##
-  hostname: keycloak.inspection.alpha.canada.ca # doesnt support * https://github.com/bitnami/charts/blob/main/bitnami/keycloak/templates/ingress.yaml#L25
+  hostname: keycloak.inspection.alpha.canada.ca
   ## @param ingress.hostnameStrict Disables dynamically resolving the hostname from request headers.
   ## Should always be set to true in production, unless your reverse proxy overwrites the Host header.
   ## If enabled, the hostname option needs to be specified.
@@ -130,7 +130,7 @@ ingress:
   ## @param ingress.servicePort Backend service port to use
   ## Default is http. Alternative is https.
   ##
-  servicePort: https
+  servicePort: http
   ## @param ingress.annotations [object] Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
   ## Use this parameter to set the required annotations for cert-manager, see
   ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
