@@ -66,10 +66,10 @@ configs:
     statusbadge.enabled: true
 
     # OIDC configuration as an alternative to dex (optional).
-    url: http://argocd.inspection.alpha.canada.ca
+    url: https://argocd.inspection.alpha.canada.ca
     oidc.config: |
       name: Keycloak
-      issuer: http://10.140.79.10/realms/main
+      issuer: https://keycloak.inspection.alpha.canada.ca/realms/main
       clientID: argocd
       clientSecret: $argocd-config:oidc.keycloak.clientSecret
       requestedScopes:
