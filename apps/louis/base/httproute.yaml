@@ -1,0 +1,39 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: louis-frontend-route
+  namespace: louis
+spec:
+  parentRefs:
+    - namespace: louis
+      name: louis-gateway
+      sectionName: https-louis
+  hostnames:
+    - louis.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: open-webui-svc
+          port: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: bridge-gptr-backend-route
+  namespace: louis
+spec:
+  parentRefs:
+    - namespace: louis
+      name: louis-gateway
+      sectionName: all-http
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: bridge-gptr-svc
+          port: 8000
