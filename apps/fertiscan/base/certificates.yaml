@@ -13,7 +13,6 @@ spec:
   commonName: fertiscan-backend.inspection.alpha.canada.ca
   dnsNames:
     - fertiscan-backend.inspection.alpha.canada.ca
-    - fertiscan-backend
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
@@ -34,7 +33,6 @@ spec:
   commonName: fertiscan.inspection.alpha.canada.ca
   dnsNames:
     - fertiscan.inspection.alpha.canada.ca
-    - fertiscan
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
