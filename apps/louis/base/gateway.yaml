@@ -18,11 +18,30 @@ spec:
         certificateRefs:
           - name: openwebui-tls
             kind: Secret
-    - name: all-http
-      port: 80
-      protocol: HTTP
-      allowedRoutes:
-        kinds:
-        - kind: HTTPRoute
-        namespaces:
-          from: All
+    - name: https-ollama
+      hostname: ollama.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: ollama-tls
+            kind: Secret
+    - name: https-litellm
+      hostname: litellm.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: litellm-tls
+            kind: Secret
+    - name: https-bridge-gptr
+      hostname: gptr-mcp.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: bridge-gptr-tls
+            kind: Secret

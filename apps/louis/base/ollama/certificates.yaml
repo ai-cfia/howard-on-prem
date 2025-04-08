@@ -1,18 +1,18 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: openwebui-tls
+  name: ollama-tls
   namespace: louis
 spec:
-  secretName: openwebui-tls
+  secretName: ollama-tls
   duration: 2160h  # 90 days
   renewBefore: 360h  # 15 days
   subject:
     organizations:
       - ACIA CFIA AI Lab
-  commonName: louis.inspection.alpha.canada.ca
+  commonName: ollama.inspection.alpha.canada.ca
   dnsNames:
-    - louis.inspection.alpha.canada.ca
+    - ollama.inspection.alpha.canada.ca
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer

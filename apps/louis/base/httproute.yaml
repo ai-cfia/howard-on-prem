@@ -28,7 +28,9 @@ spec:
   parentRefs:
     - namespace: louis
       name: louis-gateway
-      sectionName: all-http
+      sectionName: https-bridge-gptr
+  hostnames:
+    - gptr-mcp.inspection.alpha.canada.ca
   rules:
     - matches:
         - path:
@@ -37,3 +39,45 @@ spec:
       backendRefs:
         - name: bridge-gptr-svc
           port: 8000
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: litellm-backend-route
+  namespace: louis
+spec:
+  parentRefs:
+    - namespace: louis
+      name: louis-gateway
+      sectionName: https-litellm
+  hostnames:
+    - litellm.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: litellm-svc
+          port: 4000
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: ollama-backend-route
+  namespace: louis
+spec:
+  parentRefs:
+    - namespace: louis
+      name: louis-gateway
+      sectionName: https-ollama
+  hostnames:
+    - ollama.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: ollama-svc
+          port: 11434
