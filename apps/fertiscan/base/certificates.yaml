@@ -1,26 +1,6 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: fertiscan-backend-tls
-  namespace: fertiscan
-spec:
-  secretName: fertiscan-backend-tls
-  duration: 2160h # 90 days
-  renewBefore: 360h # 15 days
-  subject:
-    organizations:
-      - ACIA CFIA AI Lab
-  commonName: fertiscan-backend.inspection.alpha.canada.ca
-  dnsNames:
-    - fertiscan-backend.inspection.alpha.canada.ca
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
-    group: cert-manager.io
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
   name: fertiscan-frontend-tls
   namespace: fertiscan
 spec:
