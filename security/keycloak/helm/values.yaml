@@ -74,7 +74,7 @@ auth:
 adminRealm: "main"
 ## @param production Run Keycloak in production mode. TLS configuration is required except when using proxy=edge.
 ##
-production: false # TODO + HTTPS configuration
+production: true # TODO + HTTPS configuration
 ## @param replicaCount Number of Keycloak replicas to deploy
 ##
 replicaCount: 1
