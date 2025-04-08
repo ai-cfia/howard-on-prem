@@ -28,7 +28,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: gpt-researcher-backend
-          image: ghcr.io/ai-cfia/gpt-researcher@sha256:92ce9415b5de6eb8a1731bc050a873e7125363fa7d5e25cebb6d73425fec0463
+          image: ghcr.io/ai-cfia/gpt-researcher:latest
           imagePullPolicy: Always
           envFrom:
             - secretRef:
