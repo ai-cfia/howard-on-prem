@@ -18,12 +18,11 @@ spec:
         certificateRefs:
           - name: openwebui-tls
             kind: Secret
-    - name: http-bridge-gptr
-      hostname: "*.inspection.alpha.canada.ca"
+    - name: all-http
       port: 80
       protocol: HTTP
-      # tls:
-      #   mode: Terminate
-      #   certificateRefs:
-      #     - name: bridge-gptr-tls
-      #       kind: Secret
+      allowedRoutes:
+        kinds:
+        - kind: HTTPRoute
+        namespaces:
+          from: All
