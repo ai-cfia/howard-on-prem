@@ -33,26 +33,33 @@ spec:
               value: "true"
             # - name: DOCLING_SERVE_ARTIFACTS_PATH
             #   value: "/app/artifacts"
-          volumeMounts:
-            - name: artifacts
-              mountPath: /app/artifacts
-      volumes:
-        - name: artifacts
-          persistentVolumeClaim:
-            claimName: docling-pvc
+          resources:
+            requests:
+              cpu: "4"
+              memory: "4Gi"
+            limits:
+              cpu: "8"
+              memory: "8Gi"
+#           volumeMounts:
+#             - name: artifacts
+#               mountPath: /app/artifacts
+#       volumes:
+#         - name: artifacts
+#           persistentVolumeClaim:
+#             claimName: docling-pvc
 
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: docling-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: ceph-hot-block
-  resources:
-    requests:
-      storage: 50Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: docling-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: ceph-hot-block
+#   resources:
+#     requests:
+#       storage: 50Gi
 
 ---
 apiVersion: v1
