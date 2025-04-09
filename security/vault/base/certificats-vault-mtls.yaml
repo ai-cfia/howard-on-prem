@@ -1,0 +1,54 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: vault-selfsigned
+spec:
+  selfSigned: {}
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vault-ca
+spec:
+  isCA: true
+  commonName: vault-ca
+  secretName: vault-ca-tls
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: vault-selfsigned
+    kind: Issuer
+
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: vault-ca-issuer
+spec:
+  ca:
+    secretName: vault-ca-tls
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vault-ha-tls
+spec:
+  secretName: vault-ha-tls
+  duration: 2160h
+  renewBefore: 360h
+  issuerRef:
+    name: vault-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+  commonName: vault.svc.cluster.local
+  dnsNames:
+    - vault-0.vault-internal
+    - vault-1.vault-internal
+    - vault-2.vault-internal
+    - vault-3.vault-internal
+    - vault.vault.svc
+    - vault.svc.cluster.local
+    - vault.vault.svc.cluster.local
