@@ -69,7 +69,7 @@ server:
   # kubectl --namespace vault create secret tls tls-ca --cert ./tls-ca.cert
   # kubectl --namespace vault create secret tls tls-server --cert ./tls-server.cert --key ./tls-server.key
   extraEnvironmentVars:
-    VAULT_CACERT: /vault/userconfig/vault-ha-tls-ca/ca.crt
+    VAULT_CACERT: /vault/userconfig/vault-ha-tls/ca.crt
     VAULT_TLSCERT: /vault/userconfig/vault-ha-tls/tls.crt
     VAULT_TLSKEY: /vault/userconfig/vault-ha-tls/tls.key
 
@@ -91,10 +91,6 @@ server:
       secret:
         defaultMode: 420
         secretName: vault-ha-tls
-    - name: userconfig-vault-ha-tls-ca
-      secret:
-        defaultMode: 420
-        secretName: vault-ca-tls
 
   # volumeMounts is a list of volumeMounts for the main server container. These are rendered
   # via toYaml rather than pre-processed like the extraVolumes value.
@@ -102,9 +98,6 @@ server:
   volumeMounts:
     - mountPath: /vault/userconfig/vault-ha-tls
       name: userconfig-vault-ha-tls
-      readOnly: true
-    - mountPath: /vault/userconfig/vault-ha-tls-ca
-      name: userconfig-vault-ha-tls-ca
       readOnly: true
 
   # This configures the Vault Statefulset to create a PVC for audit logs.
@@ -145,13 +138,13 @@ server:
           path = "/vault/data"
           retry_join {
             leader_api_addr = "https://vault-0.vault-internal:8200"
-            leader_ca_cert_file = "/vault/userconfig/vault-ha-tls-ca/ca.crt"
+            leader_ca_cert_file = "/vault/userconfig/vault-ha-tls/ca.crt"
             leader_client_cert_file = "/vault/userconfig/vault-ha-tls/tls.crt"
             leader_client_key_file = "/vault/userconfig/vault-ha-tls/tls.key"
           }
           retry_join {
             leader_api_addr = "https://vault-1.vault-internal:8200"
-            leader_ca_cert_file = "/vault/userconfig/vault-ha-tls-ca/ca.crt"
+            leader_ca_cert_file = "/vault/userconfig/vault-ha-tls/ca.crt"
             leader_client_cert_file = "/vault/userconfig/vault-ha-tls/tls.crt"
             leader_client_key_file = "/vault/userconfig/vault-ha-tls/tls.key"
           }
