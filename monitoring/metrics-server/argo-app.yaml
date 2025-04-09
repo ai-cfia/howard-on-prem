@@ -7,7 +7,7 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
+    namespace: kube-system
   sources:
     - chart: metrics-server
       repoURL: https://kubernetes-sigs.github.io/metrics-server/
