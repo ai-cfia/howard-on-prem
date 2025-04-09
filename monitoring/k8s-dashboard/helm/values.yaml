@@ -145,7 +145,7 @@ metricsScraper:
 ## for our all containers.
 ## https://github.com/kubernetes/dashboard/issues/8972
 kong:
-  enabled: true
+  enabled: false
   proxy:
     type: ClusterIP
     http:
