@@ -8,7 +8,7 @@ metadata:
     app: vault
   annotations:
     lbipam.cilium.io/ips: 10.140.79.12
-    ingress.cilium.io/force-https: enabled
+    ingress.cilium.io/ssl-passthrough: enabled # see gateway.yaml for more information
     ingress.cilium.io/loadbalancer-mode: dedicated
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
