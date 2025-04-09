@@ -30,22 +30,3 @@
 #       - kind: Secret
 #         name: vault-ha-tls
 #     verification: Enforced
-
----
-apiVersion: gateway.networking.k8s.io/v1alpha2
-kind: TLSRoute
-metadata:
-  name: vault-route
-spec:
-  parentRefs:
-    - name: vault-gateway
-  hostnames:
-    - vault.inspection.alpha.canada.ca
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: "/"
-      backendRefs:
-        - name: vault-ui
-          port: 8200
