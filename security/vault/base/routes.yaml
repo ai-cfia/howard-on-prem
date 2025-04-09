@@ -1,0 +1,51 @@
+# apiVersion: gateway.networking.k8s.io/v1beta1
+# kind: HTTPRoute
+# metadata:
+#   name: vault-route
+# spec:
+#   parentRefs:
+#     - name: vault-gateway
+#   hostnames:
+#     - vault.inspection.alpha.canada.ca
+#   rules:
+#     - matches:
+#         - path:
+#             type: PathPrefix
+#             value: "/"
+#       backendRefs:
+#         - name: vault-ui
+#           port: 8200
+
+# Applies to the vault-ui service 
+# apiVersion: gateway.networking.k8s.io/v1alpha2
+# kind: BackendTLSPolicy
+# metadata:
+#   name: vault-backend-tls-policy
+# spec:
+#   targetRef:
+#     kind: Service
+#     name: vault-ui
+#   tls:
+#     caCertRefs: 
+#       - kind: Secret
+#         name: vault-ha-tls
+#     verification: Enforced
+
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: TLSRoute
+metadata:
+  name: vault-route
+spec:
+  parentRefs:
+    - name: vault-gateway
+  hostnames:
+    - vault.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: vault-ui
+          port: 8200
