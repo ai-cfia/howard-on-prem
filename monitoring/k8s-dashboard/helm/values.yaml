@@ -36,7 +36,7 @@ app:
     #  #  Is this CRD namespaced?
     #  namespaced: true
   ingress:
-    enabled: true
+    enabled: false
     hosts:
       - dashboard.inspection.alpha.canada.ca
     ingressClassName: cilium
@@ -49,8 +49,8 @@ app:
     #    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     #    nginx.ingress.kubernetes.io/ssl-redirect: "true"
     useDefaultAnnotations: false
-    pathType: ImplementationSpecific
-    # pathType: Prefix
+    # pathType: ImplementationSpecific
+    pathType: Prefix
     # If path is not the default (/), rewrite-target annotation will be added to the Ingress.
     # It allows serving Kubernetes Dashboard on a sub-path. Make sure that the configured path
     # does not conflict with gateway route configuration.
@@ -148,7 +148,7 @@ metricsScraper:
 kong:
   enabled: true
   proxy:
-    type: ClusterIP
+    type: LoadBalancer
     http:
       enabled: true
 
