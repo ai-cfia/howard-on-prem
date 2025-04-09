@@ -68,7 +68,7 @@ app:
       secretName: "k8s-dashboard-tls"
     labels: {}
     annotations:
-      lbipam.cilium.io/ips: 10.140.79.29
+      lbipam.cilium.io/ips: 10.140.79.41
       ingress.cilium.io/loadbalancer-mode: dedicated
 
 # Auth deployment configuration
