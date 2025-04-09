@@ -21,5 +21,7 @@ resources:
   - bridge-gptr/deployment.yaml
   - bridge-gptr/secrets.yaml
   - bridge-gptr/certificates.yaml
+  - docling/deployment.yaml
+  - docling/certificates.yaml
   - gateway.yaml
   - httproute.yaml

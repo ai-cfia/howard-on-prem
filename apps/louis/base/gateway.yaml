@@ -45,3 +45,12 @@ spec:
         certificateRefs:
           - name: bridge-gptr-tls
             kind: Secret
+    - name: https-docling
+      hostname: docling.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: docling-tls
+            kind: Secret
