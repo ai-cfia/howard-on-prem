@@ -20,6 +20,9 @@ spec:
             requests:
               cpu: 2
               memory: 8G
+            limits:
+              cpu: 8
+              memory: 8Gi
           ports:
             - containerPort: 8080
           envFrom:
@@ -29,13 +32,6 @@ spec:
                 name: openwebui-secrets
             - secretRef:
                 name: openwebui-connection-string
-          resources:
-            requests:
-              cpu: "4"
-              memory: "4Gi"
-            limits:
-              cpu: "8"
-              memory: "8Gi"
           tty: true
           volumeMounts:
             - name: openwebui-volume
