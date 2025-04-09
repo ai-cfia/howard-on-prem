@@ -45,6 +45,7 @@ resources:
 
   # Monitoring applications
   - ../../monitoring/k8s-dashboard/
+  - ../../monitoring/metrics-server/
 
   # MLOps
   - ../../mlops/nvidia/
