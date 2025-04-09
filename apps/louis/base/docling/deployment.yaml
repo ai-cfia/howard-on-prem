@@ -31,8 +31,8 @@ spec:
           env:
             - name: DOCLING_SERVE_ENABLE_UI
               value: "true"
-            - name: DOCLING_SERVE_ARTIFACTS_PATH
-              value: "/app/artifacts"
+            # - name: DOCLING_SERVE_ARTIFACTS_PATH
+            #   value: "/app/artifacts"
           volumeMounts:
             - name: artifacts
               mountPath: /app/artifacts
