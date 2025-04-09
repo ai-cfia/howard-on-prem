@@ -36,7 +36,7 @@ app:
     #  #  Is this CRD namespaced?
     #  namespaced: true
   ingress:
-    enabled: true
+    enabled: false
     hosts:
       - dashboard.inspection.alpha.canada.ca
     ingressClassName: cilium
