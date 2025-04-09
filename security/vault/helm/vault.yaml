@@ -129,9 +129,10 @@ server:
         listener "tcp" {
           address = "[::]:8200"
           cluster_address = "[::]:8201"
-          tls_disable = "false"
+          tls_disable = 0
           tls_cert_file = "/vault/userconfig/vault-ha-tls/tls.crt"
-          tls_key_file = "/vault/userconfig/vault-ha-tls/tls.key"
+          tls_key_file  = "/vault/userconfig/vault-ha-tls/tls.key"
+          tls_client_ca_file = "/vault/userconfig/vault-ha-tls/ca.ca"
         }
 
         storage "raft" {
