@@ -145,11 +145,11 @@ metricsScraper:
 ## for our all containers.
 ## https://github.com/kubernetes/dashboard/issues/8972
 kong:
-  enabled: false
+  enabled: true
   proxy:
     type: ClusterIP
     http:
-      enabled: false
+      enabled: true
 
 ## Optional Cert Manager sub-chart configuration
 ## Enable this if you don't already have cert-manager enabled on your cluster.
