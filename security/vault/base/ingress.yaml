@@ -12,13 +12,13 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: cilium
-  tls:
-  - hosts:
-    - vault.inspection.alpha.canada.ca
-    secretName: vault-tls
+  # tls:
+  # - hosts:
+  #   - vault.inspection.alpha.canada.ca
+  #   secretName: vault-tls
   rules:
-    - host: vault.inspection.alpha.canada.ca
-      http:
+    # - host: vault.inspection.alpha.canada.ca
+    - http:
         paths:
         - path: /
           pathType: Prefix
