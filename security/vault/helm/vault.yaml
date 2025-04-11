@@ -145,7 +145,7 @@ server:
         listener "tcp" {
           address = "[::]:8200"
           cluster_address = "[::]:8201"
-          tls_disable = "true"
+          tls_disable = true
           # tls_cert_file = "/vault/userconfig/vault-mtls/server.crt"
           # tls_key_file  = "/vault/userconfig/vault-mtls/server.key"
           # tls_client_ca_file = "/vault/userconfig/vault-mtls/client_ca.crt"
