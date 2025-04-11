@@ -69,9 +69,10 @@ server:
   # kubectl --namespace vault create secret tls tls-ca --cert ./tls-ca.cert
   # kubectl --namespace vault create secret tls tls-server --cert ./tls-server.cert --key ./tls-server.key
   extraEnvironmentVars:
-    VAULT_CACERT: /vault/userconfig/vault-ha-tls/ca.crt
-    VAULT_TLSCERT: /vault/userconfig/vault-ha-tls/tls.crt
-    VAULT_TLSKEY: /vault/userconfig/vault-ha-tls/tls.key
+    VAULT_TLSCERT: /vault/userconfig/vault-mtls/server.crt
+    VAULT_TLSKEY: /vault/userconfig/vault-mtls/server.key
+    VAULT_CLIENT_CERT: /vault/userconfig/vault-mtls/client.crt
+    VAULT_CLIENT_KEY: /vault/userconfig/vault-mtls/client.key
 
   # extraVolumes is a list of extra volumes to mount. These will be exposed
   # to Vault in the path `/vault/userconfig/<name>/`.
@@ -90,13 +91,13 @@ server:
     - name: userconfig-vault-ha-tls
       secret:
         defaultMode: 420
-        secretName: vault-ha-tls
+        secretName: vault-mtls
 
   # volumeMounts is a list of volumeMounts for the main server container. These are rendered
   # via toYaml rather than pre-processed like the extraVolumes value.
   # The purpose is to make it easy to share volumes between containers.
   volumeMounts:
-    - mountPath: /vault/userconfig/vault-ha-tls
+    - mountPath: /vault/userconfig/vault-mtls
       name: userconfig-vault-ha-tls
       readOnly: true
 
@@ -130,9 +131,9 @@ server:
           address = "[::]:8200"
           cluster_address = "[::]:8201"
           tls_disable = 0
-          tls_cert_file = "/vault/userconfig/vault-ha-tls/tls.crt"
-          tls_key_file  = "/vault/userconfig/vault-ha-tls/tls.key"
-          tls_client_ca_file = "/vault/userconfig/vault-ha-tls/ca.crt"
+          tls_cert_file = "/vault/userconfig/vault-mtls/server.crt"
+          tls_key_file  = "/vault/userconfig/vault-mtls/server.key"
+          tls_client_ca_file = "/vault/userconfig/vault-mtls/client_ca.crt"
           tls_require_and_verify_client_cert = true
         }
 
@@ -140,15 +141,15 @@ server:
           path = "/vault/data"
           retry_join {
             leader_api_addr = "https://vault-0.vault-internal:8200"
-            leader_ca_cert_file = "/vault/userconfig/vault-ha-tls/ca.crt"
-            leader_client_cert_file = "/vault/userconfig/vault-ha-tls/tls.crt"
-            leader_client_key_file = "/vault/userconfig/vault-ha-tls/tls.key"
+            leader_ca_cert_file = "/vault/userconfig/vault-mtls/server_ca.crt"
+            leader_client_cert_file = "/vault/userconfig/vault-mtls/server.crt"
+            leader_client_key_file = "/vault/userconfig/vault-mtls/server.key"
           }
           retry_join {
             leader_api_addr = "https://vault-1.vault-internal:8200"
-            leader_ca_cert_file = "/vault/userconfig/vault-ha-tls/ca.crt"
-            leader_client_cert_file = "/vault/userconfig/vault-ha-tls/tls.crt"
-            leader_client_key_file = "/vault/userconfig/vault-ha-tls/tls.key"
+            leader_ca_cert_file = "/vault/userconfig/vault-mtls/server_ca.crt"
+            leader_client_cert_file = "/vault/userconfig/vault-mtls/server.crt"
+            leader_client_key_file = "/vault/userconfig/vault-mtls/server.key"
           }
         }
   
