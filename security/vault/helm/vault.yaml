@@ -56,7 +56,7 @@ server:
   # For HA configuration and because we need to manually init the vault,
   # we need to define custom readiness/liveness Probe settings
   readinessProbe:
-    enabled: true
+    enabled: false
     path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
     port: 8200
     failureThreshold: 12
@@ -65,7 +65,7 @@ server:
     successThreshold: 1
     timeoutSeconds: 3
   livenessProbe:
-    enabled: true
+    enabled: false
     execCommand: []
     # - /bin/sh
     # - -c
