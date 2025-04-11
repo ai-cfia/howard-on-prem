@@ -2,11 +2,9 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
   name: louis-frontend-route
-  namespace: louis
 spec:
   parentRefs:
-    - namespace: louis
-      name: louis-gateway
+    - name: louis-gateway
       sectionName: https-louis
   hostnames:
     - louis.inspection.alpha.canada.ca
@@ -23,11 +21,9 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
   name: bridge-gptr-backend-route
-  namespace: louis
 spec:
   parentRefs:
-    - namespace: louis
-      name: louis-gateway
+    - name: louis-gateway
       sectionName: https-bridge-gptr
   hostnames:
     - gptr-mcp.inspection.alpha.canada.ca
@@ -44,11 +40,9 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
   name: litellm-backend-route
-  namespace: louis
 spec:
   parentRefs:
-    - namespace: louis
-      name: louis-gateway
+    - name: louis-gateway
       sectionName: https-litellm
   hostnames:
     - litellm.inspection.alpha.canada.ca
@@ -65,11 +59,9 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
   name: ollama-backend-route
-  namespace: louis
 spec:
   parentRefs:
-    - namespace: louis
-      name: louis-gateway
+    - name: louis-gateway
       sectionName: https-ollama
   hostnames:
     - ollama.inspection.alpha.canada.ca
@@ -86,11 +78,9 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
   name: docling-backend-route
-  namespace: louis
 spec:
   parentRefs:
-    - namespace: louis
-      name: louis-gateway
+    - name: louis-gateway
       sectionName: https-docling
   hostnames:
     - docling.inspection.alpha.canada.ca
