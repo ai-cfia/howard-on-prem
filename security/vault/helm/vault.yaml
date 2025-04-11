@@ -56,12 +56,27 @@ server:
   # For HA configuration and because we need to manually init the vault,
   # we need to define custom readiness/liveness Probe settings
   readinessProbe:
-    enabled: false
-    path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+    enabled: true
+    path: /v1/sys/health?standbyok=true
+    port: 8200
+    failureThreshold: 12
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 3
   livenessProbe:
-    enabled: false
+    enabled: true
+    execCommand: []
+    # - /bin/sh
+    # - -c
+    # - /vault/userconfig/mylivenessscript/run.sh
     path: "/v1/sys/health?standbyok=true"
+    port: 8200
+    failureThreshold: 12
     initialDelaySeconds: 60
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 3
 
   # extraEnvironmentVars is a list of extra environment variables to set with the stateful set. These could be
   # used to include variables required for auto-unseal.
