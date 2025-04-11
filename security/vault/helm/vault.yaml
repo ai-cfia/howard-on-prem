@@ -60,7 +60,7 @@ server:
     path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
     port: 8200
     failureThreshold: 12
-    initialDelaySeconds: 5
+    initialDelaySeconds: 80
     periodSeconds: 5
     successThreshold: 1
     timeoutSeconds: 3
@@ -73,7 +73,7 @@ server:
     path: "/v1/sys/health?standbyok=true"
     port: 8200
     failureThreshold: 12
-    initialDelaySeconds: 60
+    initialDelaySeconds: 80
     periodSeconds: 5
     successThreshold: 1
     timeoutSeconds: 3
