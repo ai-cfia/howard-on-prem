@@ -27,4 +27,4 @@ spec:
             service:
               name: vault-ui
               port:
-                name: https
+                name: http
