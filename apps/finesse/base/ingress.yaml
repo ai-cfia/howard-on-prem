@@ -16,7 +16,7 @@ spec:
     - host: finesse-backend.inspection.alpha.canada.ca
       http:
         paths:
-          - path: /
+          - path: /api(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
