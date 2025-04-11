@@ -64,7 +64,7 @@ affinity:
                 - app-worker
 
 settings:
-  vault_url: "https://vault.vault:8200"
+  vault_url: "http://vault.vault:8200"
   # vault unlocking keys settings:
   vault_secret_shares: 3
   vault_secret_threshold: 2
