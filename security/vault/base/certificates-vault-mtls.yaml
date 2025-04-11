@@ -47,8 +47,6 @@ spec:
   dnsNames:
     - vault-0.vault-internal
     - vault-1.vault-internal
-    - vault-2.vault-internal
-    - vault-3.vault-internal
     - vault.vault.svc
     - vault.vault.svc.cluster.local
   ipAddresses:
