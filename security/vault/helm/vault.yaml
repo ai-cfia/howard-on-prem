@@ -132,7 +132,6 @@ server:
           tls_disable = 0
           tls_cert_file = "/vault/userconfig/vault-ha-tls/tls.crt"
           tls_key_file  = "/vault/userconfig/vault-ha-tls/tls.key"
-          tls_client_ca_file = "/vault/userconfig/vault-ha-tls/ca.crt"
         }
 
         storage "raft" {
