@@ -167,7 +167,7 @@ consoleIngress:
 ## See https://min.io/docs/minio/linux/operations/external-iam/configure-openid-external-identity-management.html for a tutorial on using these variables.
 oidc:
   enabled: true
-  configUrl: "https://keycloak.inspection.alpha.canada.ca/.well-known/openid-configuration"
+  configUrl: "https://keycloak.inspection.alpha.canada.ca/realms/infrastructure/.well-known/openid-configuration"
   clientId: "minio"
   clientSecret: ""
   # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientId` and/or `clientSecret``
