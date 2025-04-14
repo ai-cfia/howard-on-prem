@@ -1,88 +1,88 @@
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: nachet-rcnn-detector
-#   namespace: nachet-dev
-# spec:
-#   replicas: 1
-#   revisionHistoryLimit: 3
-#   selector:
-#     matchLabels:
-#       app: nachet-rcnn-detector
-#   strategy:
-#     type: RollingUpdate
-#     rollingUpdate:
-#       maxSurge: 1
-#       maxUnavailable: 1
-#   template:
-#     metadata:
-#       labels:
-#         app: nachet-rcnn-detector
-#     spec:
-#       affinity:
-#         podAntiAffinity:
-#           requiredDuringSchedulingIgnoredDuringExecution:
-#             - labelSelector:
-#                 matchExpressions:
-#                   - key: app
-#                     operator: In
-#                     values:
-#                       - nachet-rcnn-detector
-#               topologyKey: "kubernetes.io/hostname"
-#         nodeAffinity:
-#           requiredDuringSchedulingIgnoredDuringExecution:
-#             nodeSelectorTerms:
-#               - matchExpressions:
-#                   - key: kubernetes.io/hostname
-#                     operator: In
-#                     values:
-#                       - ai-lab-2
-#       containers:
-#         - name: nachet-rcnn-detector
-#           image: ghcr.io/ai-cfia/nachet-backend:29-azureml-seed-detector
-#           imagePullPolicy: Always
-#           command: ["/bin/sh", "-c"]
-#           args: ['./startup.sh']
-#           # envFrom:
-#           #   - secretRef:
-#           #       name: nachet-rcnn-detector-secrets
-#           ports:
-#             - containerPort: 5001
-#           volumeMounts:
-#             - name: logs
-#               mountPath: /app/logs
-#             - name: tmp
-#               mountPath: /tmp
-#           livenessProbe:
-#             httpGet:
-#               path: /
-#               port: 5001
-#             initialDelaySeconds: 120
-#             periodSeconds: 120
-#           resources:
-#             requests:
-#               cpu: "6"
-#               memory: "12Gi"
-#             limits:
-#               memory: "24Gi"
-#           securityContext:
-#             runAsNonRoot: false
-#             runAsUser: 1000
-#             runAsGroup: 1000
-#             readOnlyRootFilesystem: false
-#             allowPrivilegeEscalation: false
-#             capabilities:
-#               drop:
-#                 - ALL
-#       volumes:
-#         - name: tmp
-#           emptyDir:
-#             medium: Memory
-#             sizeLimit: 500Mi
-#         - name: logs
-#           emptyDir:
-#             medium: Memory
-#             sizeLimit: 500Mi
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nachet-rcnn-detector
+  namespace: nachet-dev
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: nachet-rcnn-detector
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: nachet-rcnn-detector
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - nachet-rcnn-detector
+              topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - ai-lab-1
+      containers:
+        - name: nachet-rcnn-detector
+          image: ghcr.io/ai-cfia/nachet-backend:29-azureml-seed-detector
+          imagePullPolicy: Always
+          command: ["/bin/sh", "-c"]
+          args: ['./startup.sh']
+          # envFrom:
+          #   - secretRef:
+          #       name: nachet-rcnn-detector-secrets
+          ports:
+            - containerPort: 5001
+          volumeMounts:
+            - name: logs
+              mountPath: /app/logs
+            - name: tmp
+              mountPath: /tmp
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5001
+            initialDelaySeconds: 120
+            periodSeconds: 120
+          resources:
+            requests:
+              cpu: "4"
+              memory: "12Gi"
+            limits:
+              memory: "24Gi"
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 500Mi
+        - name: logs
+          emptyDir:
+            medium: Memory
+            sizeLimit: 500Mi
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
