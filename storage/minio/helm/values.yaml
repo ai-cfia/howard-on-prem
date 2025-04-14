@@ -83,27 +83,6 @@ persistence:
   ##
   subPath: ""
 
-
-## OpenID Identity Management
-## The following section documents environment variables for enabling external identity management using an OpenID Connect (OIDC)-compatible provider.
-## See https://min.io/docs/minio/linux/operations/external-iam/configure-openid-external-identity-management.html for a tutorial on using these variables.
-oidc:
-  enabled: true
-  configUrl: "https://keycloak.inspection.alpha.canada.ca/.well-known/openid-configuration"
-  clientId: "minio"
-  clientSecret: ""
-  # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientId` and/or `clientSecret``
-  existingClientSecretName: "minio-client-secret"
-  existingClientIdKey: ""
-  existingClientSecretKey: "minio-client-secret"
-  claimName: "policy"
-  scopes: "openid,profile,email"
-  redirectUri: "https://minio-console.inspection.alpha.canada.ca/oauth_callback"
-  # Can leave empty
-  claimPrefix: ""
-  comment: ""
-  displayName: ""
-
 ## Expose the MinIO service to be accessed from outside the cluster (LoadBalancer service).
 ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
 ## ref: http://kubernetes.io/docs/user-guide/services/
@@ -183,22 +162,21 @@ consoleIngress:
         - minio-console.inspection.alpha.canada.ca
       secretName: minio-console-tls
 
-
 ## OpenID Identity Management
 ## The following section documents environment variables for enabling external identity management using an OpenID Connect (OIDC)-compatible provider.
 ## See https://min.io/docs/minio/linux/operations/external-iam/configure-openid-external-identity-management.html for a tutorial on using these variables.
 oidc:
   enabled: true
-  configUrl: "http://10.140.79.10/realms/infra"
+  configUrl: "https://keycloak.inspection.alpha.canada.ca/.well-known/openid-configuration"
   clientId: "minio"
   clientSecret: ""
   # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientId` and/or `clientSecret``
-  existingClientSecretName: "minio-secret"
+  existingClientSecretName: "minio-client-secret"
   existingClientIdKey: ""
-  existingClientSecretKey: "keycloak-secret"
+  existingClientSecretKey: "minio-client-secret"
   claimName: "policy"
   scopes: "openid,profile,email"
-  redirectUri: "http://10.140.79.26/oauth_callback"
+  redirectUri: "https://minio-console.inspection.alpha.canada.ca/oauth_callback"
   # Can leave empty
   claimPrefix: ""
   comment: ""
