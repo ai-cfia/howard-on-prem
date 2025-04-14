@@ -279,7 +279,7 @@ externalDatabase:
   host: ""
   port: 5432
   user: bn_keycloak
-  database: keycloak
+  database: keycloak-database
   password: ""
   existingSecret: "keycloak-secrets"
   existingSecretHostKey: "pgsql-host"
