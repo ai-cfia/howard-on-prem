@@ -13,10 +13,8 @@ spec:
   commonName: nachet-backend.inspection.alpha.canada.ca
   dnsNames:
     - nachet-backend.inspection.alpha.canada.ca
-    - nachet-backend
-    - nachet-backend.nachet-dev.svc.cluster.local
   issuerRef:
-    name: internal-ca-issuer
+    name: letsencrypt-prod
     kind: ClusterIssuer
     group: cert-manager.io
 ---
@@ -32,12 +30,11 @@ spec:
   subject:
     organizations:
       - ACIA CFIA AI Lab
-  commonName: nachet-on-prem.inspection.alpha.canada.ca
+  commonName: nachet.inspection.alpha.canada.ca
   dnsNames:
-    - nachet-on-prem.inspection.alpha.canada.ca
-    - nachet-on-prem
+    - nachet.inspection.alpha.canada.ca
   issuerRef:
-    name: internal-ca-issuer
+    name: letsencrypt-prod
     kind: ClusterIssuer
     group: cert-manager.io
 ---

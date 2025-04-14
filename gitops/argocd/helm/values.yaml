@@ -13,7 +13,7 @@ crds:
 global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
-  domain:
+  domain: argocd.inspection.alpha.canada.ca
 
   # -- Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
   revisionHistoryLimit: 3
@@ -53,7 +53,7 @@ configs:
 
     # -- Enable local admin user
     ## Ref: https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
-    admin.enabled: false
+    admin.enabled: true
 
     # -- Timeout to discover if a new manifests version got published to the repository
     timeout.reconciliation: 180s
@@ -66,10 +66,10 @@ configs:
     statusbadge.enabled: true
 
     # OIDC configuration as an alternative to dex (optional).
-    url: http://10.140.79.3
+    url: https://argocd.inspection.alpha.canada.ca
     oidc.config: |
       name: Keycloak
-      issuer: http://10.140.79.10/realms/main
+      issuer: https://keycloak.inspection.alpha.canada.ca/realms/infra
       clientID: argocd
       clientSecret: $argocd-config:oidc.keycloak.clientSecret
       requestedScopes:
@@ -221,6 +221,131 @@ configs:
 
     # -- Matcher function for Casbin, `glob` for glob matcher and `regex` for regex matcher.
     policy.matchMode: "glob"
+
+
+## Notifications controller
+notifications:
+  # -- Enable notifications controller
+  enabled: true
+
+  # -- Notifications controller name string
+  name: notifications-controller
+
+  # -- Argo CD dashboard url; used in place of {{.context.argocdUrl}} in templates
+  # @default -- `""` (defaults to https://`global.domain`)
+  argocdUrl: ""
+
+  # -- Runtime class name for the notifications controller
+  # @default -- `""` (defaults to global.runtimeClassName)
+  runtimeClassName: ""
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- `[]` (defaults to global.imagePullSecrets)
+  imagePullSecrets: []
+
+  # -- Notifications controller log format. Either `text` or `json`
+  # @default -- `""` (defaults to global.logging.format)
+  logFormat: ""
+  # -- Notifications controller log level. One of: `debug`, `info`, `warn`, `error`
+  # @default -- `""` (defaults to global.logging.level)
+  logLevel: ""
+
+  # -- Extra arguments to provide to the notifications controller
+  extraArgs: []
+
+  # -- Additional container environment variables
+  extraEnv: []
+
+  # -- envFrom to pass to the notifications controller
+  # @default -- `[]` (See [values.yaml])
+  extraEnvFrom: []
+    # - configMapRef:
+    #     name: config-map-name
+    # - secretRef:
+    #     name: secret-name
+
+  cm:
+    # -- Whether helm chart creates notifications controller config map
+    create: false
+
+  secret:
+    # -- Whether helm chart creates notifications controller secret
+    ## If true, will create a secret with the name below. Otherwise, will assume existence of a secret with that name.
+    create: false
+
+    # -- notifications controller Secret name
+    name: "argocd-notifications-secret"
+
+    # -- key:value pairs of annotations to be added to the secret
+    annotations: {}
+
+    # -- key:value pairs of labels to be added to the secret
+    labels: {}
+
+    # -- Generic key:value pairs to be inserted into the secret
+    ## Can be used for templates, notification services etc. Some examples given below.
+    ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/overview/
+    items: []
+
+  # -- Configures notification services such as slack, email or custom webhook
+  # @default -- See [values.yaml]
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/overview/
+  notifiers:
+    service.github: |
+      appID: 1206896
+      installationID: 64077645
+      privateKey: $github-privateKey
+  
+  # Notification controller container ports
+  containerPorts:
+    # -- Metrics container port
+    metrics: 9001
+
+  # -- Assign custom [affinity] rules
+  # @default -- `{}` (defaults to global.affinity preset)
+  affinity: {}
+
+  # -- Contains centrally managed global application subscriptions
+  ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/subscriptions/
+  subscriptions: []
+    # # subscription for on-sync-status-unknown trigger notifications
+    # - recipients:
+    #   - slack:test2
+    #   - email:test@gmail.com
+    #   triggers:
+    #   - on-sync-status-unknown
+    # # subscription restricted to applications with matching labels only
+    # - recipients:
+    #   - slack:test3
+    #   selector: test=true
+    #   triggers:
+    #   - on-sync-status-unknown
+
+  templates:
+    template.app-deployed: |
+      message: |
+        Application {{.app.metadata.name}} is now running new version of deployments manifests.
+      github:
+        repoURLPath: "{{.app.spec.source.repoURL}}"
+        revisionPath: "{{.app.status.operationState.syncResult.revision}}"
+        status:
+          state: success
+          label: "continuous-delivery/{{.app.metadata.name}}"
+          targetURL: "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
+        deployment:
+          state: success
+          environment: production
+          environmentURL: "https://{{.app.metadata.name}}.example.com"
+          logURL: "{{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true"
+          requiredContexts: []
+          autoMerge: true
+          transientEnvironment: false
+          reference: v1.0.0
+        pullRequestComment:
+          content: |
+            Application {{.app.metadata.name}} is now running new version of deployments manifests.
+            See more here: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}?operation=true
+  triggers: {}
 
 ## Dex
 dex:
@@ -387,6 +512,7 @@ server:
     annotations:
       lbipam.cilium.io/ips: 10.140.79.3
       ingress.cilium.io/loadbalancer-mode: dedicated
+      cert-manager.io/cluster-issuer: letsencrypt-prod
       # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
 
@@ -406,26 +532,26 @@ server:
     # -- Enable TLS configuration for the hostname defined at `server.ingress.hostname`
     ## TLS certificate will be retrieved from a TLS secret `argocd-server-tls`
     ## You can create this secret via `certificate` or `certificateSecret` option
-    tls: false
+    tls: true
 
   # TLS certificate configuration via cert-manager
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
-    enabled: false
+    enabled: true
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
-    domain: ""
+    domain: "argocd.inspection.alpha.canada.ca"
     # -- Certificate Subject Alternate Names (SANs)
     additionalHosts: []
     # -- The requested 'duration' (i.e. lifetime) of the certificate.
     # @default -- `""` (defaults to 2160h = 90d if not specified)
     ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
-    duration: ""
+    duration: "2160h"
     # -- How long before the expiry a certificate should be renewed.
     # @default -- `""` (defaults to 360h = 15d if not specified)
     ## Ref: https://cert-manager.io/docs/usage/certificate/#renewal
-    renewBefore: ""
+    renewBefore: "360h"
     # Certificate issuer
     ## Ref: https://cert-manager.io/docs/concepts/issuer
     issuer:

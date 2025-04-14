@@ -7,10 +7,16 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.5
     ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: cilium
+  tls:
+    - hosts:
+        - rook-c.inspection.alpha.canada.ca
+      secretName: rook-c-tls
   rules:
-    - http:
+    - host: rook-c.inspection.alpha.canada.ca
+      http:
         paths:
         - path: /
           pathType: Prefix

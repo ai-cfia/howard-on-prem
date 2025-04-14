@@ -10,7 +10,6 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: nachet-dev
   source:
     repoURL: https://github.com/ai-cfia/howard-on-prem.git
     path: apps/nachet-dev/base

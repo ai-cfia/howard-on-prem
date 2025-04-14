@@ -15,6 +15,8 @@ resources:
   - ../../apps/webtop/
   - ../../apps/ailab-website/
   - ../../apps/librechat/
+  - ../../apps/gpt-researcher/
+  # - ../../apps/insect-project/
 
   # Example of deployment, ingress, pvc's, etc...
   # - ../../apps/examples/
@@ -43,6 +45,7 @@ resources:
 
   # Monitoring applications
   - ../../monitoring/k8s-dashboard/
+  - ../../monitoring/metrics-server/
 
   # MLOps
   - ../../mlops/nvidia/

@@ -15,11 +15,14 @@ spec:
     spec:
       containers:
         - name: open-webui
-          image: ghcr.io/open-webui/open-webui:git-d84e7d1
+          image: ghcr.io/ai-cfia/louis/open-webui:louis-0d596d0
           resources:
             requests:
               cpu: 2
               memory: 8G
+            limits:
+              cpu: 8
+              memory: 8Gi
           ports:
             - containerPort: 8080
           envFrom:

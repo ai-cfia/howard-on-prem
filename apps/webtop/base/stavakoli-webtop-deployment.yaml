@@ -82,7 +82,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
-  storageClassName: ceph-cold-filesystem
+  storageClassName: ceph-hot-filesystem
   resources:
     requests:
       storage: 20Gi

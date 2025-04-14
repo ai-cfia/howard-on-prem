@@ -10,8 +10,8 @@ spec:
       # caProvider:
       #   type: "Secret"
       #   namespace: "vault"
-      #   name: "tls-ca"
-      #   key: "tls.crt"
+      #   name: "vault-ca-tls"
+      #   key: "ca.crt"
       auth:
         tokenSecretRef:
           name: "vault-root-token"
