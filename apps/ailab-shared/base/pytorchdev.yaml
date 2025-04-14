@@ -4,7 +4,7 @@ metadata:
   name: pytorchdev
   namespace: ailab-shared
 spec:
-  replicas: 1
+  replicas: 0
   revisionHistoryLimit: 3
   selector:
     matchLabels:
