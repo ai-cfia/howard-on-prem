@@ -69,7 +69,7 @@ configs:
     url: https://argocd.inspection.alpha.canada.ca
     oidc.config: |
       name: Keycloak
-      issuer: https://keycloak.inspection.alpha.canada.ca/realms/infra
+      issuer: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure
       clientID: argocd
       clientSecret: $argocd-config:oidc.keycloak.clientSecret
       requestedScopes:
