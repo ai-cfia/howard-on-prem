@@ -207,4 +207,3 @@ schedulerName: ""
 
 tmpVolume:
   emptyDir: {}
-

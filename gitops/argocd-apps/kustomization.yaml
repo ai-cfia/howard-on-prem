@@ -51,7 +51,6 @@ resources:
   - ../../mlops/nvidia/
 
   # Infrastructure and configuration applications
-  - ../../infrastructure/crossplane/
 
 # This patch enforces a standardized sync policy for Argo CD applications:
 # - Enables automated sync with pruning (removes orphaned resources) and self-healing.
