@@ -5,9 +5,9 @@ metadata:
 spec:
   parentRefs:
     - name: louis-gateway
-      sectionName: https-louis
+      sectionName: https-ami
   hostnames:
-    - louis.inspection.alpha.canada.ca
+    - ami.inspection.alpha.canada.ca
   rules:
     - matches:
         - path:

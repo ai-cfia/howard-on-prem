@@ -9,9 +9,9 @@ spec:
   subject:
     organizations:
       - ACIA CFIA AI Lab
-  commonName: louis.inspection.alpha.canada.ca
+  commonName: ami.inspection.alpha.canada.ca
   dnsNames:
-    - louis.inspection.alpha.canada.ca
+    - ami.inspection.alpha.canada.ca
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer

@@ -8,8 +8,8 @@ spec:
       value: 10.140.79.6
   gatewayClassName: cilium
   listeners:
-    - name: https-louis
-      hostname: louis.inspection.alpha.canada.ca
+    - name: https-ami
+      hostname: ami.inspection.alpha.canada.ca
       port: 443
       protocol: HTTPS
       tls:
