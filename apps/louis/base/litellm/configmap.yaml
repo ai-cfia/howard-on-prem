@@ -41,6 +41,12 @@ data:
             api_base: os.environ/OPENAI_O3_MINI_API_ENDPOINT
             api_key: os.environ/OPENAI_O3_MINI_API_KEY
             api_version: os.environ/OPENAI_O3_MINI_API_VERSION
+        - model_name: gpt-4.1
+          litellm_params:
+            model: azure/gpt-4.1
+            api_base: os.environ/OPENAI_GPT41_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT41_API_KEY
+            api_version: os.environ/OPENAI_GPT41_API_VERSION
         - model_name: text-embedding-3-large
           litellm_params:
             model: azure/text-embedding-3-large
