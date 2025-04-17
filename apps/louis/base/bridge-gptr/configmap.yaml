@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bridge-gptr-config
+data:
+  config.json: |
+    {
+      "mcpServers": {
+        "deep-research": {
+          "command": "uv",
+          "args": ["run", "mcp", "run", "/app/mcp-server/server.py"]
+        },
+        "sequential-thinking": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@modelcontextprotocol/server-sequential-thinking"
+          ]
+        },
+        "time": {
+          "command": "uvx",
+          "args": ["mcp-server-time", "--local-timezone=America/New_York"]
+        },
+        "puppeteer": {
+          "command": "npx",
+          "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+        },
+        "filesystem": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@modelcontextprotocol/server-filesystem",
+            "/tmp"
+          ]
+        },
+        "fetch": {
+          "command": "uvx",
+          "args": ["mcp-server-fetch"]
+        },
+        "web-search-brave": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@modelcontextprotocol/server-brave-search"
+          ],
+          "env": {
+            "BRAVE_API_KEY": "os.environ/BRAVE_API_KEY"
+          }
+        },
+        "web-search-tavily": {
+          "command": "npx",
+          "args": ["-y", "tavily-mcp@0.1.4"],
+          "env": {
+            "TAVILY_API_KEY": "os.environ/TAVILY_API_KEY"
+          },
+          "disabled": false,
+          "autoApprove": []
+        }
+      }
+    }

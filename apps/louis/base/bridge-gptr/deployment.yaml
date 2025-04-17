@@ -24,7 +24,7 @@ spec:
                       - app-worker
       containers:
         - name: bridge-gptr
-          image: ghcr.io/ai-cfia/louis/mcpo-gptr:louis-3e891a1
+          image: ghcr.io/ai-cfia/louis:mcpo-gptr-louis-3e891a1
           imagePullPolicy: Always
           envFrom:
             - secretRef:
@@ -36,6 +36,9 @@ spec:
               mountPath: /.cache/
             - name: tmp-volume
               mountPath: /tmp
+            - name: config-volume
+              mountPath: /app/mcpo-gptr/config.json
+              subPath: config.json
 
       volumes:
         - name: cache-volume
@@ -45,7 +48,10 @@ spec:
         - name: tmp-volume
           emptyDir:
             medium: Memory
-            sizeLimit: 200Mi
+            sizeLimit: 2000Mi
+        - name: config-volume
+          configMap:
+            name: bridge-gptr-config
 
 ---
 apiVersion: v1
