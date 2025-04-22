@@ -19,7 +19,7 @@ grafana:
         - name: Mimir
           uid: prom
           type: prometheus
-          url: http://{{ .Release.Name }}-mimir-nginx/prometheus
+          url: http://{{ .Release.Name }}-mimir/prometheus
           isDefault: true
         # https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/#provision-the-data-source
         - name: Tempo
@@ -51,7 +51,6 @@ grafana:
     pathType: Prefix
     path: /
     annotations:
-      kubernetes.io/ingress.class: cilium
       cert-manager.io/cluster-issuer: letsencrypt-prod
       lbipam.cilium.io/ips: 10.140.79.43
     hosts:
