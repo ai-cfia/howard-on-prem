@@ -17,6 +17,22 @@ spec:
           name: "vault-root-token"
           namespace: "vault"
           key: "root_token"
+
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ClusterSecretStore
+metadata:
+  name: vault-devsecops-store
+spec:
+  provider:
+    vault:
+      server: "http://vault.vault.svc.cluster.local:8200"
+      path: "devsecops"
+      auth:
+        tokenSecretRef:
+          name: "vault-root-token"
+          namespace: "vault"
+          key: "root_token"
 ---
 # This secret won't be tracked by argocd
 # TODO: Change the tokenSecretRef to OIDC
