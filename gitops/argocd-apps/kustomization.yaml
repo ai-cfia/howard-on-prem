@@ -46,6 +46,8 @@ resources:
   # Monitoring applications
   - ../../monitoring/k8s-dashboard/
   - ../../monitoring/metrics-server/
+  - ../../monitoring/grafana-lgtm/
+  - ../../monitoring/grafana-alloy/
 
   # MLOps
   - ../../mlops/nvidia/
