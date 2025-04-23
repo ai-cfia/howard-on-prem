@@ -12,6 +12,10 @@ alloy:
     # -- Content to assign to the new ConfigMap.  This is passed into `tpl` allowing for templating from values.
     # https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.otlp/
     content: |-
+      livedebugging {
+        enabled = true
+      }
+
       otelcol.receiver.otlp "default" {
         grpc {
           endpoint = "0.0.0.0:4317"
