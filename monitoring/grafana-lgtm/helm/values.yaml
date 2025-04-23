@@ -211,6 +211,9 @@ tempo:
   enabled: true
   ingester:
     replicas: 1
+    # https://github.com/grafana/loki/issues/8899
+    config:
+      replication_factor: 1
     persistence:
       enabled: true
       storageClass: ceph-hot-block
