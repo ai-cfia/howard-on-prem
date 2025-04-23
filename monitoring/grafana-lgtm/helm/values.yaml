@@ -63,6 +63,9 @@ grafana:
 loki:
   # -- Deploy Loki if enabled. See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/loki-distributed#values) for full values reference.
   enabled: true
+  loki:
+    containerSecurityContext:
+      readOnlyRootFilesystem: true
   compactor:
     enabled: true
     persistence:
