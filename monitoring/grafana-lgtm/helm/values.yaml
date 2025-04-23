@@ -106,26 +106,27 @@ mimir:
     extraEnvFrom:
       - secretRef:
           name: minio-secret
-  structuredConfig:
-    common:
-      storage:
-        backend: s3
+  mimir:
+    structuredConfig:
+      common:
+        storage:
+          backend: s3
+          s3:
+            bucket_name: mimir
+            endpoint: "minio.minio.svc.cluster.local:9000"
+            secret_access_key: "${rootPassword}" # This is a secret injected via an environment variable
+            access_key_id: "${rootUser}" # This is a secret injected via an environment variable
+            http:
+              insecure_skip_verify: true
+      blocks_storage:
         s3:
-          bucket_name: mimir
-          endpoint: "minio.minio.svc.cluster.local:9000"
-          secret_access_key: "${rootPassword}" # This is a secret injected via an environment variable
-          access_key_id: "${rootUser}" # This is a secret injected via an environment variable
-          http:
-            insecure_skip_verify: true
-    blocks_storage:
-      s3:
-        bucket_name: mimir-blocks
-    alertmanager_storage:
-      s3:
-        bucket_name: mimir-alertmanager
-    ruler_storage:
-      s3:
-        bucket_name: mimir-ruler
+          bucket_name: mimir-blocks
+      alertmanager_storage:
+        s3:
+          bucket_name: mimir-alertmanager
+      ruler_storage:
+        s3:
+          bucket_name: mimir-ruler
   alertmanager:
     persistentVolume:
       storageClass: ceph-hot-block
