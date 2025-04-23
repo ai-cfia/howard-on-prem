@@ -49,7 +49,7 @@ alloy:
 
       otelcol.exporter.otlp "tempo" {
         client {
-          endpoint = "http://lgtm-distributed-tempo-query-frontend:3100"
+          endpoint = "http://lgtm-distributed-tempo-distributor:3100"
         }
       }
 
