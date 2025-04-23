@@ -34,4 +34,4 @@ spec:
             value: "/"
       backendRefs:
         - name: alloy
-          port: 12347
+          port: 12345
