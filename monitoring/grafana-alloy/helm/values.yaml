@@ -16,6 +16,18 @@ alloy:
         enabled = true
       }
 
+      prometheus.scrape "argocd" {
+        targets = ["argocd-server.argocd.svc.cluster.local:8082"]
+        job_name = "argocd"
+        forward_to = [otelcol.processor.batch.default.input]
+      }
+
+      prometheus.scrape "mimir-distributor" {
+        targets = ["mimir-distributor.monitoring.svc.cluster.local:8080"]
+        job_name = "mimir-distributor"
+        forward_to = [otelcol.processor.batch.default.input]
+      }
+
       otelcol.receiver.otlp "default" {
         grpc {
           endpoint = "0.0.0.0:4317"
@@ -34,15 +46,15 @@ alloy:
 
       otelcol.processor.batch "default" {
         output {
-          metrics = [otelcol.exporter.otlp.mimir.input]
+          metrics = [prometheus.exporter.remote_write.to_mimir.input]
           logs    = [otelcol.exporter.otlp.loki.input]
           traces  = [otelcol.exporter.otlp.tempo.input]
         }
       }
 
-      otelcol.exporter.otlp "mimir" {
-        client {
-          endpoint = "http://lgtm-distributed-mimir-nginx/prometheus"
+      prometheus.exporter.remote_write "to_mimir" {
+        endpoint {
+          url = "http://lgtm-distributed-mimir-nginx/api/v1/push"
         }
       }
 

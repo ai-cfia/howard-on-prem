@@ -498,6 +498,10 @@ server:
   # -- The number of server pods to run
   replicas: 1
 
+  # Metrics server
+  metrics:
+    enabled: true
+
   # Argo CD server ingress configuration
   ingress:
     # -- Enable an ingress resource for the Argo CD server
