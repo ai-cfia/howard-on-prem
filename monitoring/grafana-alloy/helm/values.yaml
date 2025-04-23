@@ -22,7 +22,7 @@ alloy:
         forward_to = [otelcol.processor.batch.default.input]
       }
 
-      prometheus.scrape "mimir-distributor" {
+      prometheus.scrape "mimir_distributor" {
         targets = ["mimir-distributor.monitoring.svc.cluster.local:8080"]
         job_name = "mimir-distributor"
         forward_to = [otelcol.processor.batch.default.input]
