@@ -98,7 +98,17 @@ alloy:
     # -- Extra volume mounts to add into the Grafana Alloy container. Does not
     # affect the watch container.
     extra: []
-
+  
+  # -- Extra ports to expose on the Alloy container.
+  extraPorts:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+      protocol: TCP
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+      protocol: TCP
 rbac:
   # -- Whether to create RBAC resources for Alloy.
   create: true
