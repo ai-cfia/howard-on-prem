@@ -97,10 +97,14 @@ mimir:
   # -- Deploy Mimir if enabled. See [upstream values.yaml](https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/values.yaml) for full values reference.
   enabled: true
   alertmanager:
+    persistentVolume:
+      storageClass: ceph-hot-block
     resources:
       requests:
         cpu: 20m
   compactor:
+    persistentVolume:
+      storageClass: ceph-hot-block
     resources:
       requests:
         cpu: 20m
@@ -110,6 +114,8 @@ mimir:
         cpu: 20m
   ingester:
     replicas: 2
+    persistentVolume:
+      storageClass: ceph-hot-block
     zoneAwareReplication:
       enabled: false
     resources:
@@ -138,6 +144,8 @@ mimir:
       requests:
         cpu: 20m
   store_gateway:
+    persistentVolume:
+      storageClass: ceph-hot-block
     zoneAwareReplication:
       enabled: false
     resources:
