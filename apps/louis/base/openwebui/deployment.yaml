@@ -32,6 +32,11 @@ spec:
                 name: openwebui-secrets
             - secretRef:
                 name: openwebui-connection-string
+          env:
+            - name: ENABLE_OTEL
+              value: "true"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://alloy.monitoring.svc.cluster.local:4317"
           tty: true
           volumeMounts:
             - name: openwebui-volume
