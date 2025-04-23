@@ -18,7 +18,7 @@ alloy:
 
       prometheus.scrape "argocd" {
         targets = [
-          { __address__ = "argocd-server.argocd.svc.cluster.local:8082" },
+          { __address__ = "argocd-server-metrics.argocd.svc.cluster.local:8083" },
         ]
         job_name = "argocd"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
