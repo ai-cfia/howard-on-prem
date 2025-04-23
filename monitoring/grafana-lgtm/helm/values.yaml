@@ -215,6 +215,13 @@ tempo:
       enabled: true
       storageClass: ceph-hot-block
       size: 100Gi
+  traces:
+    otlp:
+      http:
+        enabled: true
+      grpc:
+        # -- Enable Tempo to ingest Open Telemetry GRPC traces
+        enabled: true
 
 grafana-oncall:
   # -- Deploy Grafana OnCall if enabled. See [upstream values.yaml](https://github.com/grafana/oncall/blob/dev/helm/oncall/values.yaml) for full values reference.

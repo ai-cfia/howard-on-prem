@@ -10,6 +10,7 @@ alloy:
     # -- Create a new ConfigMap for the config file.
     create: true
     # -- Content to assign to the new ConfigMap.  This is passed into `tpl` allowing for templating from values.
+    # https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.otlp/
     content: |-
       otelcol.receiver.otlp "default" {
         grpc {
@@ -49,7 +50,7 @@ alloy:
 
       otelcol.exporter.otlp "tempo" {
         client {
-          endpoint = "http://lgtm-distributed-tempo-distributor:3100"
+          endpoint = "http://lgtm-distributed-tempo-distributor:4317"
           tls {
             insecure = true
             insecure_skip_verify = true
