@@ -50,7 +50,10 @@ alloy:
       otelcol.exporter.otlp "tempo" {
         client {
           endpoint = "http://lgtm-distributed-tempo-distributor:3100"
-          insecure = true
+          tls {
+            insecure = true
+            insecure_skip_verify = true
+          }
         }
       }
 
