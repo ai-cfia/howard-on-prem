@@ -69,6 +69,10 @@ loki:
       enabled: true
       storageClass: ceph-hot-block
       size: 100Gi
+      claims:
+        - name: data
+          size: 100Gi
+          storageClass: ceph-hot-block
   indexGateway:
     enabled: true
     persistence:
@@ -78,8 +82,10 @@ loki:
   ingester:
     persistence:
       enabled: true
-      storageClass: ceph-hot-block
-      size: 100Gi
+      claims:
+        - name: data
+          size: 100Gi
+          storageClass: ceph-hot-block
   querier:
     persistence:
       enabled: true
@@ -155,6 +161,9 @@ mimir:
     resources:
       requests:
         cpu: 20m
+    persistence:
+      size: 5Gi
+      storageClass: ceph-hot-block
   rollout_operator:
     resources:
       requests:
