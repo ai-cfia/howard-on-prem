@@ -111,10 +111,12 @@ mimir:
       storage:
         backend: s3
         s3:
-          endpoint: minio.minio.svc:9000
+          bucket_name: mimir
+          endpoint: "minio.minio.svc.cluster.local:9000"
           secret_access_key: "${rootPassword}" # This is a secret injected via an environment variable
           access_key_id: "${rootUser}" # This is a secret injected via an environment variable
-          insecure: true
+          http:
+            insecure_skip_verify: true
     blocks_storage:
       s3:
         bucket_name: mimir-blocks
