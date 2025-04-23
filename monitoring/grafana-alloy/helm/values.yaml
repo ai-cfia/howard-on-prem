@@ -21,7 +21,7 @@ alloy:
           { __address__ = "argocd-server.argocd.svc.cluster.local:8082" },
         ]
         job_name = "argocd"
-        forward_to = [prometheus.remote_write.to_mimir.input]
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
       prometheus.scrape "mimir_distributor" {
@@ -29,7 +29,7 @@ alloy:
           { __address__ = "mimir-distributor.monitoring.svc.cluster.local:8080" },
         ]
         job_name = "mimir-distributor"
-        forward_to = [prometheus.remote_write.to_mimir.input]
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
       otelcol.receiver.otlp "default" {
@@ -50,7 +50,7 @@ alloy:
 
       otelcol.processor.batch "default" {
         output {
-          metrics = [prometheus.remote_write.to_mimir.input]
+          metrics = [prometheus.remote_write.to_mimir.receiver]
           logs    = [otelcol.exporter.otlp.loki.input]
           traces  = [otelcol.exporter.otlp.tempo.input]
         }
