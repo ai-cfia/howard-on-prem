@@ -67,29 +67,29 @@ loki:
     enabled: true
     persistence:
       enabled: true
-      storageClassName: ceph-hot-block
+      storageClass: ceph-hot-block
       size: 100Gi
   indexGateway:
     enabled: true
     persistence:
       enabled: true
-      storageClassName: ceph-hot-block
+      storageClass: ceph-hot-block
       size: 100Gi
   ingester:
     persistence:
       enabled: true
-      storageClassName: ceph-hot-block
+      storageClass: ceph-hot-block
       size: 100Gi
   querier:
     persistence:
       enabled: true
-      storageClassName: ceph-hot-block
+      storageClass: ceph-hot-block
       size: 100Gi
   ruler:
     enabled: true
     persistence:
       enabled: true
-      storageClassName: ceph-hot-block
+      storageClass: ceph-hot-block
       size: 100Gi
 
 # -- Mimir chart values. Resources are set to a minimum by default.
@@ -159,7 +159,7 @@ tempo:
     replicas: 1
     persistence:
       enabled: true
-      storageClassName: ceph-hot-block
+      storageClass: ceph-hot-block
       size: 100Gi
 
 grafana-oncall:
