@@ -102,6 +102,28 @@ loki:
 mimir:
   # -- Deploy Mimir if enabled. See [upstream values.yaml](https://github.com/grafana/mimir/blob/main/operations/helm/charts/mimir-distributed/values.yaml) for full values reference.
   enabled: true
+  global:
+    extraEnvFrom:
+      - secretRef:
+          name: minio-secret
+  structuredConfig:
+    common:
+      storage:
+        backend: s3
+        s3:
+          endpoint: minio.minio.svc:9000
+          secret_access_key: "${rootPassword}" # This is a secret injected via an environment variable
+          access_key_id: "${rootUser}" # This is a secret injected via an environment variable
+          insecure: true
+    blocks_storage:
+      s3:
+        bucket_name: mimir-blocks
+    alertmanager_storage:
+      s3:
+        bucket_name: mimir-alertmanager
+    ruler_storage:
+      s3:
+        bucket_name: mimir-ruler
   alertmanager:
     persistentVolume:
       storageClass: ceph-hot-block
@@ -158,12 +180,7 @@ mimir:
       requests:
         cpu: 20m
   minio:
-    resources:
-      requests:
-        cpu: 20m
-    persistence:
-      size: 5Gi
-      storageClass: ceph-hot-block
+    enabled: false # using the already installed minio
   rollout_operator:
     resources:
       requests:
