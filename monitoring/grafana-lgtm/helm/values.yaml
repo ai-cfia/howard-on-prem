@@ -28,7 +28,7 @@ grafana:
         - name: Mimir
           uid: prom
           type: prometheus
-          url: http://{{ .Release.Name }}-mimir/prometheus
+          url: http://{{ .Release.Name }}-mimir-nginx/prometheus
           isDefault: true
         # https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/#provision-the-data-source
         - name: Tempo

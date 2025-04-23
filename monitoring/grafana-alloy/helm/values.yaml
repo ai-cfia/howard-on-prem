@@ -37,19 +37,19 @@ alloy:
 
       otelcol.exporter.otlp "mimir" {
         client {
-          endpoint = "http://grafana-lgtm-mimir/prometheus"
+          endpoint = "http://lgtm-distributed-mimir-nginx/prometheus"
         }
       }
 
       otelcol.exporter.otlp "loki" {
         client {
-          endpoint = "http://grafana-lgtm-loki-gateway"
+          endpoint = "http://lgtm-distributed-loki-gateway"
         }
       }
 
       otelcol.exporter.otlp "tempo" {
         client {
-          endpoint = "http://grafana-lgtm-tempo-query-frontend:3100"
+          endpoint = "http://lgtm-distributed-tempo-query-frontend:3100"
         }
       }
 
