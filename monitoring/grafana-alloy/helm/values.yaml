@@ -50,7 +50,7 @@ alloy:
 
       otelcol.processor.batch "default" {
         output {
-          metrics = [prometheus.remote_write.to_mimir.receiver]
+          metrics = [otelcol.exporter.otlp.mimir.input]
           logs    = [otelcol.exporter.otlp.loki.input]
           traces  = [otelcol.exporter.otlp.tempo.input]
         }
@@ -59,6 +59,12 @@ alloy:
       prometheus.remote_write "to_mimir" {
         endpoint {
           url = "http://lgtm-distributed-mimir-nginx/api/v1/push"
+        }
+      }
+
+      otelcol.exporter.otlp "mimir" {
+        client {
+          endpoint = "http://lgtm-distributed-mimir-nginx/api/v1/push"
         }
       }
 
