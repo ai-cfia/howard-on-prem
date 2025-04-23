@@ -29,9 +29,9 @@ spec:
   subject:
     organizations:
       - ACIA CFIA AI Lab
-  commonName: alloy.inspection.alpha.canada.ca
+  commonName: alloy-b.inspection.alpha.canada.ca
   dnsNames:
-    - alloy.inspection.alpha.canada.ca
+    - alloy-b.inspection.alpha.canada.ca
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
