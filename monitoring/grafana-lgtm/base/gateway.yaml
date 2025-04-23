@@ -9,7 +9,7 @@ spec:
   gatewayClassName: cilium
   listeners:
     - name: https-grafana
-      hostname: grafana.inspection.alpha.canada.ca
+      hostname: grafana-b.inspection.alpha.canada.ca
       port: 443
       protocol: HTTPS
       tls:

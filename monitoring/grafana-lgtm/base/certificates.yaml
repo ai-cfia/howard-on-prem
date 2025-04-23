@@ -9,9 +9,9 @@ spec:
   subject:
     organizations:
       - ACIA CFIA AI Lab
-  commonName: grafana.inspection.alpha.canada.ca
+  commonName: grafana-b.inspection.alpha.canada.ca
   dnsNames:
-    - grafana.inspection.alpha.canada.ca
+    - grafana-b.inspection.alpha.canada.ca
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
