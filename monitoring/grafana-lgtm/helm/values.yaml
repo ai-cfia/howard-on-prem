@@ -5,10 +5,11 @@ grafana:
   grafana.ini: # todo, configure keycloak login
     auth.anonymous:
       enabled: true
-      org_name: 1
+      org_name: "Main Org."
       org_role: Admin
     auth:
       disable_login_form: true
+      auto_assign_org_id: 1
     server:
       root_url: https://grafana-b.inspection.alpha.canada.ca
   # -- Grafana data sources config. Connects to all three by default
