@@ -51,6 +51,10 @@ alloy:
         client {
           endpoint = "http://lgtm-distributed-tempo-distributor:3100"
         }
+
+        tls {
+          insecure_skip_verify = true
+        }
       }
 
   clustering:
