@@ -158,6 +158,7 @@ ingress:
   path: /
   faroPort: 12347
   pathType: Prefix
+  ingressClassName: cilium
   hosts:
     - alloy.inspection.alpha.canada.ca
   tls:
