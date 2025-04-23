@@ -1,0 +1,28 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: monitoring-gateway
+spec:
+  addresses:
+    - type: IPAddress
+      value: 10.140.79.26
+  gatewayClassName: cilium
+  listeners:
+    - name: https-grafana
+      hostname: grafana.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: grafana-tls
+            kind: Secret
+    - name: https-alloy
+      hostname: alloy.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: alloy-tls
+            kind: Secret

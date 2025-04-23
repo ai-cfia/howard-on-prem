@@ -46,7 +46,7 @@ grafana:
     finalizers:
       - kubernetes.io/pvc-protection
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: cilium
     pathType: Prefix
     path: /

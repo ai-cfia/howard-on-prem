@@ -150,7 +150,7 @@ serviceMonitor:
   #   replacement: $1
   #   action: replace
 ingress:
-  enabled: true
+  enabled: false
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     lbipam.cilium.io/ips: 10.140.79.44

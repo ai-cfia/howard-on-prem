@@ -1,0 +1,28 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: minio-gateway
+spec:
+  addresses:
+    - type: IPAddress
+      value: 10.140.79.25
+  gatewayClassName: cilium
+  listeners:
+    - name: https-minio-console
+      hostname: minio-console.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: minio-console-tls
+            kind: Secret
+    - name: https-minio
+      hostname: minio.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: minio-tls
+            kind: Secret
