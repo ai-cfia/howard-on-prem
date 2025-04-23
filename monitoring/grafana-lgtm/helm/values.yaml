@@ -2,7 +2,13 @@
 grafana:
   # -- Deploy Grafana if enabled. See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration) for full values reference.
   enabled: true
-
+  grafana.ini: # todo, configure keycloak login
+    auth.anonymous:
+      enabled: true
+      org_name: Main Org.
+      org_role: Admin
+    auth:
+      disable_login_form: true
   # -- Grafana data sources config. Connects to all three by default
   datasources:
     datasources.yaml:
