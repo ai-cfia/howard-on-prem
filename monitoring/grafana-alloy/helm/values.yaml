@@ -18,18 +18,18 @@ alloy:
 
       prometheus.scrape "argocd" {
         targets = [
-          { __address__ = "argocd-server.argocd.svc.cluster.local:8082" }
+          { __address__ = "argocd-server.argocd.svc.cluster.local:8082" },
         ]
         job_name = "argocd"
-        forward_to = [otelcol.processor.batch.default.input]
+        forward_to = [prometheus.remote_write.to_mimir.input]
       }
 
       prometheus.scrape "mimir_distributor" {
         targets = [
-          { __address__ = "mimir-distributor.monitoring.svc.cluster.local:8080" }
+          { __address__ = "mimir-distributor.monitoring.svc.cluster.local:8080" },
         ]
         job_name = "mimir-distributor"
-        forward_to = [otelcol.processor.batch.default.input]
+        forward_to = [prometheus.remote_write.to_mimir.input]
       }
 
       otelcol.receiver.otlp "default" {
