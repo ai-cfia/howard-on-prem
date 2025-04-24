@@ -48,6 +48,7 @@ resources:
   - ../../monitoring/metrics-server/
   - ../../monitoring/grafana-lgtm/
   - ../../monitoring/grafana-alloy/
+  - ../../monitoring/k8s-state-metrics/
 
   # MLOps
   - ../../mlops/nvidia/
