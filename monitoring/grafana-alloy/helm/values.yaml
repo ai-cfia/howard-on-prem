@@ -16,13 +16,6 @@ alloy:
         enabled = true
       }
 
-      discovery.kubelet "cadvisor" {
-        url = "https://localhost:10250"
-        tls_config {
-          insecure_skip_verify = true
-        }
-      }
-
       prometheus.exporter.unix "node_metrics" {
         include_exporter_metrics = true
       }
@@ -31,11 +24,8 @@ alloy:
         
       }
 
-      prometheus.scrape "cadvisor_metrics" {
-        targets = discovery.kubelet.cadvisor.targets
-        metrics_path = "/metrics/cadvisor"
-        scheme = "https"
-        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      prometheus.exporter.cadvisor "container_metrics" {
+
       }
 
       prometheus.scrape "argocd" {
@@ -68,6 +58,13 @@ alloy:
         scrape_interval = "15s"
         targets = prometheus.exporter.process.process_metrics.targets
         job_name = "process_metrics"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.scrape "container_metrics" {
+        scrape_interval = "15s"
+        targets = prometheus.exporter.cadvisor.container_metrics.targets
+        job_name = "container_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
