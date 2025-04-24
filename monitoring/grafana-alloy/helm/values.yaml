@@ -48,16 +48,26 @@ alloy:
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
-      prometheus.scrape "k8s" {
+      prometheus.scrape "k8s_state_metrics" {
         scrape_interval = "15s"
-        targets = concat(
-          [
-            { __address__ = "kube-state-metrics.monitoring.svc.cluster.local:8080" },
-          ],
-          prometheus.exporter.unix.node_metrics.targets,
-          prometheus.exporter.process.process_metrics.targets
-        )
-        job_name = "k8s"
+        targets = [
+          { __address__ = "kube-state-metrics.monitoring.svc.cluster.local:8080" },
+        ]
+        job_name = "k8s_state_metrics"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.scrape "node_metrics" {
+        scrape_interval = "15s"
+        targets = prometheus.exporter.unix.node_metrics.targets
+        job_name = "node_metrics"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.scrape "process_metrics" {
+        scrape_interval = "15s"
+        targets = prometheus.exporter.process.process_metrics.targets
+        job_name = "process_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
