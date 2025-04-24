@@ -16,16 +16,6 @@ alloy:
         enabled = true
       }
 
-      discovery.kubelet "kubelet_metrics" {
-        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
-        enable_http2 = true
-        follow_redirects = true
-
-        tls_config {
-          insecure_skip_verify = true
-        }
-      }
-
       prometheus.exporter.unix "node_metrics" {
         include_exporter_metrics = true
       }
@@ -75,13 +65,6 @@ alloy:
         scrape_interval = "15s"
         targets = prometheus.exporter.cadvisor.container_metrics.targets
         job_name = "container_metrics"
-        forward_to = [prometheus.remote_write.to_mimir.receiver]
-      }
-
-      prometheus.scrape "kubelet_metrics" {
-        scrape_interval = "15s"
-        targets = discovery.kubelet.kubelet_metrics.targets
-        job_name = "kubelet_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
