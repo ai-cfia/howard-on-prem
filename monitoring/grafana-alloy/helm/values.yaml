@@ -16,6 +16,16 @@ alloy:
         enabled = true
       }
 
+      discovery.kubelet "kubelet_metrics" {
+        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+        enable_http2 = true
+        follow_redirects = true
+
+        tls_config {
+          insecure_skip_verify = true
+        }
+      }
+
       prometheus.exporter.unix "node_metrics" {
         include_exporter_metrics = true
       }
@@ -66,6 +76,23 @@ alloy:
         targets = prometheus.exporter.cadvisor.container_metrics.targets
         job_name = "container_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.relabel "kubelet_filter" {
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+
+        rule {
+          action        = "keep"
+          source_labels = ["__name__"]
+          regex         = "kubelet_persistentvolume|kubelet_persistentvolumeclaim"
+        }
+      }
+
+      prometheus.scrape "kubelet_metrics" {
+        scrape_interval = "120s"
+        targets = discovery.kubelet.kubelet_metrics.targets
+        job_name = "kubelet_metrics"
+        forward_to = [prometheus.relabel.kubelet_filter.receiver]
       }
 
       otelcol.receiver.otlp "default" {
@@ -202,7 +229,9 @@ controller:
   replicas: 1
 
   # -- For kubelet (set to true for kubelet)
-  hostNetwork: false
+  hostNetwork: true
+  # https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+  dnsPolicy: ClusterFirstWithHostNet
 
 serviceMonitor:
   enabled: false
