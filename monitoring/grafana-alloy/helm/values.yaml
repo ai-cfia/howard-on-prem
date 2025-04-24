@@ -214,6 +214,9 @@ controller:
   # -- Number of pods to deploy. Ignored when controller.type is 'daemonset'.
   replicas: 1
 
+  # -- For kubelet
+  hostNetwork: true
+
 serviceMonitor:
   enabled: false
   # -- Additional labels for the service monitor.
