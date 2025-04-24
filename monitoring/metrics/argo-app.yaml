@@ -9,13 +9,6 @@ spec:
     server: https://kubernetes.default.svc
     namespace: monitoring
   sources:
-    - chart: prometheus-node-exporter
-      repoURL: https://prometheus-community.github.io/helm-charts
-      targetRevision: 4.45.2
-      helm:
-        releaseName: prometheus-node-exporter
-        valueFiles:
-          - $values/monitoring/metrics/prometheus-node-exporter/helm/values.yaml
     - chart: metrics-server
       repoURL: https://kubernetes-sigs.github.io/metrics-server/
       targetRevision: 3.12.2

@@ -23,6 +23,14 @@ alloy:
         }
       }
 
+      prometheus.exporter.unix "node_metrics" {
+        include_exporter_metrics = true
+      }
+
+      prometheus.exporter.process "process_metrics" {
+        
+      }
+
       prometheus.scrape "cadvisor_metrics" {
         targets = discovery.kubelet.cadvisor.targets
         metrics_path = "/metrics/cadvisor"
@@ -31,6 +39,7 @@ alloy:
       }
 
       prometheus.scrape "argocd" {
+        scrape_interval = "15s"
         targets = [
           { __address__ = "argocd-server-metrics.argocd.svc.cluster.local:8083" },
           { __address__ = "argocd-application-controller-metrics.argocd.svc.cluster.local:8082" },
@@ -39,18 +48,15 @@ alloy:
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
-      prometheus.scrape "mimir_distributor" {
-        targets = [
-          { __address__ = "mimir-distributor.monitoring.svc.cluster.local:8080" },
-        ]
-        job_name = "mimir-distributor"
-        forward_to = [prometheus.remote_write.to_mimir.receiver]
-      }
-
       prometheus.scrape "k8s" {
-        targets = [
-          { __address__ = "kube-state-metrics.monitoring.svc.cluster.local:8080" },
-        ]
+        scrape_interval = "15s"
+        targets = concat(
+          [
+            { __address__ = "kube-state-metrics.monitoring.svc.cluster.local:8080" },
+          ],
+          prometheus.exporter.unix.node_metrics.targets,
+          prometheus.exporter.process.process_metrics.targets
+        )
         job_name = "k8s"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
