@@ -1,0 +1,22 @@
+# Default values for prometheus-node-exporter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  registry: quay.io
+  repository: prometheus/node-exporter
+  # Overrides the image tag whose default is {{ printf "v%s" .Chart.AppVersion }}
+  tag: ""
+  pullPolicy: IfNotPresent
+  digest: ""
+
+# Number of old history to retain to allow rollback
+# Default Kubernetes value is set to 10
+revisionHistoryLimit: 10
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 50Mi
+  requests:
+    cpu: 100m
+    memory: 30Mi

@@ -16,6 +16,20 @@ alloy:
         enabled = true
       }
 
+      discovery.kubelet "cadvisor" {
+        url = "https://localhost:10250"
+        tls_config {
+          insecure_skip_verify = true
+        }
+      }
+
+      prometheus.scrape "cadvisor_metrics" {
+        targets = discovery.kubelet.cadvisor.targets
+        metrics_path = "/metrics/cadvisor"
+        scheme = "https"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
       prometheus.scrape "argocd" {
         targets = [
           { __address__ = "argocd-server-metrics.argocd.svc.cluster.local:8083" },

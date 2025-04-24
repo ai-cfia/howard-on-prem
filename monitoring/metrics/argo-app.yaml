@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metrics
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  sources:
+    - chart: prometheus-node-exporter
+      repoURL: https://prometheus-community.github.io/helm-charts
+      targetRevision: 3.12.2
+      helm:
+        releaseName: prometheus-node-exporter
+        valueFiles:
+          - $values/monitoring/metrics/prometheus-node-exporter/helm/values.yaml
+    - chart: metrics-server
+      repoURL: https://kubernetes-sigs.github.io/metrics-server/
+      targetRevision: 3.12.2
+      helm:
+        releaseName: metrics-server
+        valueFiles:
+          - $values/monitoring/metrics/metrics-server/helm/values.yaml
+    - chart: kube-state-metrics
+      repoURL: https://prometheus-community.github.io/helm-charts
+      targetRevision: 5.32.0
+      helm:
+        releaseName: kube-state-metrics
+        valueFiles:
+          - $values/monitoring/metrics/k8s-state-metrics/helm/values.yaml
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
