@@ -10,15 +10,18 @@ alloy:
     # -- Create a new ConfigMap for the config file.
     create: true
     # -- Content to assign to the new ConfigMap.  This is passed into `tpl` allowing for templating from values.
-    # https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.otlp/
+    # More info here: https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.otlp/
     content: |-
+      # -- Enable live debugging
       livedebugging {
         enabled = true
       }
 
+      # -- Receivers / scrape configs
       prometheus.scrape "argocd" {
         targets = [
           { __address__ = "argocd-server-metrics.argocd.svc.cluster.local:8083" },
+          { __address__ = "argocd-application-controller-metrics.argocd.svc.cluster.local:8082" },
         ]
         job_name = "argocd"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
@@ -48,6 +51,7 @@ alloy:
         }
       }
 
+      # -- Distributed tracing receiver
       otelcol.processor.batch "default" {
         output {
           metrics = [otelcol.exporter.otlp.mimir.input]
@@ -56,6 +60,7 @@ alloy:
         }
       }
 
+      # -- Exporters
       prometheus.remote_write "to_mimir" {
         endpoint {
           url = "http://lgtm-distributed-mimir-nginx/api/v1/push"

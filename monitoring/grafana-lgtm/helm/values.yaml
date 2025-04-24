@@ -229,3 +229,38 @@ tempo:
 grafana-oncall:
   # -- Deploy Grafana OnCall if enabled. See [upstream values.yaml](https://github.com/grafana/oncall/blob/dev/helm/oncall/values.yaml) for full values reference.
   enabled: false
+  base_url: https://grafana-oncall.inspection.alpha.canada.ca
+  ingress:
+    enabled: false
+  ingress-nginx:
+    enabled: false
+  cert-manager:
+    enabled: false
+  database:
+    type: postgresql
+  mariadb:
+    enabled: false
+  grafana:
+    enabled: false
+  redis:
+    enabled: true
+  rabbitmq:
+    enabled: true
+  externalPostgresql: # TODO
+    host:
+    port:
+    db_name:
+    user:
+    password:
+    # Use an existing secret for the database password
+    existingSecret:
+    # The key in the secret containing the database password
+    passwordKey:
+    # Extra options (see example below)
+    # Reference: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS
+    options:
+    # options: >-
+    #   sslmode=verify-full
+    #   sslrootcert=/mnt/postgres-tls/ca.crt
+    #   sslcert=/mnt/postgres-tls/client.crt
+    #   sslkey=/mnt/postgres-tls/client.key
