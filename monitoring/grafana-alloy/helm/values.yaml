@@ -21,7 +21,7 @@ alloy:
         enable_http2 = true
         follow_redirects = true
 
-        tls {
+        tls_config {
           insecure_skip_verify = true
         }
       }
