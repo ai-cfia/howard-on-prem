@@ -19,7 +19,7 @@ resources:
   # - ../../apps/insect-project/
 
   # Example of deployment, ingress, pvc's, etc...
-  - ../../apps/examples/
+  # - ../../apps/examples/
 
   # Networking applications
   - ../../networking/cilium/
