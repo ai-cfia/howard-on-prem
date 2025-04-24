@@ -20,6 +20,10 @@ alloy:
         bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
         enable_http2 = true
         follow_redirects = true
+
+        tls {
+          insecure_skip_verify = true
+        }
       }
 
       prometheus.exporter.unix "node_metrics" {
