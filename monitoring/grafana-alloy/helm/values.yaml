@@ -62,9 +62,9 @@ alloy:
         scrape_interval = "60s"
         targets = [
           {
-            __address__ = "localhost:10250"
-            __scheme__ = "https"
-            __metrics_path__ = "/metrics"
+            __address__ = "localhost:10250",
+            __scheme__ = "https",
+            __metrics_path__ = "/metrics",
           }
         ]
         bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
