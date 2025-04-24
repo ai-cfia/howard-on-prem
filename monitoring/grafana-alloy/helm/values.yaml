@@ -57,6 +57,35 @@ alloy:
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
+      prometheus.scrape "kubelet_metrics_raw" {
+        job_name = "kubelet_raw"
+        scrape_interval = "60s"
+        targets = [
+          {
+            __address__ = "localhost:10250"
+            __scheme__ = "https"
+            __metrics_path__ = "/metrics"
+          }
+        ]
+        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+        tls_config {
+          insecure_skip_verify = true
+        }
+
+        forward_to = [prometheus.relabel.filter_kubelet_pv.receiver]
+      }
+
+      prometheus.relabel "filter_kubelet_pv" {
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+
+        rule {
+          action        = "keep"
+          source_labels = ["__name__"]
+          regex         = "kubelet_volume_.*|kubelet_persistentvolumeclaim_.*|kubelet_persistentvolume_.*"
+        }
+      }
+
       prometheus.scrape "node_metrics" {
         scrape_interval = "15s"
         targets = prometheus.exporter.unix.node_metrics.targets
