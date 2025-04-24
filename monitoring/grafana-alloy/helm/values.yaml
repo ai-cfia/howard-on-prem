@@ -12,31 +12,11 @@ alloy:
     # -- Content to assign to the new ConfigMap.  This is passed into `tpl` allowing for templating from values.
     # More info here: https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.otlp/
     content: |-
-      livedebugging {
-        enabled = true
-      }
+      livedebugging { enabled = true }
 
-      discovery.kubelet "kubelet_metrics" {
-        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
-        enable_http2 = true
-        follow_redirects = true
-
-        tls_config {
-          insecure_skip_verify = true
-        }
-      }
-
-      prometheus.exporter.unix "node_metrics" {
-        include_exporter_metrics = true
-      }
-
-      prometheus.exporter.process "process_metrics" {
-        
-      }
-
-      prometheus.exporter.cadvisor "container_metrics" {
-
-      }
+      prometheus.exporter.unix "node_metrics" { include_exporter_metrics = true }
+      prometheus.exporter.process "process_metrics" {}
+      prometheus.exporter.cadvisor "container_metrics" {}
       
       prometheus.scrape "argocd" {
         scrape_interval = "15s"
@@ -76,16 +56,6 @@ alloy:
         forward_to = [prometheus.relabel.filter_kubelet_pv.receiver]
       }
 
-      prometheus.relabel "filter_kubelet_pv" {
-        forward_to = [prometheus.remote_write.to_mimir.receiver]
-
-        rule {
-          action        = "keep"
-          source_labels = ["__name__"]
-          regex         = "kubelet_volume_.*|kubelet_persistentvolumeclaim_.*|kubelet_persistentvolume_.*"
-        }
-      }
-
       prometheus.scrape "node_metrics" {
         scrape_interval = "15s"
         targets = prometheus.exporter.unix.node_metrics.targets
@@ -107,31 +77,25 @@ alloy:
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
-      prometheus.relabel "kubelet_filter" {
+      prometheus.relabel "filter_kubelet_pv" {
         forward_to = [prometheus.remote_write.to_mimir.receiver]
 
         rule {
           action        = "keep"
           source_labels = ["__name__"]
-          regex         = "kubelet_persistentvolume|kubelet_persistentvolumeclaim"
+          regex         = "kubelet_volume_.*|kubelet_persistentvolumeclaim_.*|kubelet_persistentvolume_.*"
         }
       }
 
-      prometheus.scrape "kubelet_metrics" {
-        scrape_interval = "120s"
-        targets = discovery.kubelet.kubelet_metrics.targets
-        job_name = "kubelet_metrics"
-        forward_to = [prometheus.relabel.kubelet_filter.receiver]
+      prometheus.remote_write "to_mimir" {
+        endpoint {
+          url = "http://lgtm-distributed-mimir-nginx/api/v1/push"
+        }
       }
 
       otelcol.receiver.otlp "default" {
-        grpc {
-          endpoint = "0.0.0.0:4317"
-        }
-
-        http {
-          endpoint = "0.0.0.0:4318"
-        }
+        grpc { endpoint = "0.0.0.0:4317" }
+        http { endpoint = "0.0.0.0:4318" }
 
         output {
           metrics = [otelcol.processor.batch.default.input]
@@ -145,12 +109,6 @@ alloy:
           metrics = [otelcol.exporter.otlp.mimir.input]
           logs    = [otelcol.exporter.otlp.loki.input]
           traces  = [otelcol.exporter.otlp.tempo.input]
-        }
-      }
-
-      prometheus.remote_write "to_mimir" {
-        endpoint {
-          url = "http://lgtm-distributed-mimir-nginx/api/v1/push"
         }
       }
 
