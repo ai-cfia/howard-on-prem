@@ -69,3 +69,32 @@ The distributed Tempo setup includes:
 ### Grafana OnCall (optional)
 
 Grafana OnCall is an on-call management system designed to integrate with Grafana alerts. It handles alert grouping, escalation policies, and on-call scheduling. Though optional in this deployment, it can enhance alert response workflows.
+
+## Kubernetes metrics and dashboard
+
+### Kubernetes Dashboard
+
+The Kubernetes Dashboard is a web-based UI that allows users to interact with Kubernetes objects visually. While it is not part of the LGTM stack, it complements it by offering a high-level overview of cluster resources and events.
+
+Use cases include:
+
+- Browsing workloads, services, and volumes
+- Viewing pod logs and events
+- Manually applying YAML manifests
+
+---
+
+### metrics-server
+
+`metrics-server` provides real-time resource usage metrics (CPU, memory) to the Kubernetes control plane. It is used by:
+
+Example usage:
+
+```sh
+kubectl top nodes
+kubectl top pods
+```
+
+### kube-state-metrics
+
+`kube-state-metrics` is a service that exposes the state of Kubernetes resources (Deployments, Pods, Nodes, etc.) as Prometheus metrics. Unlike `metrics-server`, it focuses on declarative object state rather than real-time resource usage.

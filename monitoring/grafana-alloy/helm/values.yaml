@@ -33,6 +33,14 @@ alloy:
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
+      prometheus.scrape "k8s" {
+        targets = [
+          { __address__ = "kube-state-metrics.monitoring.svc.cluster.local:8080" },
+        ]
+        job_name = "k8s"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
       otelcol.receiver.otlp "default" {
         grpc {
           endpoint = "0.0.0.0:4317"
