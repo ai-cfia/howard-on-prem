@@ -5,18 +5,18 @@ metadata:
 data:
   config.yaml: |
       model_list:
-        - model_name: gpt-4
-          litellm_params:
-            model: azure/gpt-4
-            api_base: os.environ/OPENAI_GPT4_API_ENDPOINT
-            api_key: os.environ/OPENAI_GPT4_API_KEY
-            api_version: os.environ/OPENAI_GPT4_API_VERSION
         - model_name: gpt-4o
           litellm_params:
             model: azure/gpt-4o
             api_base: os.environ/OPENAI_GPT4O_API_ENDPOINT
             api_key: os.environ/OPENAI_GPT4O_API_KEY
             api_version: os.environ/OPENAI_GPT4O_API_VERSION
+        - model_name: fertiscan gpt-4o
+          litellm_params:
+            model: azure/gpt-4o
+            api_base: os.environ/FERTISCAN_GPT4O_API_ENDPOINT
+            api_key: os.environ/FERTISCAN_GPT4O_API_KEY
+            api_version: os.environ/FERTISCAN_GPT4O_API_VERSION
         - model_name: gpt-4o-mini
           litellm_params:
             model: azure/gpt-4o-mini
