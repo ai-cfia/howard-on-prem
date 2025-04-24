@@ -184,36 +184,34 @@ configs:
     # -- File containing user-defined policies and role definitions.
     # @default -- `''` (See [values.yaml])
     policy.csv: |
-      p, role:finesse, applications, create, default/finesse, allow
-      p, role:finesse, applications, update, default/finesse, allow
-      p, role:finesse, applications, delete, default/finesse, allow
-      p, role:finesse, applications, sync, default/finesse, allow
-      p, role:finesse, applications, override, default/finesse, allow
+      p, role:apps, applications, create, default/finesse, allow
+      p, role:apps, applications, update, default/finesse, allow
+      p, role:apps, applications, delete, default/finesse, allow
+      p, role:apps, applications, sync, default/finesse, allow
+      p, role:apps, applications, override, default/finesse, allow
 
-      p, role:nachet, applications, create, default/nachet-dev, allow
-      p, role:nachet, applications, update, default/nachet-dev, allow
-      p, role:nachet, applications, delete, default/nachet-dev, allow
-      p, role:nachet, applications, sync, default/nachet-dev, allow
-      p, role:nachet, applications, override, default/nachet-dev, allow
+      p, role:apps, applications, create, default/nachet-dev, allow
+      p, role:apps, applications, update, default/nachet-dev, allow
+      p, role:apps, applications, delete, default/nachet-dev, allow
+      p, role:apps, applications, sync, default/nachet-dev, allow
+      p, role:apps, applications, override, default/nachet-dev, allow
 
-      p, role:fertiscan, applications, create, default/fertiscan, allow
-      p, role:fertiscan, applications, update, default/fertiscan, allow
-      p, role:fertiscan, applications, delete, default/fertiscan, allow
-      p, role:fertiscan, applications, sync, default/fertiscan, allow
-      p, role:fertiscan, applications, override, default/fertiscan, allow
+      p, role:apps, applications, create, default/fertiscan, allow
+      p, role:apps, applications, update, default/fertiscan, allow
+      p, role:apps, applications, delete, default/fertiscan, allow
+      p, role:apps, applications, sync, default/fertiscan, allow
+      p, role:apps, applications, override, default/fertiscan, allow
 
-      p, role:fertiscan, applications, create, default/fertiscan-preview, allow
-      p, role:fertiscan, applications, update, default/fertiscan-preview, allow
-      p, role:fertiscan, applications, delete, default/fertiscan-preview, allow
-      p, role:fertiscan, applications, sync, default/fertiscan-preview, allow
-      p, role:fertiscan, applications, override, default/fertiscan-preview, allow
+      p, role:apps, applications, create, default/fertiscan-preview, allow
+      p, role:apps, applications, update, default/fertiscan-preview, allow
+      p, role:apps, applications, delete, default/fertiscan-preview, allow
+      p, role:apps, applications, sync, default/fertiscan-preview, allow
+      p, role:apps, applications, override, default/fertiscan-preview, allow
 
       p, role:admin, exec, create, */*, allow
       
       g, devsecops, role:admin
-      g, finesse, role:finesse
-      g, nachet, role:nachet
-      g, fertiscan, role:fertiscan
+      g, apps, role:apps
 
     # -- OIDC scopes to examine during rbac enforcement (in addition to `sub` scope).
     # The scope value can be a string, or a list of strings.
@@ -222,6 +220,10 @@ configs:
     # -- Matcher function for Casbin, `glob` for glob matcher and `regex` for regex matcher.
     policy.matchMode: "glob"
 
+# Application controller metrics
+controller:
+  metrics:
+    enabled: true
 
 ## Notifications controller
 notifications:
