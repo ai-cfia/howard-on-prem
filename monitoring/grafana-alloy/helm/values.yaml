@@ -22,6 +22,30 @@ alloy:
           cmdline = [".+"]
         }
       }
+
+      prometheus.exporter.blackbox "blackbox_metrics" {
+        config = "{ 
+          modules: { 
+            http_2xx: { 
+              prober: http,
+              timeout: 10s, 
+              http: { 
+                valid_http_versions: ["HTTP/1.1", "HTTP/2"],
+                method: GET,
+                fail_if_ssl: false,  
+              } 
+            } 
+          } 
+        }"
+
+        targets = [
+          {
+            __name__    = "argocd"
+            __address__ = "https://argocd.inspection.alpha.canada.ca"
+            __module__  = "http_2xx"
+          },          
+        ]
+      }
       
       prometheus.scrape "argocd" {
         scrape_interval = "15s"
@@ -79,6 +103,13 @@ alloy:
         scrape_interval = "15s"
         targets = prometheus.exporter.cadvisor.container_metrics.targets
         job_name = "container_metrics"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.scrape "blackbox_metrics" {
+        scrape_interval = "15s"
+        targets = prometheus.exporter.blackbox.blackbox_metrics.targets
+        job_name = "blackbox_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
