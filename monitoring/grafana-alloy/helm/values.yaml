@@ -34,6 +34,15 @@ alloy:
           },          
         ]
       }
+
+      discovery.relabel "relabel_blackbox_metrics" {
+        targets = prometheus.exporter.blackbox.blackbox_metrics.targets
+
+        rule {
+          source_labels = ["__param_target"]
+          target_label = "instance"
+        }
+      }
       
       prometheus.scrape "argocd" {
         scrape_interval = "15s"
@@ -96,7 +105,7 @@ alloy:
 
       prometheus.scrape "blackbox_metrics" {
         scrape_interval = "15s"
-        targets = prometheus.exporter.blackbox.blackbox_metrics.targets
+        targets = discovery.relabel.relabel_blackbox_metrics.output
         job_name = "blackbox_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
