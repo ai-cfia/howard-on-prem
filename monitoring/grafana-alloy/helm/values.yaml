@@ -28,9 +28,9 @@ alloy:
 
         targets = [
           {
-            __name__    = "argocd",
-            __address__ = "https://argocd.inspection.alpha.canada.ca",
-            __module__  = "http_2xx",
+            name    = "argocd",
+            address = "https://argocd.inspection.alpha.canada.ca",
+            module  = "http_2xx",
           },          
         ]
       }
