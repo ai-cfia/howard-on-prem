@@ -47,7 +47,7 @@ spec:
                 name: litellm-connection-string
           env:
             - name: OTEL_EXPORTER
-              value: "otlp_http"
+              value: "otlp_grpc"
             - name: OTEL_ENDPOINT
               value: "http://alloy.monitoring.svc.cluster.local:4317"
           resources:
