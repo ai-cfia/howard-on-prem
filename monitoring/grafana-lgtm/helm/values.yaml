@@ -144,6 +144,8 @@ mimir:
       ruler_storage:
         s3:
           bucket_name: mimir-ruler
+      limits:
+        compactor_blocks_retention_period: 1440h # 2 months
   alertmanager:
     persistentVolume:
       storageClass: ceph-hot-block
@@ -153,6 +155,7 @@ mimir:
   compactor:
     persistentVolume:
       storageClass: ceph-hot-block
+      size: 3Ti
     resources:
       requests:
         cpu: 20m
@@ -164,6 +167,7 @@ mimir:
     replicas: 2
     persistentVolume:
       storageClass: ceph-hot-block
+      size: 3Ti
     zoneAwareReplication:
       enabled: false
     resources:
@@ -194,6 +198,7 @@ mimir:
   store_gateway:
     persistentVolume:
       storageClass: ceph-hot-block
+      size: 100Gi
     zoneAwareReplication:
       enabled: false
     resources:
@@ -225,6 +230,10 @@ tempo:
       grpc:
         # -- Enable Tempo to ingest Open Telemetry GRPC traces
         enabled: true
+  compactor:
+    config:
+      compaction:
+        block_retention: 1440h # 2 months
 
 grafana-oncall:
   # -- Deploy Grafana OnCall if enabled. See [upstream values.yaml](https://github.com/grafana/oncall/blob/dev/helm/oncall/values.yaml) for full values reference.
