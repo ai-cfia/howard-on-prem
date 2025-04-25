@@ -12,6 +12,10 @@ grafana:
       auto_assign_org_id: 1
     server:
       root_url: https://grafana.inspection.alpha.canada.ca
+  plugins:
+    - marcusolsson-treemap-panel
+    - digrich-bubblechart-panel
+    - grafana-clock-panel
   # -- Grafana data sources config. Connects to all three by default
   datasources:
     datasources.yaml:
