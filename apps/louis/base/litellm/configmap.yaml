@@ -69,3 +69,5 @@ data:
             mode: embedding
       litellm_settings:
         cache: false
+        callbacks:
+          - otel

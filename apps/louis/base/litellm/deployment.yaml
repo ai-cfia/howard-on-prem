@@ -45,6 +45,11 @@ spec:
                 name: litellm-secrets
             - secretRef:
                 name: litellm-connection-string
+          env:
+            - name: OTEL_EXPORTER
+              value: "otlp_http"
+            - name: OTEL_ENDPOINT
+              value: "http://alloy.monitoring.svc.cluster.local:4317"
           resources:
             requests:
               cpu: 1000m
