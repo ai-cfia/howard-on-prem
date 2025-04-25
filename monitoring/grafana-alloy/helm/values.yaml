@@ -21,7 +21,6 @@ alloy:
           name = "{{.Comm}}"
           cmdline = [".+"]
         }
-
       }
       
       prometheus.scrape "argocd" {
@@ -223,8 +222,12 @@ controller:
 
   # -- For kubelet (set to true for kubelet)
   hostNetwork: true
+
   # https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
   dnsPolicy: ClusterFirstWithHostNet
+
+  # So prometheus.exporter.process can see host PID
+  hostPID: true
 
 serviceMonitor:
   enabled: false
