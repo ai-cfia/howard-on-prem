@@ -15,8 +15,14 @@ alloy:
       livedebugging { enabled = true }
 
       prometheus.exporter.unix "node_metrics" { include_exporter_metrics = true }
-      prometheus.exporter.process "process_metrics" {}
       prometheus.exporter.cadvisor "container_metrics" {}
+      prometheus.exporter.process "process_metrics" {
+        matcher {
+          name = "{{.Comm}}"
+          cmdline = [".+"]
+        }
+
+      }
       
       prometheus.scrape "argocd" {
         scrape_interval = "15s"
