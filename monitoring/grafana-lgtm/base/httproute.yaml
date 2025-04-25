@@ -7,7 +7,7 @@ spec:
     - name: monitoring-gateway
       sectionName: https-grafana
   hostnames:
-    - grafana-b.inspection.alpha.canada.ca
+    - grafana.inspection.alpha.canada.ca
   rules:
     - matches:
         - path:
@@ -26,7 +26,7 @@ spec:
     - name: monitoring-gateway
       sectionName: https-alloy
   hostnames:
-    - alloy-b.inspection.alpha.canada.ca
+    - alloy.inspection.alpha.canada.ca
   rules:
     - matches:
         - path:
