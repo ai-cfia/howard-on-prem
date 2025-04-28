@@ -37,6 +37,10 @@ data:
           "command": "uvx",
           "args": ["mcp-server-fetch"]
         },
+        "markitdown": {
+          "command": "uvx",
+          "args": ["markitdown-mcp"]
+        },
         "web-search-brave": {
           "command": "npx",
           "args": [
