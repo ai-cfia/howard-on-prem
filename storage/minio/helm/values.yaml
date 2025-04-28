@@ -119,7 +119,7 @@ ingress:
     ingress.cilium.io/loadbalancer-mode: dedicated
   path: /
   hosts:
-    - *
+    - ''
 
 consoleService:
   type: ClusterIP
