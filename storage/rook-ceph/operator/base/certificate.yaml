@@ -1,0 +1,38 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rook-h-tls
+spec:
+  secretName: rook-h-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: rook-h.inspection.alpha.canada.ca
+  dnsNames:
+    - rook-h.inspection.alpha.canada.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rook-c-tls
+spec:
+  secretName: rook-c-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: rook-c.inspection.alpha.canada.ca
+  dnsNames:
+    - rook-c.inspection.alpha.canada.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io

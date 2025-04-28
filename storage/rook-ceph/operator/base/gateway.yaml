@@ -1,0 +1,28 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: rook-gateway
+spec:
+  addresses:
+    - type: IPAddress
+      value: 10.140.79.4
+  gatewayClassName: cilium
+  listeners:
+    - name: https-rook-c
+      hostname: rook-c.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: rook-c-tls
+            kind: Secret
+    - name: https-rook-h
+      hostname: rook-h.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: rook-h-tls
+            kind: Secret
