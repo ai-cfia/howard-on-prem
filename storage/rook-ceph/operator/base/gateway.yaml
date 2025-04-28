@@ -18,8 +18,6 @@ spec:
           selector:
             matchLabels:
               rook-ceph: "true"
-        kinds:
-          - kind: HTTPRoute
       tls:
         mode: Terminate
         certificateRefs:
@@ -35,8 +33,6 @@ spec:
           selector:
             matchLabels:
               rook-ceph: "true"
-        kinds:
-          - kind: HTTPRoute
       tls:
         mode: Terminate
         certificateRefs:
