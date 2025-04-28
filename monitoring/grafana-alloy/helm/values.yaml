@@ -151,7 +151,7 @@ alloy:
             name    = "keycloak",
             address = "https://keycloak.inspection.alpha.canada.ca",
             module  = "http_2xx",
-          }
+          },
         ]
       }
 
