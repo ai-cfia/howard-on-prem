@@ -115,7 +115,7 @@ ingress:
   ingressClassName: cilium
   labels: {}
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.2
+    lbipam.cilium.io/ips: 10.140.79.6
     ingress.cilium.io/loadbalancer-mode: dedicated
   path: /
 
