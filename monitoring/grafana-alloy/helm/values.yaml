@@ -31,7 +31,127 @@ alloy:
             name    = "argocd",
             address = "https://argocd.inspection.alpha.canada.ca",
             module  = "http_2xx",
-          },          
+          },
+          {
+            name    = "nachet-frontend",
+            address = "https://nachet.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "nachet-frontend",
+            address = "https://nachet-backend.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "fertiscan",
+            address = "https://fertiscan.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "finesse",
+            address = "https://finesse.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "finesse-backend",
+            address = "https://finesse-backend.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "ailab",
+            address = "https://ailab.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "gpt-researcher-frontend",
+            address = "https://gptr.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "gpt-researcher-backend",
+            address = "https://gptr-b.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "gpt-researcher-mcp",
+            address = "https://gptr-mcp.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "librechat",
+            address = "https://librechat.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "ami",
+            address = "https://ami.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "litellm",
+            address = "https://litellm.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "docling",
+            address = "https://docling.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "ollama",
+            address = "https://ollama.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "argocd",
+            address = "https://argocd.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "minio-console",
+            address = "https://minio-console.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "minio",
+            address = "https://minio.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "rook-ceph-cold",
+            address = "https://rook-c.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "rook-ceph-hot",
+            address = "https://rook-h.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "hubble",
+            address = "https://hubble.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "grafana",
+            address = "https://grafana.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "alloy",
+            address = "https://alloy.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "vault",
+            address = "https://vault.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "keycloak",
+            address = "https://keycloak.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          }
         ]
       }
 
