@@ -16,6 +16,7 @@ spec:
       backendRefs:
         - name: rook-ceph-mgr-dashboard
           port: 8443
+          namespace: rook-ceph-cold-cluster
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
@@ -35,3 +36,4 @@ spec:
       backendRefs:
         - name: rook-ceph-mgr-dashboard
           port: 8443
+          namespace: rook-ceph-hot-cluster

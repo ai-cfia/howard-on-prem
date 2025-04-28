@@ -12,6 +12,13 @@ spec:
       hostname: rook-c.inspection.alpha.canada.ca
       port: 443
       protocol: HTTPS
+      allowedRoutes:
+        from: Selector
+        selector:
+          matchLabels:
+            rook-ceph: true
+        kinds:
+          - kind: HTTPRoute
       tls:
         mode: Terminate
         certificateRefs:
@@ -21,6 +28,13 @@ spec:
       hostname: rook-h.inspection.alpha.canada.ca
       port: 443
       protocol: HTTPS
+      allowedRoutes:
+        from: Selector
+        selector:
+          matchLabels:
+            rook-ceph: true
+        kinds:
+          - kind: HTTPRoute
       tls:
         mode: Terminate
         certificateRefs:
