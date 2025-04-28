@@ -118,6 +118,8 @@ ingress:
     lbipam.cilium.io/ips: 10.140.79.6
     ingress.cilium.io/loadbalancer-mode: dedicated
   path: /
+  hosts:
+    - *
 
 consoleService:
   type: ClusterIP
