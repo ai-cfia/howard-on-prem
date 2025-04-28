@@ -54,7 +54,7 @@ alloy:
           },
           {
             name    = "finesse-backend",
-            address = "https://finesse-backend.inspection.alpha.canada.ca",
+            address = "https://finesse-backend.inspection.alpha.canada.ca/health",
             module  = "http_2xx",
           },
           {
@@ -114,7 +114,7 @@ alloy:
           },
           {
             name    = "minio",
-            address = "https://minio.inspection.alpha.canada.ca",
+            address = "https://minio.inspection.alpha.canada.ca/minio/health/live",
             module  = "http_2xx",
           },
           {
