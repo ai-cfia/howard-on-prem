@@ -13,10 +13,11 @@ spec:
       port: 443
       protocol: HTTPS
       allowedRoutes:
-        from: Selector
-        selector:
-          matchLabels:
-            rook-ceph: true
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              rook-ceph: true
         kinds:
           - kind: HTTPRoute
       tls:
@@ -29,10 +30,11 @@ spec:
       port: 443
       protocol: HTTPS
       allowedRoutes:
-        from: Selector
-        selector:
-          matchLabels:
-            rook-ceph: true
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              rook-ceph: true
         kinds:
           - kind: HTTPRoute
       tls:
