@@ -111,7 +111,7 @@ service:
 ## Configure Ingress based on the documentation here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ##
 ingress:
-  enabled: true
+  enabled: false
   ingressClassName: cilium
   labels: {}
   annotations:
