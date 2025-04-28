@@ -111,11 +111,11 @@ service:
 ## Configure Ingress based on the documentation here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ##
 ingress:
-  enabled: false
+  enabled: true
   ingressClassName: cilium
   labels: {}
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.25
+    lbipam.cilium.io/ips: 10.140.79.4
     ingress.cilium.io/loadbalancer-mode: dedicated
     cert-manager.io/cluster-issuer: letsencrypt-prod
   path: /
