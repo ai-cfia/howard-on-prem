@@ -17,7 +17,7 @@ spec:
           from: Selector
           selector:
             matchLabels:
-              rook-ceph: true
+              rook-ceph: "true"
         kinds:
           - kind: HTTPRoute
       tls:
@@ -34,7 +34,7 @@ spec:
           from: Selector
           selector:
             matchLabels:
-              rook-ceph: true
+              rook-ceph: "true"
         kinds:
           - kind: HTTPRoute
       tls:
