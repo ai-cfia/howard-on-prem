@@ -38,8 +38,8 @@ alloy:
             module  = "http_2xx",
           },
           {
-            name    = "nachet-frontend",
-            address = "https://nachet-backend.inspection.alpha.canada.ca",
+            name    = "nachet-backend",
+            address = "https://nachet-backend.inspection.alpha.canada.ca/health",
             module  = "http_2xx",
           },
           {
@@ -94,7 +94,7 @@ alloy:
           },
           {
             name    = "docling",
-            address = "https://docling.inspection.alpha.canada.ca",
+            address = "https://docling.inspection.alpha.canada.ca/health",
             module  = "http_2xx",
           },
           {
