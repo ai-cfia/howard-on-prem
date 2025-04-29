@@ -20,5 +20,5 @@ spec:
       targetRevision: HEAD
       ref: values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      path: storage/minio/base
+      path: storage/velero/base
       targetRevision: HEAD
