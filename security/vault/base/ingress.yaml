@@ -9,10 +9,16 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.12
     ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: cilium
+  tls:
+  - hosts:
+    - vault.inspection.alpha.canada.ca
+    secretName: vault-tls
   rules:
-    - http:
+    - host: vault.inspection.alpha.canada.ca
+      http:
         paths:
         - path: /
           pathType: Prefix
@@ -20,29 +26,4 @@ spec:
             service:
               name: vault-ui
               port:
-                number: 8200
-
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: vault-external-ingress
-#   namespace: vault
-#   labels:
-#     ingress: cilium
-#     app: vault
-#   annotations:
-#     ingress.cilium.io/force-https: enabled
-#     cert-manager.io/cluster-issuer: letsencrypt-prod
-# spec:
-#   ingressClassName: cilium
-#   rules:
-#     - http:
-#         paths:
-#         - path: /
-#           pathType: Prefix
-#           backend:
-#             service:
-#               name: vault-ui
-#               port:
-#                 name: https
+                name: http

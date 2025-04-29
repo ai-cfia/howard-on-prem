@@ -41,7 +41,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ai-lab-2
+                      - ai-lab-1
       containers:
         - name: nachet-backend
           image: ghcr.io/ai-cfia/nachet-backend:156-allow-string-list-cors
@@ -51,6 +51,12 @@ spec:
           envFrom:
             - secretRef:
                 name: nachet-backend-secrets
+            - secretRef:
+                name: nachet-db-connection-string
+            - secretRef:
+                name: nachet-storage-connection-string
+            - secretRef:
+                name: nachet-storage-url
           ports:
             - containerPort: 8080
           livenessProbe:

@@ -1,7 +1,7 @@
 # Vault Helm chart Value Overrides
 global:
   enabled: true
-  tlsDisable: true # TLS
+  tlsDisable: true
   resources:
     requests:
       memory: 256Mi
@@ -56,31 +56,65 @@ server:
   # For HA configuration and because we need to manually init the vault,
   # we need to define custom readiness/liveness Probe settings
   readinessProbe:
-    enabled: true
+    enabled: false
     path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+    port: 8200
+    failureThreshold: 12
+    initialDelaySeconds: 80
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 3
   livenessProbe:
-    enabled: true
+    enabled: false
+    execCommand: []
+    # - /bin/sh
+    # - -c
+    # - /vault/userconfig/mylivenessscript/run.sh
     path: "/v1/sys/health?standbyok=true"
-    initialDelaySeconds: 60
+    port: 8200
+    failureThreshold: 12
+    initialDelaySeconds: 80
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 3
 
   # extraEnvironmentVars is a list of extra environment variables to set with the stateful set. These could be
   # used to include variables required for auto-unseal.
   # This was created using:
   # kubectl --namespace vault create secret tls tls-ca --cert ./tls-ca.cert
   # kubectl --namespace vault create secret tls tls-server --cert ./tls-server.cert --key ./tls-server.key
-  # kubectl create secret generic consul-token --from-file=./consul_token
-  # TLS
-  # extraEnvironmentVars:
-  #   VAULT_CACERT: /vault/userconfig/tls-ca/tls.crt
+  extraEnvironmentVars: {}
+    # VAULT_TLSCERT: /vault/userconfig/vault-mtls/server.crt
+    # VAULT_TLSKEY: /vault/userconfig/vault-mtls/server.key
+    # VAULT_CLIENT_CERT: /vault/userconfig/vault-mtls/client.crt
+    # VAULT_CLIENT_KEY: /vault/userconfig/vault-mtls/client.key
 
   # extraVolumes is a list of extra volumes to mount. These will be exposed
   # to Vault in the path `/vault/userconfig/<name>/`.
-  # TLS
-  # extraVolumes:
-  #   - type: secret
-  #     name: tls-server
-  #   - type: secret
-  #     name: tls-ca
+  # Deprecated: please use 'volumes' instead.
+  extraVolumes: []
+    # - type: secret
+    #   name: vault-ha-tls
+    # - type: secret
+    #   name: tls-ca
+
+
+  # volumes is a list of volumes made available to all containers. These are rendered
+  # via toYaml rather than pre-processed like the extraVolumes value.
+  # The purpose is to make it easy to share volumes between containers.
+  volumes: []
+    # - name: userconfig-vault-ha-tls
+    #   secret:
+    #     defaultMode: 420
+    #     secretName: vault-mtls
+
+  # volumeMounts is a list of volumeMounts for the main server container. These are rendered
+  # via toYaml rather than pre-processed like the extraVolumes value.
+  # The purpose is to make it easy to share volumes between containers.
+  volumeMounts: []
+    # - mountPath: /vault/userconfig/vault-mtls
+    #   name: userconfig-vault-ha-tls
+    #   readOnly: true
 
   # This configures the Vault Statefulset to create a PVC for audit logs.
   # See https://www.vaultproject.io/docs/audit/index.html to know more
@@ -111,9 +145,11 @@ server:
         listener "tcp" {
           address = "[::]:8200"
           cluster_address = "[::]:8201"
-          tls_disable = "true" # TLS
-          # tls_cert_file = "/vault/userconfig/tls-server/tls.crt"
-          # tls_key_file = "/vault/userconfig/tls-server/tls.key"
+          tls_disable = true
+          # tls_cert_file = "/vault/userconfig/vault-mtls/server.crt"
+          # tls_key_file  = "/vault/userconfig/vault-mtls/server.key"
+          # tls_client_ca_file = "/vault/userconfig/vault-mtls/client_ca.crt"
+          # tls_require_and_verify_client_cert = false
         }
 
         storage "raft" {
@@ -121,26 +157,18 @@ server:
           retry_join {
             leader_api_addr = "http://vault-0.vault-internal:8200"
             # leader_api_addr = "https://vault-0.vault-internal:8200"
-            # leader_ca_cert_file = "/vault/userconfig/tls-ca/tls.crt"
-            # leader_client_cert_file = "/vault/userconfig/tls-server/tls.crt"
-            # leader_client_key_file = "/vault/userconfig/tls-server/tls.key"
+            # leader_ca_cert_file = "/vault/userconfig/vault-mtls/server_ca.crt"
+            # leader_client_cert_file = "/vault/userconfig/vault-mtls/server.crt"
+            # leader_client_key_file = "/vault/userconfig/vault-mtls/server.key"
           }
           retry_join {
             leader_api_addr = "http://vault-1.vault-internal:8200"
             # leader_api_addr = "https://vault-1.vault-internal:8200"
-            # leader_ca_cert_file = "/vault/userconfig/tls-ca/tls.crt"
-            # leader_client_cert_file = "/vault/userconfig/tls-server/tls.crt"
-            # leader_client_key_file = "/vault/userconfig/tls-server/tls.key"
+            # leader_ca_cert_file = "/vault/userconfig/vault-mtls/server_ca.crt"
+            # leader_client_cert_file = "/vault/userconfig/vault-mtls/server.crt"
+            # leader_client_key_file = "/vault/userconfig/vault-mtls/server.key"
           }
         }
-
-        # seal "transit" {
-        #   address = "http://vault.vault:8200"
-        #   disable_renewal = "false"
-        #   key_name = "autounseal"
-        #   mount_path = "transit/"
-        #   tls_skip_verify = "true"
-        # }
   
   # Ingress allows ingress services to be created to allow external access
   # from Kubernetes to access Vault pods.

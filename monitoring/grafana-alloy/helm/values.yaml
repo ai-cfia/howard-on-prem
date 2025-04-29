@@ -1,0 +1,420 @@
+crds:
+  # -- Whether to install CRDs for monitoring.
+  create: true
+
+## Various Alloy settings. For backwards compatibility with the grafana-agent
+## chart, this field may also be called "agent". Naming this field "agent" is
+## deprecated and will be removed in a future release.
+alloy:
+  configMap:
+    # -- Create a new ConfigMap for the config file.
+    create: true
+    # -- Content to assign to the new ConfigMap.  This is passed into `tpl` allowing for templating from values.
+    # More info here: https://grafana.com/docs/alloy/latest/reference/components/otelcol/otelcol.exporter.otlp/
+    content: |-
+      livedebugging { enabled = true }
+
+      prometheus.exporter.unix "node_metrics" { include_exporter_metrics = true }
+      prometheus.exporter.cadvisor "container_metrics" {}
+      prometheus.exporter.process "process_metrics" {
+        matcher {
+          name = "{{.Comm}}"
+          cmdline = [".+"]
+        }
+      }
+
+      prometheus.exporter.blackbox "blackbox_metrics" {
+        config = "{ modules: { http_2xx: { prober: http, timeout: 5s } } }"
+
+        targets = [
+          {
+            name    = "argocd",
+            address = "https://argocd.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "nachet-frontend",
+            address = "https://nachet.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "nachet-backend",
+            address = "https://nachet-backend.inspection.alpha.canada.ca/health",
+            module  = "http_2xx",
+          },
+          {
+            name    = "fertiscan",
+            address = "https://fertiscan.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "finesse",
+            address = "https://finesse.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "finesse-backend",
+            address = "https://finesse-backend.inspection.alpha.canada.ca/health",
+            module  = "http_2xx",
+          },
+          {
+            name    = "ailab",
+            address = "https://ailab.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "gpt-researcher-frontend",
+            address = "https://gptr.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "gpt-researcher-backend",
+            address = "https://gptr-b.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "gpt-researcher-mcp",
+            address = "https://gptr-mcp.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "librechat",
+            address = "https://librechat.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "ami",
+            address = "https://ami.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "litellm",
+            address = "https://litellm.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "docling",
+            address = "https://docling.inspection.alpha.canada.ca/health",
+            module  = "http_2xx",
+          },
+          {
+            name    = "ollama",
+            address = "https://ollama.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "argocd",
+            address = "https://argocd.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "minio-console",
+            address = "https://minio-console.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "minio",
+            address = "https://minio.inspection.alpha.canada.ca/minio/health/live",
+            module  = "http_2xx",
+          },
+          {
+            name    = "rook-ceph-cold",
+            address = "https://rook-c.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "rook-ceph-hot",
+            address = "https://rook-h.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "hubble",
+            address = "https://hubble.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "grafana",
+            address = "https://grafana.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "alloy",
+            address = "https://alloy.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "vault",
+            address = "https://vault.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "keycloak",
+            address = "https://keycloak.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+        ]
+      }
+
+      discovery.relabel "relabel_blackbox_metrics" {
+        targets = prometheus.exporter.blackbox.blackbox_metrics.targets
+
+        rule {
+          source_labels = ["__param_target"]
+          target_label = "instance"
+        }
+      }
+      
+      prometheus.scrape "argocd" {
+        scrape_interval = "60s"
+        targets = [
+          { __address__ = "argocd-server-metrics.argocd.svc.cluster.local:8083" },
+          { __address__ = "argocd-application-controller-metrics.argocd.svc.cluster.local:8082" },
+        ]
+        job_name = "argocd"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.scrape "k8s_state_metrics" {
+        scrape_interval = "60s"
+        targets = [
+          { __address__ = "kube-state-metrics.monitoring.svc.cluster.local:8080" },
+        ]
+        job_name = "k8s_state_metrics"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.scrape "kubelet_metrics_raw" {
+        scrape_interval = "60s"
+        job_name = "kubelet_raw"
+        targets = [
+          {
+            __address__ = "localhost:10250",
+            __scheme__ = "https",
+            __metrics_path__ = "/metrics",
+          },
+        ]
+        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+        tls_config {
+          insecure_skip_verify = true
+        }
+
+        forward_to = [prometheus.relabel.filter_kubelet_pv.receiver]
+      }
+
+      prometheus.scrape "node_metrics" {
+        scrape_interval = "60s"
+        targets = prometheus.exporter.unix.node_metrics.targets
+        job_name = "node_metrics"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.scrape "process_metrics" {
+        scrape_interval = "60s"
+        targets = prometheus.exporter.process.process_metrics.targets
+        job_name = "process_metrics"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.scrape "container_metrics" {
+        scrape_interval = "60s"
+        targets = prometheus.exporter.cadvisor.container_metrics.targets
+        job_name = "container_metrics"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.scrape "blackbox_metrics" {
+        scrape_interval = "60s"
+        targets = discovery.relabel.relabel_blackbox_metrics.output
+        job_name = "blackbox_metrics"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.relabel "filter_kubelet_pv" {
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+
+        rule {
+          action        = "keep"
+          source_labels = ["__name__"]
+          regex         = "kubelet_volume_.*|kubelet_persistentvolumeclaim_.*|kubelet_persistentvolume_.*"
+        }
+      }
+
+      prometheus.remote_write "to_mimir" {
+        endpoint {
+          url = "http://lgtm-distributed-mimir-nginx/api/v1/push"
+        }
+      }
+
+      otelcol.receiver.otlp "default" {
+        grpc { endpoint = "0.0.0.0:4317" }
+        http { endpoint = "0.0.0.0:4318" }
+
+        output {
+          metrics = [otelcol.processor.batch.default.input]
+          logs    = [otelcol.processor.batch.default.input]
+          traces  = [otelcol.processor.batch.default.input]
+        }
+      }
+
+      otelcol.processor.batch "default" {
+        output {
+          metrics = [otelcol.exporter.otlp.mimir.input]
+          logs    = [otelcol.exporter.otlp.loki.input]
+          traces  = [otelcol.exporter.otlp.tempo.input]
+        }
+      }
+
+      otelcol.exporter.otlp "mimir" {
+        client {
+          endpoint = "http://lgtm-distributed-mimir-nginx/api/v1/push"
+        }
+      }
+
+      otelcol.exporter.otlp "loki" {
+        client {
+          endpoint = "http://lgtm-distributed-loki-gateway"
+        }
+      }
+
+      otelcol.exporter.otlp "tempo" {
+        client {
+          endpoint = "http://lgtm-distributed-tempo-distributor:4317"
+          tls {
+            insecure = true
+            insecure_skip_verify = true
+          }
+        }
+      }
+
+  clustering:
+    # -- Deploy Alloy in a cluster to allow for load distribution.
+    enabled: false
+
+    # -- Name for the Alloy cluster. Used for differentiating between clusters.
+    name: ""
+
+    # -- Name for the port used for clustering, useful if running inside an Istio Mesh
+    portName: http
+
+  # -- Minimum stability level of components and behavior to enable. Must be
+  # one of "experimental", "public-preview", or "generally-available".
+  stabilityLevel: "generally-available"
+
+  # -- Path to where Grafana Alloy stores data (for example, the Write-Ahead Log).
+  # By default, data is lost between reboots.
+  storagePath: /tmp/alloy
+
+  # -- Address to listen for traffic on. 0.0.0.0 exposes the UI to other
+  # containers.
+  listenAddr: 0.0.0.0
+
+  # -- Port to listen for traffic on.
+  listenPort: 12345
+
+  # -- Scheme is needed for readiness probes. If enabling tls in your configs, set to "HTTPS"
+  listenScheme: HTTP
+
+  # --  Base path where the UI is exposed.
+  uiPathPrefix: /
+
+  # -- Enables sending Grafana Labs anonymous usage stats to help improve Grafana
+  # Alloy.
+  enableReporting: true
+
+  mounts:
+    # -- Mount /var/log from the host into the container for log collection.
+    varlog: true
+    # -- Mount /var/lib/docker/containers from the host into the container for log
+    # collection.
+    dockercontainers: true
+
+    # -- Extra volume mounts to add into the Grafana Alloy container. Does not
+    # affect the watch container.
+    extra: []
+  
+  # -- Extra ports to expose on the Alloy container.
+  extraPorts:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+      protocol: TCP
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+      protocol: TCP
+rbac:
+  # -- Whether to create RBAC resources for Alloy.
+  create: true
+
+serviceAccount:
+  # -- Whether to create a service account for the Grafana Alloy deployment.
+  create: true
+  # -- Additional labels to add to the created service account.
+  additionalLabels: {}
+  # -- Annotations to add to the created service account.
+  annotations: {}
+  # -- The name of the existing service account to use when
+  # serviceAccount.create is false.
+  name: null
+  # Whether the Alloy pod should automatically mount the service account token.
+  automountServiceAccountToken: true
+
+controller:
+  # -- Type of controller to use for deploying Grafana Alloy in the cluster.
+  # Must be one of 'daemonset', 'deployment', or 'statefulset'.
+  type: 'daemonset'
+
+  # -- Number of pods to deploy. Ignored when controller.type is 'daemonset'.
+  replicas: 1
+
+  # -- For kubelet (set to true for kubelet)
+  hostNetwork: true
+
+  # https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+  dnsPolicy: ClusterFirstWithHostNet
+
+  # So prometheus.exporter.process can see host PID
+  hostPID: true
+
+serviceMonitor:
+  enabled: false
+  # -- Additional labels for the service monitor.
+  additionalLabels: {}
+  # -- Scrape interval. If not set, the Prometheus default scrape interval is used.
+  interval: ""
+  # -- MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
+  # ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
+  metricRelabelings: []
+  # - action: keep
+  #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+  #   sourceLabels: [__name__]
+
+  # -- Customize tls parameters for the service monitor
+  tlsConfig: {}
+
+  # -- RelabelConfigs to apply to samples before scraping
+  # ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#relabelconfig
+  relabelings: []
+  # - sourceLabels: [__meta_kubernetes_pod_node_name]
+  #   separator: ;
+  #   regex: ^(.*)$
+  #   targetLabel: nodename
+  #   replacement: $1
+  #   action: replace
+ingress:
+  enabled: false
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    lbipam.cilium.io/ips: 10.140.79.44
+  labels: {}
+  path: /
+  faroPort: 12347
+  pathType: Prefix
+  ingressClassName: cilium
+  hosts:
+    - alloy.inspection.alpha.canada.ca
+  tls:
+    - hosts:
+        - alloy.inspection.alpha.canada.ca
+      secretName: alloy-tls

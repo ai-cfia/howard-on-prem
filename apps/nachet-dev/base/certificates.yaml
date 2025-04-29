@@ -1,0 +1,61 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nachet-backend-tls
+  namespace: nachet-dev
+spec:
+  secretName: nachet-backend-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: nachet-backend.inspection.alpha.canada.ca
+  dnsNames:
+    - nachet-backend.inspection.alpha.canada.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nachet-frontend-tls
+  namespace: nachet-dev
+spec:
+  secretName: nachet-frontend-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: nachet.inspection.alpha.canada.ca
+  dnsNames:
+    - nachet.inspection.alpha.canada.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nachet-blob-tls
+  namespace: nachet-dev
+spec:
+  secretName: nachet-blob-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: nachet-blob.inspection.alpha.canada.ca
+  dnsNames:
+    - nachet-blob.inspection.alpha.canada.ca
+    - nachet-blob
+    - nachet-blob.nachet-dev.svc.cluster.local
+  issuerRef:
+    name: internal-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

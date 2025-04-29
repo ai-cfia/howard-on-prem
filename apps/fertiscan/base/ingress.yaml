@@ -26,10 +26,16 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.24
     ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: cilium
+  tls:
+    - hosts:
+        - fertiscan.inspection.alpha.canada.ca
+      secretName: fertiscan-frontend-tls
   rules:
-    - http:
+    - host: fertiscan.inspection.alpha.canada.ca
+      http:
         paths:
           - path: /
             pathType: Prefix

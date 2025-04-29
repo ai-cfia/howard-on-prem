@@ -9,4 +9,4 @@ spec:
   #     ingress: cilium
   blocks:
     - start: "10.140.79.2"
-      stop: "10.140.79.49"
+      stop: "10.140.79.37"

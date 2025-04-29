@@ -7,8 +7,13 @@ metadata:
     ingress.cilium.io/loadbalancer-mode: dedicated
 spec:
   ingressClassName: cilium
+  tls:
+    - hosts:
+        - ailab.inspection.alpha.canada.ca
+      secretName: ailab-on-prem-tls
   rules:
-    - http:
+    - host: ailab.inspection.alpha.canada.ca
+      http:
         paths:
           - path: /
             pathType: Prefix

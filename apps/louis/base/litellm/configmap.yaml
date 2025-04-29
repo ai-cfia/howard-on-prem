@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litellm-config-file
+data:
+  config.yaml: |
+      model_list:
+        - model_name: _gpt-4o
+          litellm_params:
+            model: azure/gpt-4o
+            api_base: os.environ/OPENAI_GPT4O_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT4O_API_KEY
+            api_version: os.environ/OPENAI_GPT4O_API_VERSION
+        - model_name: gpt-4o
+          litellm_params:
+            model: azure/gpt-4o
+            api_base: os.environ/FERTISCAN_GPT4O_API_ENDPOINT
+            api_key: os.environ/FERTISCAN_GPT4O_API_KEY
+            api_version: os.environ/FERTISCAN_GPT4O_API_VERSION
+        - model_name: gpt-4o-mini
+          litellm_params:
+            model: azure/gpt-4o-mini
+            api_base: os.environ/OPENAI_GPT4O_MINI_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT4O_MINI_API_KEY
+            api_version: os.environ/OPENAI_GPT4O_MINI_API_VERSION
+        - model_name: o1
+          litellm_params:
+            model: azure/o1
+            api_base: os.environ/OPENAI_O1_API_ENDPOINT
+            api_key: os.environ/OPENAI_O1_API_KEY
+            api_version: os.environ/OPENAI_O1_API_VERSION
+        - model_name: o1-mini
+          litellm_params:
+            model: azure/o1-mini
+            api_base: os.environ/OPENAI_O1_MINI_API_ENDPOINT
+            api_key: os.environ/OPENAI_O1_MINI_API_KEY
+            api_version: os.environ/OPENAI_O1_MINI_API_VERSION
+        - model_name: o3-mini
+          litellm_params:
+            model: azure/o3-mini
+            api_base: os.environ/OPENAI_O3_MINI_API_ENDPOINT
+            api_key: os.environ/OPENAI_O3_MINI_API_KEY
+            api_version: os.environ/OPENAI_O3_MINI_API_VERSION
+        - model_name: o3
+          litellm_params:
+            model: azure/o3
+            api_base: os.environ/OPENAI_O3_API_ENDPOINT
+            api_key: os.environ/OPENAI_O3_API_KEY
+            api_version: os.environ/OPENAI_O3_API_VERSION
+        - model_name: o4-mini
+          litellm_params:
+            model: azure/o4-mini
+            api_base: os.environ/OPENAI_O4_MINI_API_ENDPOINT
+            api_key: os.environ/OPENAI_O4_MINI_API_KEY
+            api_version: os.environ/OPENAI_O4_MINI_API_VERSION
+        - model_name: gpt-4.1
+          litellm_params:
+            model: azure/gpt-4.1
+            api_base: os.environ/OPENAI_GPT41_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT41_API_KEY
+            api_version: os.environ/OPENAI_GPT41_API_VERSION
+        - model_name: text-embedding-3-large
+          litellm_params:
+            model: azure/text-embedding-3-large
+            api_base: os.environ/OPENAI_TEXT_EMBEDDING_3_LARGE_API_ENDPOINT
+            api_key: os.environ/OPENAI_TEXT_EMBEDDING_3_LARGE_API_KEY
+            api_version: os.environ/OPENAI_TEXT_EMBEDDING_3_LARGE_API_VERSION
+          model_info:
+            mode: embedding
+      litellm_settings:
+        cache: false
+        callbacks:
+          - otel

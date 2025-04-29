@@ -10,3 +10,17 @@ stringData:
   name: actions-runner-controller-charts
   type: helm
   enableOCI: "true"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dockerhub-helm-oci
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  url: oci://registry-1.docker.io/bitnamicharts
+  name: bitnamicharts-oci
+  type: helm
+  enableOCI: "true"

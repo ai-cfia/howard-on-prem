@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: keycloak-database
+spec:
+  name: keycloak-database
+  owner: bn_keycloak
+  cluster:
+    name: acia-cfia-dev-cluster

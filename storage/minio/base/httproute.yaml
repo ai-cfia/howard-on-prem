@@ -1,0 +1,37 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: minio-route
+spec:
+  parentRefs:
+    - name: minio-gateway
+      sectionName: https-minio
+  hostnames:
+    - minio.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: minio
+          port: 9000
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: minio-console-route
+spec:
+  parentRefs:
+    - name: minio-gateway
+      sectionName: https-minio-console
+  hostnames:
+    - minio-console.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: minio-console
+          port: 9001

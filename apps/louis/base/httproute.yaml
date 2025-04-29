@@ -1,0 +1,94 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: louis-frontend-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      sectionName: https-ami
+  hostnames:
+    - ami.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: open-webui-service
+          port: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: bridge-gptr-backend-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      sectionName: https-bridge-gptr
+  hostnames:
+    - gptr-mcp.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: bridge-gptr-service
+          port: 8000
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: litellm-backend-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      sectionName: https-litellm
+  hostnames:
+    - litellm.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: litellm-service
+          port: 4000
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: ollama-backend-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      sectionName: https-ollama
+  hostnames:
+    - ollama.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: ollama-service
+          port: 11434
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: docling-backend-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      sectionName: https-docling
+  hostnames:
+    - docling.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: docling-service
+          port: 5001

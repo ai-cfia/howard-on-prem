@@ -16,12 +16,12 @@ spec:
     spec:
       containers:
         - name: ollama
-          image: ollama/ollama:latest
+          image: ollama/ollama:0.6.5
           ports:
           - containerPort: 11434
-          resources:
-            limits:
-              nvidia.com/gpu: 1
+          # resources:
+          #   limits:
+          #     nvidia.com/gpu: 1
           volumeMounts:
             - name: ollama-volume
               mountPath: /root/.ollama
@@ -31,10 +31,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: type
-                    operator: In
-                    values:
-                      - ai-worker
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - ai-lab-1
   volumeClaimTemplates:
     - metadata:
         name: ollama-volume

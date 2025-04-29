@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: finesse-internal-database
+spec:
+  name: finesse-internal-database
+  owner: finesse-internal
+  cluster:
+    name: acia-cfia-dev-cluster

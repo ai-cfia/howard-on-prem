@@ -45,7 +45,7 @@ data:
   ALLOW_REGISTRATION: "true"
   ALLOW_SOCIAL_LOGIN: "false"
   ALLOW_SOCIAL_REGISTRATION: "false"
-  # OLLAMA_BASE_URL: http://ollama-service.louis.svc.cluster.local:11434
+  OLLAMA_BASE_URL: http://ollama-service.louis.svc.cluster.local:11434
   SESSION_EXPIRY: "900000"  # 1000 * 60 * 15
   REFRESH_TOKEN_EXPIRY: "604800000"  # (1000 * 60 * 60 * 24) * 7
   APP_TITLE: "LibreChat"
@@ -53,7 +53,7 @@ data:
   RAG_HOST: "rag-api.librechat.svc.cluster.local"
   RAG_API_URL: "http://rag-api.librechat.svc.cluster.local:8000"
   RAG_PORT: "8000"
-  ENDPOINTS: "azureOpenAI"
+  ENDPOINTS: "azureOpenAI,agents"
   # GOOGLE_MODELS: "gemini-1.0-pro,gemini-1.0-pro-001,gemini-1.0-pro-latest,gemini-1.0-pro-vision-latest,gemini-1.5-pro-latest,gemini-pro,gemini-pro-vision"
 ---
 apiVersion: v1
@@ -73,9 +73,6 @@ data:
       termsOfService:
         externalUrl: 'https://librechat.ai/tos'
         openNewTab: true
-    registration:
-      allowedDomains:
-      - *
     endpoints:
       azureOpenAI:
         titleModel: "current_model"
@@ -94,3 +91,37 @@ data:
               deploymentName: ailab-gpt-35-turbo
             gpt-4o:
               deploymentName: ailab-llm-gpt-4o
+      custom:
+        - name: "Ollama"
+          apiKey: "ollama"
+          baseURL: "http://ollama-service.louis.svc.cluster.local:11434/v1/chat/completions" 
+          models:
+            default: [
+              "llama3.3"
+            ]
+            fetch: true
+          titleConvo: true
+          titleModel: "current_model"
+          summarize: false
+          summaryModel: "current_model"
+          forcePrompt: false
+          modelDisplayLabel: "Ollama"
+
+        - name: "LiteLLM"
+          apiKey: "${LITELLM_MASTER_KEY}"
+          baseURL: "http://litellm-service.louis:4000/v1"
+          models:
+            default: [
+              "gpt-4",
+              "gpt-4o",
+              "o1",
+              "o1-mini",
+              "o3-mini"
+            ]
+            fetch: true
+          titleConvo: true
+          titleModel: "current_model"
+          summarize: false
+          summaryModel: "current_model"
+          forcePrompt: false
+          modelDisplayLabel: "LiteLLM"

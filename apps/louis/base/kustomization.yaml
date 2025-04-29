@@ -4,7 +4,25 @@ kind: Kustomization
 
 resources:
   - litellm/deployment.yaml
+  - litellm/configmap.yaml
+  - litellm/secrets.yaml
+  - litellm/certificates.yaml
   - ollama/deployment.yaml
+  - ollama/certificates.yaml
   - openwebui/deployment.yaml
-  - openwebui/ingress.yaml
   - openwebui/pvcs.yaml
+  - openwebui/secrets.yaml
+  - openwebui/configmap.yaml
+  - openwebui/certificates.yaml
+  - gptresearcher/deployment.yaml
+  - gptresearcher/configmap.yaml
+  - gptresearcher/secrets.yaml
+  # - gptresearcher/certificates.yaml
+  - bridge-gptr/deployment.yaml
+  - bridge-gptr/secrets.yaml
+  - bridge-gptr/certificates.yaml
+  - bridge-gptr/configmap.yaml
+  - docling/deployment.yaml
+  - docling/certificates.yaml
+  - gateway.yaml
+  - httproute.yaml

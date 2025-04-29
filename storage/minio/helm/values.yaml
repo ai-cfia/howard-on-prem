@@ -111,15 +111,15 @@ service:
 ## Configure Ingress based on the documentation here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ##
 ingress:
-  enabled: true
+  enabled: false
   ingressClassName: cilium
   labels: {}
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.25
+    lbipam.cilium.io/ips: 10.140.79.6
     ingress.cilium.io/loadbalancer-mode: dedicated
   path: /
   hosts:
-    - ""
+    - ''
 
 consoleService:
   type: ClusterIP
@@ -142,15 +142,40 @@ consoleService:
   externalTrafficPolicy: Cluster
 
 consoleIngress:
-  enabled: true
+  enabled: false
   ingressClassName: cilium
   labels: {}
   annotations:
     lbipam.cilium.io/ips: 10.140.79.26
     ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   path: /
   hosts:
-    - ""
+    - minio-console.inspection.alpha.canada.ca
+  tls:
+    - hosts:
+        - minio-console.inspection.alpha.canada.ca
+      secretName: minio-console-tls
+
+## OpenID Identity Management
+## The following section documents environment variables for enabling external identity management using an OpenID Connect (OIDC)-compatible provider.
+## See https://min.io/docs/minio/linux/operations/external-iam/configure-openid-external-identity-management.html for a tutorial on using these variables.
+oidc:
+  enabled: true
+  configUrl: "https://keycloak.inspection.alpha.canada.ca/realms/infrastructure/.well-known/openid-configuration"
+  clientId: "minio"
+  clientSecret: ""
+  # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientId` and/or `clientSecret``
+  existingClientSecretName: "minio-client-secret"
+  existingClientIdKey: ""
+  existingClientSecretKey: "minio-client-secret"
+  claimName: "policy"
+  scopes: "openid,profile,email"
+  redirectUri: "https://minio-console.inspection.alpha.canada.ca/oauth_callback"
+  # Can leave empty
+  claimPrefix: ""
+  comment: ""
+  displayName: ""
 
 ## Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/

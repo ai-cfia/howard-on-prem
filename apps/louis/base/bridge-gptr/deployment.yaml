@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bridge-gptr-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: bridge-gptr
+  template:
+    metadata:
+      labels:
+        app: bridge-gptr
+    spec:
+      securityContext:
+        fsGroup: 1000
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+        - name: bridge-gptr
+          image: ghcr.io/ai-cfia/louis:mcpo-gptr-louis-3e891a1
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: bridge-gptr-secrets
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: cache-volume
+              mountPath: /.cache/
+            - name: tmp-volume
+              mountPath: /tmp
+            - name: config-volume
+              mountPath: /app/mcpo-gptr/config.json
+              subPath: config.json
+
+      volumes:
+        - name: cache-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 200Mi
+        - name: tmp-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2000Mi
+        - name: config-volume
+          configMap:
+            name: bridge-gptr-config
+          defaultMode: 0755
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bridge-gptr-service
+spec:
+  selector:
+    app: bridge-gptr
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

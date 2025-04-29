@@ -77,6 +77,9 @@ spec:
               mountPath: /home/node
             - name: app
               mountPath: /app
+            # - name: nachet-frontend-tls
+            #   mountPath: /etc/ssl/certs
+            #   readOnly: true
       volumes:
         - name: node
           emptyDir:
@@ -86,6 +89,9 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 2000Mi
+        # - name: nachet-frontend-tls
+        #   secret:
+        #     secretName: nachet-frontend-tls
 
 ---
 apiVersion: policy/v1

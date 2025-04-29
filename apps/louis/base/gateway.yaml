@@ -1,0 +1,55 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: louis-gateway
+spec:
+  addresses:
+    - type: IPAddress
+      value: 10.140.79.6
+  gatewayClassName: cilium
+  listeners:
+    - name: https-ami
+      hostname: ami.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: openwebui-tls
+            kind: Secret
+    - name: https-ollama
+      hostname: ollama.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: ollama-tls
+            kind: Secret
+    - name: https-litellm
+      hostname: litellm.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: litellm-tls
+            kind: Secret
+    - name: https-bridge-gptr
+      hostname: gptr-mcp.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: bridge-gptr-tls
+            kind: Secret
+    - name: https-docling
+      hostname: docling.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: docling-tls
+            kind: Secret

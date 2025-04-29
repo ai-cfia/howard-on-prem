@@ -34,26 +34,49 @@ spec:
                   - key: type
                     operator: In
                     values:
-                      - ai-worker
+                      - app-worker
       containers:
         - name: litellm
-          image: ghcr.io/berriai/litellm:main-latest
+          image: ghcr.io/berriai/litellm-non_root:main-v1.67.0-stable
+          command: ["/usr/local/bin/python"]
+          args: ["/usr/local/bin/litellm", "--port", "4000", "--config", "/app/proxy_server_config.yaml"]
+          envFrom:
+            - secretRef:
+                name: litellm-secrets
+            - secretRef:
+                name: litellm-connection-string
           env:
-            - name: LITELLM_MASTER_KEY
-              value: "sk-1234567"
+            - name: OTEL_EXPORTER
+              value: "otlp_grpc"
+            - name: OTEL_ENDPOINT
+              value: "http://alloy.monitoring.svc.cluster.local:4317"
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 8G
           ports:
             - containerPort: 4000
-          args:
-            - "--config"
-            - "/app/config.yaml"
           volumeMounts:
             - name: config-volume
-              mountPath: /app/config.yaml
+              mountPath: /app/proxy_server_config.yaml
               subPath: config.yaml
+            - name: cache-volume
+              mountPath: /.cache
+            - name: npm-volume
+              mountPath: /.npm
+
       volumes:
         - name: config-volume
           configMap:
             name: litellm-config-file
+        - name: cache-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1G
+        - name: npm-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 200Mi
 
 ---
 apiVersion: v1

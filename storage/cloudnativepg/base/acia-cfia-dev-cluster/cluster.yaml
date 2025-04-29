@@ -52,6 +52,58 @@ spec:
         connectionLimit: 10
         passwordSecret:
           name: nachet-dev-user-creds
+      
+      - name: bn_keycloak
+        ensure: present
+        comment: "Owner of keycloak database"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: bn-keycloak-dev-user-creds
+
+      - name: finesse-internal
+        ensure: present
+        comment: "Owner of finesse-internal databases"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: finesse-internal-user-creds
+
+      - name: litellm
+        ensure: present
+        comment: "Owner of litellm databases"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: litellm-dev-user-creds
+
+      - name: openwebui
+        ensure: present
+        comment: "Owner of openwebui databases"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: openwebui-dev-user-creds
 
   backup:
     barmanObjectStore:

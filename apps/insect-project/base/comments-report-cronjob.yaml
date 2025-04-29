@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: insect-project-comments-report
+spec:
+  schedule: "0 13 * * 1" # Run at 9:00 AM Eastern Time (UTC-4) on Mondays only
+  suspend: true
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 172800
+      template:
+        spec:
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: type
+                        operator: In
+                        values:
+                          - app-worker
+          containers:
+            - name: insect-project-comments-report
+              image: ghcr.io/ai-cfia/insect-project:506a81d4aa7b7da5cb5d993bfbc9953b0332ec71
+              args: ["comments"]
+              imagePullPolicy: Always
+              envFrom:
+                - secretRef:
+                    name: insect-project-common-secrets
+                - secretRef:
+                    name: insect-project-comments-secrets
+              resources:
+                requests:
+                  cpu: "1"
+                  memory: "1Gi"
+                limits:
+                  memory: "2Gi"
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+              securityContext:
+                runAsNonRoot: false
+                runAsUser: 1000
+                runAsGroup: 1000
+                readOnlyRootFilesystem: false
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+          volumes:
+            - name: tmp
+              emptyDir: {}
+          restartPolicy: Never

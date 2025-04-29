@@ -7,13 +7,16 @@ resources:
   - ../../apps/fertiscan-preview/
   - ../../apps/fertiscan/
   - ../../apps/finesse/
+  - ../../apps/finesse-internal/
   - ../../apps/louis/
   - ../../apps/nachet-dev/
   # - ../../apps/nachet-prod/
-  # - ../../apps/ragflow/
+  - ../../apps/ragflow/
   - ../../apps/webtop/
   - ../../apps/ailab-website/
-  # - ../../apps/librechat/
+  - ../../apps/librechat/
+  - ../../apps/gpt-researcher/
+  # - ../../apps/insect-project/
 
   # Example of deployment, ingress, pvc's, etc...
   # - ../../apps/examples/
@@ -30,6 +33,7 @@ resources:
   - ../../security/cert-manager/
   - ../../security/eso/
   - ../../security/vault/
+  - ../../security/keycloak/
 
   # Storage applications
   - ../../storage/rook-ceph/operator/
@@ -41,9 +45,14 @@ resources:
 
   # Monitoring applications
   - ../../monitoring/k8s-dashboard/
+  - ../../monitoring/grafana-lgtm/
+  - ../../monitoring/grafana-alloy/
+  - ../../monitoring/metrics/
 
   # MLOps
   - ../../mlops/nvidia/
+
+  # Infrastructure and configuration applications
 
 # This patch enforces a standardized sync policy for Argo CD applications:
 # - Enables automated sync with pruning (removes orphaned resources) and self-healing.
