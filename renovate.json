@@ -8,6 +8,6 @@
   "commitMessageAction": "update",
   "commitMessageTopic": "{{depName}}",
   "commitMessageExtra": "to {{newVersion}}",
-  "prHourlyLimit": 2,
-  "prConcurrentLimit": 5
+  "prHourlyLimit": 10,
+  "prConcurrentLimit": 10
 }
