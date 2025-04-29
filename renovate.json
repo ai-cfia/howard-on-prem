@@ -1,6 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ]
+  "extends": ["config:recommended"],
+  "argocd": {
+    "fileMatch": ["^gitops/.*\\.ya?ml$"]
+  },
+  "labels": ["dependencies", "helm", "argo-cd"],
+  "commitMessagePrefix": "chore(deps): ",
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 5
 }
