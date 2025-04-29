@@ -203,28 +203,28 @@ alloy:
       }
 
       prometheus.scrape "node_metrics" {
-        scrape_interval = "15s"
+        scrape_interval = "60s"
         targets = prometheus.exporter.unix.node_metrics.targets
         job_name = "node_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
       prometheus.scrape "process_metrics" {
-        scrape_interval = "15s"
+        scrape_interval = "60s"
         targets = prometheus.exporter.process.process_metrics.targets
         job_name = "process_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
       prometheus.scrape "container_metrics" {
-        scrape_interval = "15s"
+        scrape_interval = "60s"
         targets = prometheus.exporter.cadvisor.container_metrics.targets
         job_name = "container_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
       prometheus.scrape "blackbox_metrics" {
-        scrape_interval = "15s"
+        scrape_interval = "60s"
         targets = discovery.relabel.relabel_blackbox_metrics.output
         job_name = "blackbox_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
