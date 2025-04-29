@@ -4,7 +4,6 @@
   "argocd": {
     "fileMatch": ["^gitops/.*\\.ya?ml$", "^mlops/.*\\.ya?ml$", "^monitoring/.*\\.ya?ml$", "^networking/.*\\.ya?ml$", "^security/.*\\.ya?ml$", "^storage/.*\\.ya?ml$"]
   },
-  "labels": ["dependencies", "helm", "argo-cd"],
   "commitMessagePrefix": "helm-argocd: ",
   "commitMessageAction": "update",
   "commitMessageTopic": "{{depName}}",
