@@ -2,16 +2,34 @@
 grafana:
   # -- Deploy Grafana if enabled. See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration) for full values reference.
   enabled: true
-  grafana.ini: # todo, configure keycloak login
-    auth.anonymous:
-      enabled: true
-      org_name: "Main Org."
-      org_role: Admin
-    auth:
-      disable_login_form: true
-      auto_assign_org_id: 1
+  envRenderSecret:
+    KEYCLOAK_CLIENT_SECRET: "grafana-client-secret"
+  grafana.ini:
+    # auth.anonymous:
+    #   enabled: true
+    #   org_name: "Main Org."
+    #   org_role: Admin
+    # auth:
+    #   disable_login_form: true
+    #   auto_assign_org_id: 1
     server:
       root_url: https://grafana.inspection.alpha.canada.ca
+    auth.generic_oauth:
+      enabled: true
+      name: Keycloak-OAuth
+      allow_sign_up: true
+      client_id: grafana_oauth
+      client_secret: ${KEYCLOAK_CLIENT_SECRET}
+      scopes: openid email profile offline_access roles
+      email_attribute_path: email
+      login_attribute_path: username
+      name_attribute_path: full_name
+      groups_attribute_path: groups
+      auth_url: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure/protocol/openid-connect/auth
+      token_url: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure/protocol/openid-connect/token
+      api_url: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure/protocol/openid-connect/userinfo
+      signout_redirect_url: https://keycloak.inspection.alpha.canada.ca/auth/realms/infrastructure/protocol/openid-connect/logout?post_logout_redirect_uri=https%3A%2F%2Fgrafana.inspection.alpha.canada.ca%2Flogin
+      role_attribute_path: contains(roles[*], 'devsecops') && 'Admin' || contains(roles[*], 'apps') && 'Viewer' || 'Viewer'
   plugins:
     - marcusolsson-treemap-panel
     - digrich-bubblechart-panel
