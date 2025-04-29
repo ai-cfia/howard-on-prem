@@ -23,7 +23,7 @@ grafana:
       email_attribute_path: email
       login_attribute_path: username
       name_attribute_path: full_name
-      groups_attribute_path: groups
+      groups_attribute_path: groups-grafana
       auth_url: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure/protocol/openid-connect/auth
       token_url: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure/protocol/openid-connect/token
       api_url: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure/protocol/openid-connect/userinfo
