@@ -2,72 +2,6 @@
 ## Configuration settings related to Velero installation namespace
 ##
 
-# Labels settings in namespace
-namespace:
-  labels: {}
-    # Enforce Pod Security Standards with Namespace Labels
-    # https://kubernetes.io/docs/tasks/configure-pod-container/enforce-standards-namespace-labels/
-    # - key: pod-security.kubernetes.io/enforce
-    #   value: privileged
-    # - key: pod-security.kubernetes.io/enforce-version
-    #   value: latest
-    # - key: pod-security.kubernetes.io/audit
-    #   value: privileged
-    # - key: pod-security.kubernetes.io/audit-version
-    #   value: latest
-    # - key: pod-security.kubernetes.io/warn
-    #   value: privileged
-    # - key: pod-security.kubernetes.io/warn-version
-    #   value: latest
-
-##
-## End of namespace-related settings.
-##
-
-
-##
-## Configuration settings that directly affect the Velero deployment YAML.
-##
-
-# Details of the container image to use in the Velero deployment & daemonset (if
-# enabling node-agent). Required.
-image:
-  repository: velero/velero
-  tag: v1.15.2
-  # Digest value example: sha256:d238835e151cec91c6a811fe3a89a66d3231d9f64d09e5f3c49552672d271f38.
-  # If used, it will take precedence over the image.tag.
-  # digest:
-  pullPolicy: IfNotPresent
-  # One or more secrets to be used when pulling images
-  imagePullSecrets: []
-  # - registrySecretName
-
-nameOverride: ""
-fullnameOverride: ""
-
-# Annotations to add to the Velero deployment's. Optional.
-#
-# If you are using reloader use the following annotation with your VELERO_SECRET_NAME
-annotations: {}
-# secret.reloader.stakater.com/reload: "<VELERO_SECRET_NAME>"
-
-# Annotations to add to secret
-secretAnnotations: {}
-
-# Labels to add to the Velero deployment's. Optional.
-labels: {}
-
-# Annotations to add to the Velero deployment's pod template. Optional.
-#
-# If using kube2iam or kiam, use the following annotation with your AWS_ACCOUNT_ID
-# and VELERO_ROLE_NAME filled in:
-podAnnotations: {}
-  #  iam.amazonaws.com/role: "arn:aws:iam::<AWS_ACCOUNT_ID>:role/<VELERO_ROLE_NAME>"
-
-# Additional pod labels for Velero deployment's template. Optional
-# ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-podLabels: {}
-
 # Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
 revisionHistoryLimit: 2
 
@@ -80,23 +14,6 @@ resources:
   limits:
     cpu: 1000m
     memory: 512Mi
-
-# Resource requests/limits to specify for the upgradeCRDs job pod. Need to be adjusted by user accordingly.
-upgradeJobResources: {}
-# requests:
-#     cpu: 50m
-#     memory: 128Mi
-#   limits:
-#     cpu: 100m
-#     memory: 256Mi
-upgradeCRDsJob:
-  # Extra volumes for the Upgrade CRDs Job. Optional.
-  extraVolumes: []
-  # Extra volumeMounts for the Upgrade CRDs Job. Optional.
-  extraVolumeMounts: []
-  # Extra key/value pairs to be used as environment variables. Optional.
-  extraEnvVars: {}
-
 
 # Configure the dnsPolicy of the Velero deployment
 # See: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
@@ -111,27 +28,6 @@ initContainers:
     volumeMounts:
       - mountPath: /target
         name: plugins
-
-# SecurityContext to use for the Velero deployment. Optional.
-# Set fsGroup for `AWS IAM Roles for Service Accounts`
-# see more informations at: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
-podSecurityContext: {}
-  # fsGroup: 1337
-
-# Container Level Security Context for the 'velero' container of the Velero deployment. Optional.
-# See: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
-containerSecurityContext: {}
-  # allowPrivilegeEscalation: false
-  # capabilities:
-  #   drop: ["ALL"]
-  #   add: []
-  # readOnlyRootFilesystem: true
-
-# Container Lifecycle Hooks to use for the Velero deployment. Optional.
-lifecycle: {}
-
-# The number of seconds to allow for graceful termination of the pod. Optional.
-terminationGracePeriodSeconds: 3600
 
 # Liveness probe of the pod
 livenessProbe:
@@ -170,7 +66,7 @@ affinity:
 
 # Settings for Velero's prometheus metrics. Enabled by default.
 metrics:
-  enabled: false
+  enabled: true
   scrapeInterval: 30s
   scrapeTimeout: 10s
 
@@ -266,22 +162,10 @@ configuration:
     provider: azure
     # bucket is the name of the bucket to store backups in. Required.
     bucket: on-prem-velero-backups
-    # caCert defines a base64 encoded CA bundle to use when verifying TLS connections to the provider. Optional.
-    caCert:
-    # prefix is the directory under which all Velero data should be stored within the bucket. Optional.
-    prefix:
-    # default indicates this location is the default backup storage location. Optional.
-    default:
-    # validationFrequency defines how frequently Velero should validate the object storage. Optional.
-    validationFrequency:
-    # accessMode determines if velero can write to this backup storage location. Optional.
-    # default to ReadWrite, ReadOnly is used during migrations and restores.
     accessMode: ReadWrite
     credential:
-      # name of the secret used by this backupStorageLocation.
-      name:
-      # name of key that contains the secret data to be used.
-      key:
+      name: azure-credentials
+      key: cloud
     # Additional provider-specific configuration. See link above
     # for details of required/optional fields for your provider.
     config: {}
@@ -487,9 +371,7 @@ schedules:
       ttl: "168h"  
       storageLocation: default # velero backup on azure
       includedNamespaces:
-        - "cloudnativepg"
-        - "minio"
-        - "ailab-shared"
+        - "minio" # cloudnativepg backups are stored in minio
 
       includedResources:
         - persistentvolumeclaims
@@ -504,31 +386,6 @@ schedules:
     # Launch the backup immediately after the schedule is created.
     skipImmediately: false
     paused: false
-
-# Velero ConfigMaps.
-# Eg:
-# configMaps:
-    # See: https://velero.io/docs/v1.11/file-system-backup/
-#   fs-restore-action-config:
-#     labels:
-#       velero.io/plugin-config: ""
-#       velero.io/pod-volume-restore: RestoreItemAction
-#     data:
-#       image: velero/velero-restore-helper:v1.10.2
-#       cpuRequest: 200m
-#       memRequest: 128Mi
-#       cpuLimit: 200m
-#       memLimit: 128Mi
-#       secCtx: |
-#         capabilities:
-#           drop:
-#           - ALL
-#           add: []
-#         allowPrivilegeEscalation: false
-#         readOnlyRootFilesystem: true
-#         runAsUser: 1001
-#         runAsGroup: 999
-configMaps: {}
 
 ##
 ## End of additional Velero resource settings.
