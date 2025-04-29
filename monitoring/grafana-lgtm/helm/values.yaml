@@ -19,7 +19,7 @@ grafana:
       allow_sign_up: true
       client_id: grafana_oauth
       client_secret: ${grafana-client-secret}
-      scopes: openid email profile offline_access roles
+      scopes: openid email profile offline_access roles groups
       email_attribute_path: email
       login_attribute_path: username
       name_attribute_path: full_name
