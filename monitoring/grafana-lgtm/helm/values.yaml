@@ -2,8 +2,7 @@
 grafana:
   # -- Deploy Grafana if enabled. See [upstream readme](https://github.com/grafana/helm-charts/tree/main/charts/grafana#configuration) for full values reference.
   enabled: true
-  envRenderSecret:
-    KEYCLOAK_CLIENT_SECRET: "grafana-client-secret"
+  envFromSecret: "grafana-client-secret"
   grafana.ini:
     # auth.anonymous:
     #   enabled: true
