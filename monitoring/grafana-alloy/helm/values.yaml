@@ -165,7 +165,7 @@ alloy:
       }
       
       prometheus.scrape "argocd" {
-        scrape_interval = "15s"
+        scrape_interval = "60s"
         targets = [
           { __address__ = "argocd-server-metrics.argocd.svc.cluster.local:8083" },
           { __address__ = "argocd-application-controller-metrics.argocd.svc.cluster.local:8082" },
@@ -175,7 +175,7 @@ alloy:
       }
 
       prometheus.scrape "k8s_state_metrics" {
-        scrape_interval = "15s"
+        scrape_interval = "60s"
         targets = [
           { __address__ = "kube-state-metrics.monitoring.svc.cluster.local:8080" },
         ]
@@ -184,8 +184,8 @@ alloy:
       }
 
       prometheus.scrape "kubelet_metrics_raw" {
-        job_name = "kubelet_raw"
         scrape_interval = "60s"
+        job_name = "kubelet_raw"
         targets = [
           {
             __address__ = "localhost:10250",
