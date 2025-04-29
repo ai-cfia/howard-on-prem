@@ -163,7 +163,7 @@ alloy:
           target_label = "instance"
         }
       }
-      
+
       prometheus.scrape "argocd" {
         scrape_interval = "60s"
         targets = [
@@ -180,6 +180,15 @@ alloy:
           { __address__ = "kube-state-metrics.monitoring.svc.cluster.local:8080" },
         ]
         job_name = "k8s_state_metrics"
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
+      }
+
+      prometheus.scrape "velero" {
+        scrape_interval = "60s"
+        targets = [
+          { __address__ = "velero.velero.svc.cluster.local:8085/metrics" },
+        ]
+        job_name = "velero"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
@@ -332,7 +341,7 @@ alloy:
     # -- Extra volume mounts to add into the Grafana Alloy container. Does not
     # affect the watch container.
     extra: []
-  
+
   # -- Extra ports to expose on the Alloy container.
   extraPorts:
     - name: otlp-grpc
