@@ -28,7 +28,8 @@ grafana:
       token_url: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure/protocol/openid-connect/token
       api_url: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure/protocol/openid-connect/userinfo
       signout_redirect_url: https://keycloak.inspection.alpha.canada.ca/auth/realms/infrastructure/protocol/openid-connect/logout?post_logout_redirect_uri=https%3A%2F%2Fgrafana.inspection.alpha.canada.ca%2Flogin
-      role_attribute_path: contains(roles[*], 'devsecops') && 'Admin' || contains(roles[*], 'apps') && 'Viewer' || 'Admin'
+      role_attribute_path: 'GrafanaAdmin'
+      allow_assign_grafana_admin: true
   plugins:
     - marcusolsson-treemap-panel
     - digrich-bubblechart-panel
