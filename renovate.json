@@ -2,10 +2,13 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "argocd": {
-    "fileMatch": ["^gitops/.*\\.ya?ml$"]
+    "fileMatch": ["^gitops/.*\\.ya?ml$", "^mlops/.*\\.ya?ml$", "^monitoring/.*\\.ya?ml$", "^networking/.*\\.ya?ml$", "^security/.*\\.ya?ml$", "^storage/.*\\.ya?ml$"]
   },
   "labels": ["dependencies", "helm", "argo-cd"],
-  "commitMessagePrefix": "chore(deps): ",
+  "commitMessagePrefix": "helm-argocd: ",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{newVersion}}",
   "prHourlyLimit": 2,
   "prConcurrentLimit": 5
 }
