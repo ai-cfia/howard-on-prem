@@ -18,7 +18,7 @@ grafana:
       name: Keycloak-OAuth
       allow_sign_up: true
       client_id: grafana_oauth
-      client_secret: ${KEYCLOAK_CLIENT_SECRET}
+      client_secret: ${grafana-client-secret}
       scopes: openid email profile offline_access roles
       email_attribute_path: email
       login_attribute_path: username
