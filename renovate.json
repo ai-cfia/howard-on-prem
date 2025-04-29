@@ -1,13 +1,41 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
+  "enabledManagers": ["argocd"],
   "argocd": {
-    "fileMatch": ["^gitops/.*\\.ya?ml$", "^mlops/.*\\.ya?ml$", "^monitoring/.*\\.ya?ml$", "^networking/.*\\.ya?ml$", "^security/.*\\.ya?ml$", "^storage/.*\\.ya?ml$"]
+    "fileMatch": [
+      "^gitops/.*\\.ya?ml$",
+      "^mlops/.*\\.ya?ml$",
+      "^monitoring/.*\\.ya?ml$",
+      "^networking/.*\\.ya?ml$",
+      "^security/.*\\.ya?ml$",
+      "^storage/.*\\.ya?ml$"
+    ]
   },
-  "commitMessagePrefix": "helm-argocd: ",
-  "commitMessageAction": "update",
-  "commitMessageTopic": "{{depName}}",
-  "commitMessageExtra": "to {{newVersion}}",
+  "separateMinorPatch": false,
   "prHourlyLimit": 10,
-  "prConcurrentLimit": 10
+  "prConcurrentLimit": 10,
+  "packageRules": [
+    {
+      "matchManagers": ["argocd"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "commitMessage": "patch(helm): update {{depName}} from {{currentVersion}} to {{newVersion}}",
+      "enabled": true
+    },
+    {
+      "matchManagers": ["argocd"],
+      "matchUpdateTypes": ["minor"],
+      "automerge": false,
+      "commitMessage": "minor(helm): update {{depName}} from {{currentVersion}} to {{newVersion}}",
+      "enabled": true
+    },
+    {
+      "matchManagers": ["argocd"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "commitMessage": "major(helm): update {{depName}} from {{currentVersion}} to {{newVersion}}",
+      "enabled": true
+    }
+  ]
 }
