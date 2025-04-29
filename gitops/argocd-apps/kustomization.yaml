@@ -42,6 +42,7 @@ resources:
   - ../../storage/cloudnativepg/
   - ../../storage/pgadmin/
   - ../../storage/minio/
+  - ../../storage/velero/
 
   # Monitoring applications
   - ../../monitoring/k8s-dashboard/
