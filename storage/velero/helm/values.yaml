@@ -168,7 +168,9 @@ configuration:
       key: cloud
     # Additional provider-specific configuration. See link above
     # for details of required/optional fields for your provider.
-    config: {}
+    config:
+      storageAccount: veleroonprembackups
+      subscriptionId: b72bb8e9-f530-4d72-bc2f-5ad441b65787
     #  region:
     #  s3ForcePathStyle:
     #  s3Url:
@@ -368,7 +370,7 @@ schedules:
     disabled: false
     schedule: "0 23 * * 5"
     template:
-      ttl: "168h"  
+      ttl: "168h"
       storageLocation: default # velero backup on azure
       includedNamespaces:
         - "minio" # cloudnativepg backups are stored in minio
