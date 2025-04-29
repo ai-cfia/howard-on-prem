@@ -23,7 +23,7 @@ dnsPolicy: ClusterFirst
 # If the value is a string then it is evaluated as a template.
 initContainers:
   - name: velero-plugin-for-microsoft-azure
-    image: velero/velero-plugin-for-microsoft-azure:v1.11.1
+    image: velero/velero-plugin-for-microsoft-azure:v1.12.0
     imagePullPolicy: IfNotPresent
     volumeMounts:
       - mountPath: /target
