@@ -186,7 +186,7 @@ alloy:
       prometheus.scrape "velero" {
         scrape_interval = "60s"
         targets = [
-          { __address__ = "velero.velero.svc.cluster.local:8085/metrics" },
+          { __address__ = "velero.velero.svc.cluster.local:8085" },
         ]
         job_name = "velero"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
