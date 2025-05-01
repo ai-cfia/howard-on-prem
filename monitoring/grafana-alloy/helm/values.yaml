@@ -386,6 +386,10 @@ controller:
   # So prometheus.exporter.process can see host PID
   hostPID: true
 
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      effect: "NoSchedule"
+
 serviceMonitor:
   enabled: false
   # -- Additional labels for the service monitor.
