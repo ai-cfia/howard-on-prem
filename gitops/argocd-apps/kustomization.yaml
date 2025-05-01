@@ -45,7 +45,7 @@ resources:
   - ../../storage/velero/
 
   # Monitoring applications
-  - ../../monitoring/k8s-dashboard/
+  # - ../../monitoring/k8s-dashboard/
   - ../../monitoring/grafana-lgtm/
   - ../../monitoring/grafana-alloy/
   - ../../monitoring/metrics/
