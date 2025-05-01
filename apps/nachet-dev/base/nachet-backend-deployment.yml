@@ -41,7 +41,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ai-lab-1
+                      - ai-lab-2
       containers:
         - name: nachet-backend
           image: ghcr.io/ai-cfia/nachet-backend:156-allow-string-list-cors

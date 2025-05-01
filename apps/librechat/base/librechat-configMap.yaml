@@ -112,11 +112,8 @@ data:
           baseURL: "http://litellm-service.louis:4000/v1"
           models:
             default: [
-              "gpt-4",
-              "gpt-4o",
-              "o1",
-              "o1-mini",
-              "o3-mini"
+              "gpt-4.1",
+              "o4-mini"
             ]
             fetch: true
           titleConvo: true
