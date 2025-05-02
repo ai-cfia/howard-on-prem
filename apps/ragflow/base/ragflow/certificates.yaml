@@ -1,0 +1,57 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ragflow-tls
+spec:
+  secretName: ragflow-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: ragflow.inspection.alpha.canada.ca
+  dnsNames:
+    - ragflow.inspection.alpha.canada.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ragflow-api-tls
+spec:
+  secretName: ragflow-api-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: ragflow-api.inspection.alpha.canada.ca
+  dnsNames:
+    - ragflow-api.inspection.alpha.canada.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ragflow-mcp-tls
+spec:
+  secretName: ragflow-mcp-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: ragflow-mcp.inspection.alpha.canada.ca
+  dnsNames:
+    - ragflow-mcp.inspection.alpha.canada.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
