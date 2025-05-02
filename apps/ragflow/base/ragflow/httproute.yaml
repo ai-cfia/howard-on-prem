@@ -1,0 +1,56 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: ragflow-route
+spec:
+  parentRefs:
+    - name: ragflow-gateway
+      sectionName: https-ragflow
+  hostnames:
+    - ragflow.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: ragflow
+          port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: ragflow-api-route
+spec:
+  parentRefs:
+    - name: ragflow-gateway
+      sectionName: https-ragflow-api
+  hostnames:
+    - ragflow-api.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: ragflow-api
+          port: 9380
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: ragflow-mcp-route
+spec:
+  parentRefs:
+    - name: ragflow-gateway
+      sectionName: https-ragflow-mcp
+  hostnames:
+    - ragflow-mcp.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: ragflow-mcp
+          port: 9382
