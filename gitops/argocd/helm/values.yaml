@@ -544,7 +544,7 @@ server:
   ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#tls-certificates-used-by-argocd-server
   certificate:
     # -- Deploy a Certificate resource (requires cert-manager)
-    enabled: true
+    enabled: false
     # -- Certificate primary domain (commonName)
     # @default -- `""` (defaults to global.domain)
     domain: "argocd.inspection.alpha.canada.ca"
