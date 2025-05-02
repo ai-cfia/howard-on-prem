@@ -24,7 +24,7 @@ spec:
                       - app-worker
       containers:
         - name: docling
-          image: ghcr.io/docling-project/docling-serve-cpu:v0.10.0
+          image: ghcr.io/docling-project/docling-serve-cpu:v0.10.1
           imagePullPolicy: Always
           ports:
             - containerPort: 5001
