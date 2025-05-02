@@ -26,11 +26,20 @@ spec:
       containers:
       - name: ragflow
         image: infiniflow/ragflow:v0.18.0
+        command:
+          - --enable-mcp-server
+          - --mcp-host=0.0.0.0
+          - --mcp-port=9382
+          - --mcp-base-url=http://127.0.0.1:9380
+          - --mcp-script-path=/ragflow/mcp/server/server.py
+          - --mcp-mode=host
         ports:
           - containerPort: 80
             name: http
           - containerPort: 9380
             name: http-api
+          - containerPort: 9382
+            name: mcp
         volumeMounts:
           - mountPath: /etc/nginx/conf.d/ragflow.conf
             subPath: ragflow.conf
@@ -76,7 +85,23 @@ spec:
     app.kubernetes.io/component: ragflow
   ports:
     - protocol: TCP
-      port: 80
+      port: 9380
       targetPort: http-api
       name: http-api
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ragflow-mcp
+  labels:
+    app.kubernetes.io/component: ragflow
+spec:
+  selector:
+    app.kubernetes.io/component: ragflow
+  ports:
+    - protocol: TCP
+      port: 9382
+      targetPort: mcp
+      name: mcp
   type: ClusterIP
