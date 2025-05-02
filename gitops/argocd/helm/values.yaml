@@ -80,22 +80,12 @@ configs:
 
     # Extension Configuration
     ## Ref: https://argo-cd.readthedocs.io/en/latest/developer-guide/extensions/proxy-extensions/
-    # extension.config: |
-    #   extensions:
-    #   - name: httpbin
-    #     backend:
-    #       connectionTimeout: 2s
-    #       keepAlive: 15s
-    #       idleConnectionTimeout: 60s
-    #       maxIdleConnections: 30
-    #       services:
-    #       - url: http://httpbin.org
-    #         headers:
-    #         - name: some-header
-    #           value: '$some.argocd.secret.key'
-    #         cluster:
-    #           name: some-cluster
-    #           server: https://some-cluster
+    extension.config: |
+      extensions:
+      - name: metrics
+        backend:
+          services:
+          - url: http://argocd-metrics-server:9003
   
   # Argo CD configuration parameters
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
@@ -209,6 +199,8 @@ configs:
       p, role:apps, applications, override, default/fertiscan-preview, allow
 
       p, role:admin, exec, create, */*, allow
+
+      p, role:readonly, extensions, invoke, metrics, allow
       
       g, devsecops, role:admin
       g, apps, role:apps

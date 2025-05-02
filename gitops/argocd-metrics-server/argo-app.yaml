@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-metrics-server
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  sources:
+    - chart: argocd-metrics-server
+      helm:
+        releaseName: argocd-metrics-server
+        valueFiles:
+          - $values/gitops/argocd-metrics-server/helm/values.yaml
+      repoURL: https://argoproj.github.io/argo-helm
+      targetRevision: 1.0.7
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values

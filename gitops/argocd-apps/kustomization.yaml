@@ -28,6 +28,7 @@ resources:
   # Gitops applications
   - ../argocd/
   - ../on-prem-gh-runners/
+  - ../argocd-metrics-server/
 
   # Security applications
   - ../../security/cert-manager/
