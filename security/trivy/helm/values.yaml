@@ -1,0 +1,159 @@
+# -- targetNamespace defines where you want trivy-operator to operate. By
+# default, it's a blank string to select all namespaces, but you can specify
+# another namespace, or a comma separated list of namespaces.
+targetNamespaces: ""
+
+# -- excludeNamespaces is a comma separated list of namespaces (or glob patterns)
+# to be excluded from scanning. Only applicable in the all namespaces install
+# mode, i.e. when the targetNamespaces values is a blank string.
+excludeNamespaces: ""
+
+# -- targetWorkloads is a comma seperated list of Kubernetes workload resources
+# to be included in the vulnerability and config-audit scans
+# if left blank, all workload resources will be scanned
+targetWorkloads: "pod,replicaset,replicationcontroller,statefulset,daemonset,cronjob,job"
+
+operator:
+  # -- namespace to install the operator, defaults to the .Release.Namespace
+  namespace: "trivy"
+  # -- replicas the number of replicas of the operator's pod
+  replicas: 1
+
+  # -- number of old history to retain to allow rollback (if not set, default Kubernetes value is set to 10)
+  revisionHistoryLimit: 3
+
+  # -- leaderElectionId determines the name of the resource that leader election
+  # will use for holding the leader lock.
+  leaderElectionId: "trivyoperator-lock"
+
+  # -- scanJobTTL the set automatic cleanup time after the job is completed
+  scanJobTTL: ""
+
+  # -- scanSecretTTL set an automatic cleanup for scan job secrets
+  scanSecretTTL: ""
+
+  # -- scanJobTimeout the length of time to wait before giving up on a scan job
+  scanJobTimeout: 5m
+
+  # -- scanJobsConcurrentLimit the maximum number of scan jobs create by the operator
+  scanJobsConcurrentLimit: 10
+
+  # -- scanNodeCollectorLimit the maximum number of node collector jobs create by the operator
+  scanNodeCollectorLimit: 1
+
+  # -- scanJobsRetryDelay the duration to wait before retrying a failed scan job
+  scanJobsRetryDelay: 30s
+
+  # -- the flag to enable vulnerability scanner
+  vulnerabilityScannerEnabled: true
+  # -- the flag to enable sbom generation, required for enabling ClusterVulnerabilityReports
+  sbomGenerationEnabled: true
+  # -- the flag to enable cluster sbom cache generation
+  clusterSbomCacheEnabled: false
+  # -- scannerReportTTL the flag to set how long a report should exist. "" means that the ScannerReportTTL feature is disabled
+  scannerReportTTL: "24h"
+  # -- cacheReportTTL the flag to set how long a cluster sbom report should exist. "" means that the cacheReportTTL feature is disabled
+  cacheReportTTL: "120h"
+  # -- configAuditScannerEnabled the flag to enable configuration audit scanner
+  configAuditScannerEnabled: true
+  # -- rbacAssessmentScannerEnabled the flag to enable rbac assessment scanner
+  rbacAssessmentScannerEnabled: true
+  # -- infraAssessmentScannerEnabled the flag to enable infra assessment scanner
+  infraAssessmentScannerEnabled: true
+  # -- clusterComplianceEnabled the flag to enable cluster compliance scanner
+  clusterComplianceEnabled: true
+  # -- batchDeleteLimit the maximum number of config audit reports deleted by the operator when the plugin's config has changed.
+  batchDeleteLimit: 10
+  # -- vulnerabilityScannerScanOnlyCurrentRevisions the flag to only create vulnerability scans on the current revision of a deployment.
+  vulnerabilityScannerScanOnlyCurrentRevisions: true
+  # -- configAuditScannerScanOnlyCurrentRevisions the flag to only create config audit scans on the current revision of a deployment.
+  configAuditScannerScanOnlyCurrentRevisions: true
+  # -- batchDeleteDelay the duration to wait before deleting another batch of config audit reports.
+  batchDeleteDelay: 10s
+  # -- accessGlobalSecretsAndServiceAccount The flag to enable access to global secrets/service accounts to allow `vulnerability scan job` to pull images from private registries
+  accessGlobalSecretsAndServiceAccount: true
+  # -- builtInTrivyServer The flag enables the usage of built-in trivy server in cluster. It also overrides the following trivy params with built-in values
+  # trivy.mode = ClientServer and serverURL = http://<serverServiceName>.<trivy operator namespace>:4975
+  builtInTrivyServer: false
+  # -- builtInServerRegistryInsecure is the flag to enable insecure connection from the built-in Trivy server to the registry.
+  builtInServerRegistryInsecure: false
+  # -- controllerCacheSyncTimeout the duration to wait for controller resources cache sync (default: 5m).
+  controllerCacheSyncTimeout: "5m"
+
+  # -- trivyServerHealthCheckCacheExpiration The flag to set the interval for trivy server health cache before it invalidate
+  trivyServerHealthCheckCacheExpiration: 10h
+
+  # -- metricsFindingsEnabled the flag to enable metrics for findings
+  metricsFindingsEnabled: true
+
+  # -- metricsVulnIdEnabled the flag to enable metrics about cve vulns id
+  # be aware of metrics cardinality is significantly increased with this feature enabled.
+  metricsVulnIdEnabled: false
+
+  # -- exposedSecretScannerEnabled the flag to enable exposed secret scanner
+  exposedSecretScannerEnabled: true
+
+  # -- MetricsExposedSecretInfo the flag to enable metrics about exposed secrets
+  # be aware of metrics cardinality is significantly increased with this feature enabled.
+  metricsExposedSecretInfo: false
+
+  # -- MetricsConfigAuditInfo the flag to enable metrics about configuration audits
+  # be aware of metrics cardinality is significantly increased with this feature enabled.
+  metricsConfigAuditInfo: false
+
+  # -- MetricsRbacAssessmentInfo the flag to enable metrics about Rbac Assessment
+  # be aware of metrics cardinality is significantly increased with this feature enabled.
+  metricsRbacAssessmentInfo: false
+
+  # -- MetricsInfraAssessmentInfo the flag to enable metrics about Infra Assessment
+  # be aware of metrics cardinality is significantly increased with this feature enabled.
+  metricsInfraAssessmentInfo: false
+
+  # -- MetricsImageInfo the flag to enable metrics about Image Information of scanned images
+  # This information has image os information including os family, name/version, and if end of service life has been reached
+  # be aware of metrics cardinality is significantly increased with this feature enabled.
+  metricsImageInfo: false
+
+  # -- MetricsClusterComplianceInfo the flag to enable metrics about Cluster Compliance
+  # be aware of metrics cardinality is significantly increased with this feature enabled.
+  metricsClusterComplianceInfo: false
+
+  # -- serverAdditionalAnnotations the flag to set additional annotations for the trivy server pod
+  serverAdditionalAnnotations: {}
+
+  # -- webhookBroadcastURL the flag to set reports should be sent to a webhook endpoint. "" means that the webhookBroadcastURL feature is disabled
+  webhookBroadcastURL: ""
+
+  # -- webhookBroadcastTimeout the flag to set timeout for webhook requests if webhookBroadcastURL is enabled
+  webhookBroadcastTimeout: 30s
+
+  # -- webhookBroadcastCustomHeaders the flag to set webhook endpoint sent with custom defined headers if webhookBroadcastURL is enabled
+  webhookBroadcastCustomHeaders: ""
+
+  # -- webhookSendDeletedReports the flag to enable sending deleted reports if webhookBroadcastURL is enabled
+  webhookSendDeletedReports: false
+
+  # -- privateRegistryScanSecretsNames is map of namespace:secrets, secrets are comma seperated which can be used to authenticate in private registries in case if there no imagePullSecrets provided example : {"mynamespace":"mySecrets,anotherSecret"}
+  privateRegistryScanSecretsNames: {}
+
+  # -- mergeRbacFindingWithConfigAudit the flag to enable merging rbac finding with config-audit report
+  mergeRbacFindingWithConfigAudit: false
+
+trivyOperator:
+  # -- vulnerabilityReportsPlugin the name of the plugin that generates vulnerability reports `Trivy`
+  vulnerabilityReportsPlugin: "Trivy"
+  # -- configAuditReportsPlugin the name of the plugin that generates config audit reports.
+  configAuditReportsPlugin: "Trivy"
+  # -- scanJobCompressLogs control whether scanjob output should be compressed or plain
+  scanJobCompressLogs: true
+
+# -- affinity set the operator affinity
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: type
+              operator: In
+              values:
+                - app-worker

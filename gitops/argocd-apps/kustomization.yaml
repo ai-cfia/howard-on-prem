@@ -34,6 +34,7 @@ resources:
   - ../../security/eso/
   - ../../security/vault/
   - ../../security/keycloak/
+  - ../../security/trivy/
 
   # Storage applications
   - ../../storage/rook-ceph/operator/

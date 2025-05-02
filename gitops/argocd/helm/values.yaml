@@ -136,7 +136,7 @@ configs:
     # -- Enable GZIP compression
     server.enable.gzip: true
     # -- Enable proxy extension feature. (proxy extension is in Alpha phase)
-    server.enable.proxy.extension: false
+    server.enable.proxy.extension: true
     # -- Set X-Frame-Options header in HTTP responses to value. To disable, set to "".
     server.x.frame.options: sameorigin
 
@@ -584,3 +584,61 @@ server:
     usages: []
     # -- Annotations that allow the certificate to be composed from data residing in existing Kubernetes Resources
     secretTemplateAnnotations: {}
+
+  ## Argo CD extensions
+  ## This function in tech preview stage, do expect instability or breaking changes in newer versions.
+  ## Ref: https://github.com/argoproj-labs/argocd-extension-installer
+  ## When you enable extensions, you need to configure RBAC of logged in Argo CD user.
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/#the-extensions-resource
+  extensions:
+    # -- Enable support for Argo CD extensions
+    enabled: true
+
+    ## Argo CD extension installer image
+    image:
+      # -- Repository to use for extension installer image
+      repository: "quay.io/argoprojlabs/argocd-extension-installer"
+      # -- Tag to use for extension installer image
+      tag: "v0.0.8"
+      # -- Image pull policy for extensions
+      # @default -- `""` (defaults to global.image.imagePullPolicy)
+      imagePullPolicy: ""
+
+    # -- Extensions for Argo CD
+    # @default -- `[]` (See [values.yaml])
+    ## Ref: https://github.com/argoproj-labs/argocd-extension-metrics#install-ui-extension
+    extensionList:
+      - name: extension-metrics
+        env:
+          - name: EXTENSION_URL
+            value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension.tar.gz
+          - name: EXTENSION_CHECKSUM_URL
+            value: https://github.com/argoproj-labs/argocd-extension-metrics/releases/download/v1.0.0/extension_checksums.txt
+      - name: extension-trivy
+        env:
+          - name: EXTENSION_URL
+            value: https://github.com/mziyabo/argocd-trivy-extension/releases/download/v0.2.0/extension-trivy.tar
+          - name: EXTENSION_CHECKSUM_URL
+            value: https://github.com/mziyabo/argocd-trivy-extension/releases/download/v0.2.0/extension-trivy_checksums.txt
+
+    # -- Server UI extensions container-level security context
+    # @default -- See [values.yaml]
+    containerSecurityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      runAsUser: 1000
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+        - ALL
+
+    # -- Resource limits and requests for the argocd-extensions container
+    resources: {}
+    #  limits:
+    #    cpu: 50m
+    #    memory: 128Mi
+    #  requests:
+    #    cpu: 10m
+    #    memory: 64Mi

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: trivy
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: trivy
+  sources:
+    - chart: trivy-operator
+      repoURL: https://aquasecurity.github.io/helm-charts/
+      targetRevision: 0.27.0
+      helm:
+        releaseName: trivy-operator
+        valueFiles:
+          - $values/security/trivy/helm/values.yaml
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
