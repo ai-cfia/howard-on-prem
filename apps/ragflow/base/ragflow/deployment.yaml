@@ -26,7 +26,7 @@ spec:
       containers:
       - name: ragflow
         image: infiniflow/ragflow:v0.18.0
-        command:
+        args:
           - --enable-mcp-server
           - --mcp-host=0.0.0.0
           - --mcp-port=9382
