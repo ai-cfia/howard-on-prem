@@ -27,7 +27,7 @@ spec:
       - name: ragflow
         image: infiniflow/ragflow:v0.18.0
         args:
-          - --enable-mcp-server
+          - --enable-mcpserver
           - --mcp-host=0.0.0.0
           - --mcp-port=9382
           - --mcp-base-url=http://127.0.0.1:9380
