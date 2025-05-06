@@ -104,6 +104,19 @@ spec:
         connectionLimit: 10
         passwordSecret:
           name: openwebui-dev-user-creds
+      
+      - name: memos
+        ensure: present
+        comment: "Owner of memos database"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: memos-user-creds
 
   backup:
     barmanObjectStore:

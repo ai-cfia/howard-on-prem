@@ -14,6 +14,7 @@ resources:
   - database/openwebui.yaml
   - database/keycloak-database.yaml
   - database/nachet-prod.yaml
+  - database/memos.yaml
 
   - acia-cfia-prod-cluster/cluster.yaml
   - acia-cfia-prod-cluster/secrets.yaml
