@@ -1,18 +1,18 @@
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
-metadata:
-  name: memos-route
-spec:
-  parentRefs:
-    - name: memos-gateway
-      sectionName: https-memos
-  hostnames:
-    - memos.inspection.alpha.canada.ca
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: "/"
-      backendRefs:
-        - name: memos-service
-          port: 5230
+# apiVersion: gateway.networking.k8s.io/v1beta1
+# kind: HTTPRoute
+# metadata:
+#   name: memos-route
+# spec:
+#   parentRefs:
+#     - name: memos-gateway
+#       sectionName: https-memos
+#   hostnames:
+#     - memos.inspection.alpha.canada.ca
+#   rules:
+#     - matches:
+#         - path:
+#             type: PathPrefix
+#             value: "/"
+#       backendRefs:
+#         - name: memos-service
+#           port: 5230
