@@ -13,20 +13,72 @@ spec:
         app: memos
     spec:
       containers:
-      - name: memos
-        image: neosmemo/memos:stable
-        ports:
-        - containerPort: 5230
-        envFrom:
-          - secretRef:
-              name: memos-secrets
-        volumeMounts:
-          - name: memos-data
-            mountPath: /var/opt/memos
+        - name: memos
+          image: neosmemo/memos:stable
+          ports:
+            - containerPort: 5230
+          envFrom:
+            - secretRef:
+                name: memos-secrets
+          volumeMounts:
+            - name: memos-data
+              mountPath: /var/opt/memos
+        - name: caddy
+          image: caddy:2.8
+          ports:
+            - containerPort: 443
+            - containerPort: 80
+          volumeMounts:
+            - name: caddy-config
+              mountPath: /etc/caddy/Caddyfile
+              subPath: Caddyfile
+            - name: caddy-data
+              mountPath: /data
+            - name: caddy-config-dir
+              mountPath: /config
+            - name: caddy-logs
+              mountPath: /logs
       volumes:
         - name: memos-data
           persistentVolumeClaim:
             claimName: memos-pvc
+        - name: caddy-config
+          configMap:
+            name: caddy-config
+        - name: caddy-data
+          emptyDir: {}
+        - name: caddy-config-dir
+          emptyDir: {}
+        - name: caddy-logs
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: caddy-config
+  namespace: default
+
+data:
+  Caddyfile: |
+    memos.inspection.alpha.canada.ca {
+        reverse_proxy localhost:5230
+
+        log {
+          format console
+          output file /logs/memos.log {
+            roll_size 10mb
+            roll_keep 20
+            roll_keep_for 7d
+          }
+        }
+
+        encode {
+          zstd
+          gzip
+          minimum_length 1024
+        }
+    }
 
 ---
 apiVersion: v1
@@ -45,12 +97,45 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: memos-service
+  name: caddy-service
 spec:
   selector:
     app: memos
   ports:
-    - protocol: TCP
-      port: 5230
-      targetPort: 5230
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
   type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: caddy-ingress
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.32
+    ingress.cilium.io/loadbalancer-mode: dedicated
+    # ingress.cilium.io/tls-passthrough: "enabled"
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: cilium
+  tls:
+    - hosts:
+        - memos.inspection.alpha.canada.ca
+      secretName: memos-tls
+  rules:
+    - host: memos.inspection.alpha.canada.ca
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: caddy-service
+                port:
+                  number: 443
