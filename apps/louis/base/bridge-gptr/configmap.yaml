@@ -21,10 +21,6 @@ data:
           "command": "uvx",
           "args": ["mcp-server-time", "--local-timezone=America/New_York"]
         },
-        "puppeteer": {
-          "command": "npx",
-          "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
-        },
         "filesystem": {
           "command": "npx",
           "args": [
