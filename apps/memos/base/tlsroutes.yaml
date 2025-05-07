@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: caddy-tlsroute
+spec:
+  parentRefs:
+    - name: memos-gateway
+      sectionName: tls-caddy
+  hostnames:
+    - memos.inspection.alpha.canada.ca
+  rules:
+    - backendRefs:
+        - name: caddy-service
+          port: 443
