@@ -42,7 +42,7 @@ data:
           "args": ["markitdown-mcp"]
         },
         "ragflow": {
-          "url": "https://ragflow-mcp.inspection.alpha.canada.ca:443",
+          "url": "https://ragflow-mcp.inspection.alpha.canada.ca:443"
         },
         "web-search-brave": {
           "command": "npx",
