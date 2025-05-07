@@ -33,6 +33,7 @@ spec:
           - --mcp-base-url=http://127.0.0.1:9380
           - --mcp-script-path=/ragflow/mcp/server/server.py
           - --mcp-mode=host
+          - --mcp-host-api-key=$(RAGFLOW_API_KEY)
         ports:
           - containerPort: 80
             name: http
