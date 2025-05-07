@@ -125,6 +125,7 @@ metadata:
   annotations:
     lbipam.cilium.io/ips: 10.140.79.32
     ingress.cilium.io/loadbalancer-mode: dedicated
+    ingress.cilium.io/tls-passthrough: enabled # Enable TLS passthrough for Caddy (terminasion at caddy)
 spec:
   ingressClassName: cilium
   tls:
