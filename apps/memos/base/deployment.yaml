@@ -38,6 +38,8 @@ spec:
               mountPath: /config
             - name: caddy-logs
               mountPath: /logs
+            - name: caddy-certs
+              mountPath: /etc/caddy/certs
       volumes:
         - name: memos-data
           persistentVolumeClaim:
@@ -51,6 +53,9 @@ spec:
           emptyDir: {}
         - name: caddy-logs
           emptyDir: {}
+        - name: caddy-certs
+          secret:
+            secretName: memos-tls
 
 ---
 apiVersion: v1
@@ -61,6 +66,8 @@ data:
   Caddyfile: |
     memos.inspection.alpha.canada.ca {
         reverse_proxy localhost:5230
+
+        tls /etc/caddy/certs/tls.crt /etc/caddy/certs/tls.key
 
         log {
           format console
