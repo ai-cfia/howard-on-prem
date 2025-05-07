@@ -121,12 +121,10 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: caddy-ingress
+  name: memos-ingress
   annotations:
     lbipam.cilium.io/ips: 10.140.79.32
     ingress.cilium.io/loadbalancer-mode: dedicated
-    # ingress.cilium.io/tls-passthrough: "enabled"
-    # cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: cilium
   tls:
