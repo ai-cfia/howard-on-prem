@@ -26,7 +26,7 @@ spec:
                       - app-worker
       containers:
         - name: bridge-gptr
-          image: ghcr.io/ai-cfia/louis:mcpo-gptr-louis-f52a68c
+          image: ghcr.io/ai-cfia/louis:mcpo-gptr-louis-21118e0
           imagePullPolicy: Always
           envFrom:
             - secretRef:
