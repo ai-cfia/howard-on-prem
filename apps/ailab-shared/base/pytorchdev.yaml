@@ -73,9 +73,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: pytorchdev-svc
+  name: pytorchdevssh-svc
 spec:
-  clusterIP: None
+  clusterIP: 10.140.79.58
   type: NodePort
   selector:
     app: pytorchdev
