@@ -75,7 +75,7 @@ kind: Service
 metadata:
   name: pytorchdev-svc
 spec:
-  clusterIP: 10.140.79.58
+  clusterIP: None
   type: NodePort
   selector:
     app: pytorchdev
