@@ -3,7 +3,5 @@ kind: Kustomization
 
 resources:
   - alpine.yaml
-  - gateway.yaml
-  - tcproute.yaml
   - pytorchdev.yaml
   - sharedpvc.yaml

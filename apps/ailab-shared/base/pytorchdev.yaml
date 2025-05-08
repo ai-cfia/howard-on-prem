@@ -75,14 +75,15 @@ kind: Service
 metadata:
   name: pytorchdev-svc
 spec:
-  clusterIP: None
+  type: NodePort
   selector:
     app: pytorchdev
   ports:
     - protocol: TCP
       port: 22
       targetPort: 22
-      name: http
+      nodePort: 30022
+      name: TCP
 
 ---
 apiVersion: v1
