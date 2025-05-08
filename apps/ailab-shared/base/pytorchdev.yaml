@@ -27,8 +27,12 @@ spec:
         - name: pytorchdev
           image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050802
           imagePullPolicy: Always
-          # command: ["/bin/sh", "-c"]
-          # args: ["tail -f /dev/null"]
+          command: ["/bin/sh", "-c"]
+          args: [
+            "mkdir -p /etc/ssh; 
+             ssh-keygen -A; 
+             exec /usr/sbin/sshd -D"
+          ]
           # resources:
           #   requests:
           #     cpu: 16
