@@ -25,14 +25,10 @@ spec:
                     - ai-lab-1
       containers:
         - name: pytorchdev
-          image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050802
+          image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050803
           imagePullPolicy: Always
-          command: ["/bin/sh", "-c"]
-          args: [
-            "mkdir -p /etc/ssh; 
-             ssh-keygen -A; 
-             exec /usr/sbin/sshd -D"
-          ]
+          # command: ["/bin/sh", "-c"]
+          # args: ["tail -f /dev/null"]
           # resources:
           #   requests:
           #     cpu: 16
@@ -52,8 +48,8 @@ spec:
             - name: dshm
               mountPath: /dev/shm
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
+            # runAsUser: 1000
+            # runAsGroup: 1000
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: true
             capabilities:
