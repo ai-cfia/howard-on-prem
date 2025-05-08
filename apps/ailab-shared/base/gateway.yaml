@@ -11,4 +11,7 @@ spec:
     - name: ssh-pytorchdev
       hostname: pytorchdev.inspection.alpha.canada.ca
       port: 80
-      protocol: HTTP
+      protocol: TCP
+      allowedRoutes:
+        kinds:
+          - kind: TCPRoute
