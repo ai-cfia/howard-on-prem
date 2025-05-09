@@ -55,6 +55,7 @@ resources:
 
   # MLOps
   - ../../mlops/nvidia/
+  - ../../mlops/mlflow/
 
   # Infrastructure and configuration applications
 

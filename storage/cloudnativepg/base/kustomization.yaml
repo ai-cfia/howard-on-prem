@@ -15,6 +15,7 @@ resources:
   - database/keycloak-database.yaml
   - database/nachet-prod.yaml
   - database/memos.yaml
+  - database/mlflow.yaml
 
   - acia-cfia-prod-cluster/cluster.yaml
   - acia-cfia-prod-cluster/secrets.yaml

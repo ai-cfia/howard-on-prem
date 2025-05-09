@@ -1,0 +1,108 @@
+# -- (int) Numbers of replicas
+replicaCount: 1
+
+# -- This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
+service:
+  # -- This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  type: ClusterIP
+  # -- This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+  port: 5000
+  # -- Default Service name
+  name: http
+  # -- Additional service annotations
+  annotations: {}
+
+# -- Mlflow database connection settings
+backendStore:
+  # -- Specifies if you want to run database migration
+  databaseMigration: false
+
+  # -- Add an additional init container, which checks for database availability
+  databaseConnectionCheck: false
+
+  # -- Specifies the default sqlite path
+  defaultSqlitePath: ":memory:"
+
+  postgres:
+    # -- Specifies if you want to use postgres backend storage
+    enabled: true
+    # -- Postgres host address. e.g. your RDS or Azure Postgres Service endpoint
+    host: "acia-cfia-dev-cluster-rw.cloudnativepg" # required
+    # -- Postgres service port
+    port: 5432 # required
+    # -- mlflow database name created before in the postgres instance
+    database: "mlflow" # required
+    # -- postgres database user name which can access to mlflow database
+    user: "" # required
+    # -- postgres database user password which can access to mlflow database
+    password: "" # required
+    # -- postgres database connection driver. e.g.: "psycopg2"
+    driver: ""
+
+  # -- Specifies if you want to use an existing database secret.
+  existingDatabaseSecret:
+    # -- The name of the existing database secret.
+    name: "mlflow-secrets"
+    # -- The key of the username in the existing database secret.
+    usernameKey: "username"
+    # -- The key of the password in the existing database secret.
+    passwordKey: "password"
+
+ingress:
+  # -- Specifies if you want to create an ingress access
+  enabled: true
+  # -- New style ingress class name. Only possible if you use K8s 1.18.0 or later version
+  className: "cilium"
+  # -- Additional ingress annotations
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.33
+    ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: mlflow.inspection.alpha.canada.ca
+      paths:
+        - path: /
+          pathType: Preifx
+  # -- Ingress tls configuration for https access
+  tls:
+    - secretName: mlflow-tls
+      hosts:
+        - mlflow.inspection.alpha.canada.ca
+
+# -- This block is for setting up the resource management for the pod more information can be found here: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# -- For more information checkout: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: type
+              operator: In
+              values:
+                - ai-worker
+
+# -- Liveness probe configurations. Please look to [here](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes).
+livenessProbe:
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 3
+  failureThreshold: 5
+
+# -- Readiness probe configurations. Please look to [here](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes).
+readinessProbe:
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 3
+  failureThreshold: 5
