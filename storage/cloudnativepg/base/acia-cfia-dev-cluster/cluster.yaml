@@ -118,7 +118,7 @@ spec:
         passwordSecret:
           name: memos-user-creds
 
-      - name: mlflow
+      - name: mlflow-user
         ensure: present
         comment: "Owner of mlflow database"
         login: true
