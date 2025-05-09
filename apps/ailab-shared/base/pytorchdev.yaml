@@ -32,8 +32,8 @@ spec:
           #   requests:
           #     cpu: 16
           #     memory: 64Gi
-          limits:
-            nvidia.com/gpu: 1
+          # limits:
+          #   nvidia.com/gpu: 1
           ports:
             - containerPort: 22
           volumeMounts:
