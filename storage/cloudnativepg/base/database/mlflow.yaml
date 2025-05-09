@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: mlflow
+spec:
+  name: mlflow
+  owner: mlflow-user
+  cluster:
+    name: acia-cfia-dev-cluster
