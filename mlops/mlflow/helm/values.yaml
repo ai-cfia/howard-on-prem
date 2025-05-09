@@ -62,7 +62,7 @@ ingress:
     - host: mlflow.inspection.alpha.canada.ca
       paths:
         - path: /
-          pathType: Preifx
+          pathType: Prefix
   # -- Ingress tls configuration for https access
   tls:
     - secretName: mlflow-tls
