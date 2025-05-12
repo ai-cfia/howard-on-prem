@@ -64,7 +64,7 @@ alloy:
           },
           {
             name    = "gpt-researcher-frontend",
-            address = "https://gptr.inspection.alpha.canada.ca",
+            address = "https://gptr.inspection.alpha.canada.ca/ping",
             module  = "http_2xx",
           },
           {
@@ -150,6 +150,16 @@ alloy:
           {
             name    = "keycloak",
             address = "https://keycloak.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "memos",
+            address = "https://memos.inspection.alpha.canada.ca",
+            module  = "http_2xx",
+          },
+          {
+            name    = "mlflow",
+            address = "https://mlflow.inspection.alpha.canada.ca",
             module  = "http_2xx",
           },
         ]
