@@ -26,7 +26,7 @@ spec:
       containers:
         - name: pytorchdev
           # image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050803
-          image: ghcr.io/ai-cfia/pytorch-cpu:jupyter-x86_64-pytorch-2.6.0
+          image: ghcr.io/ai-cfia/pytorch-cpu:jupyter-ssh-pytorch-2.6.0-2025051201
           imagePullPolicy: Always
           # resources:
           #   requests:
