@@ -4,7 +4,7 @@ metadata:
   name: minio-route
 spec:
   parentRefs:
-    - name: minio-gateway
+    - name: storage-gateway
       sectionName: https-minio
   hostnames:
     - minio.inspection.alpha.canada.ca
@@ -23,7 +23,7 @@ metadata:
   name: minio-console-route
 spec:
   parentRefs:
-    - name: minio-gateway
+    - name: storage-gateway
       sectionName: https-minio-console
   hostnames:
     - minio-console.inspection.alpha.canada.ca

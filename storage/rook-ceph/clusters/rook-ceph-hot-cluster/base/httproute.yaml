@@ -4,7 +4,7 @@ metadata:
   name: rook-h-route
 spec:
   parentRefs:
-    - name: rook-gateway
+    - name: storage-gateway
       sectionName: https-rook-h
       namespace: rook-ceph
   hostnames:
