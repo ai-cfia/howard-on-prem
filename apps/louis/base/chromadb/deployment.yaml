@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chromadb-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: chromadb
+  template:
+    metadata:
+      labels:
+        app: chromadb
+    spec:
+      containers:
+        - name: chromadb
+          image: chromadb/chroma:1.0.9
+          resources:
+            requests:
+              cpu: 2
+              memory: 4G
+            limits:
+              cpu: 2
+              memory: 8Gi
+          ports:
+            - containerPort: 8000
+          tty: true
+          volumeMounts:
+            - name: chromadb-volume
+              mountPath: /data
+            - name: config-volume
+              mountPath: /config.yaml
+              subPath: config.yaml
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      volumes:
+        - name: chromadb-volume
+          persistentVolumeClaim:
+            claimName: chromadb-pvc
+        - name: config-volume
+          configMap:
+            name: chromadb-config
+          defaultMode: 0755
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chromadb-service
+spec:
+  type: ClusterIP
+  selector:
+    app: chromadb
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

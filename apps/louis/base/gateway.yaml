@@ -53,3 +53,12 @@ spec:
         certificateRefs:
           - name: docling-tls
             kind: Secret
+    - name: https-chromadb
+      hostname: chromadb.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: chromadb-tls
+            kind: Secret

@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chromadb-config
+data:
+  config.yaml: |
+    ########################
+    # HTTP server settings #
+    ########################
+    open_telemetry:
+      service_name: "chromadb"
+      endpoint: "http://alloy.monitoring.svc.cluster.local:4317"
+    port: 8000
+    listen_address: "0.0.0.0"
+    max_payload_size_bytes: 41943040
+    cors_allow_origins: ["*"]
+
+    ####################
+    # General settings #
+    ####################
+    persist_path: "/data"
+    allow_reset: false
+    sqlitedb:
+      hash_type: "sha256"
+      migration_mode: "apply" # or "validate"
+    sysdb:
+      sqlite:
+        log_topic_namespace: "default"
+        log_tenant: "default"

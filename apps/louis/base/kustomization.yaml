@@ -24,5 +24,8 @@ resources:
   - bridge-gptr/configmap.yaml
   - docling/deployment.yaml
   - docling/certificates.yaml
+  - chromadb/deployment.yaml
+  - chromadb/configmap.yaml
+  - chromadb/pvcs.yaml
   - gateway.yaml
   - httproute.yaml
