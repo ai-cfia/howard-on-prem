@@ -6,6 +6,7 @@ spec:
   parentRefs:
     - name: storage-gateway
       sectionName: https-minio
+      namespace: rook-ceph
   hostnames:
     - minio.inspection.alpha.canada.ca
   rules:
@@ -25,6 +26,7 @@ spec:
   parentRefs:
     - name: storage-gateway
       sectionName: https-minio-console
+      namespace: rook-ceph
   hostnames:
     - minio-console.inspection.alpha.canada.ca
   rules:
