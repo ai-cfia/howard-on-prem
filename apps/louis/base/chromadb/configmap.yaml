@@ -20,7 +20,8 @@ data:
     # General settings #
     ####################
     persist_path: "/data"
-    allow_reset: false
+    allow_reset: true
+    is_persistent: true
     sqlitedb:
       hash_type: "sha256"
       migration_mode: "apply" # or "validate"
