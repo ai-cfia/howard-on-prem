@@ -17,7 +17,7 @@ spec:
           from: Selector
           selector:
             matchLabels:
-              rook-ceph: "true"
+              storage-ns: "true"
       tls:
         mode: Terminate
         certificateRefs:
@@ -32,7 +32,7 @@ spec:
           from: Selector
           selector:
             matchLabels:
-              rook-ceph: "true"
+              storage-ns: "true"
       tls:
         mode: Terminate
         certificateRefs:
@@ -42,6 +42,12 @@ spec:
       hostname: minio-console.inspection.alpha.canada.ca
       port: 443
       protocol: HTTPS
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              storage-ns: "true"
       tls:
         mode: Terminate
         certificateRefs:
@@ -51,6 +57,12 @@ spec:
       hostname: minio.inspection.alpha.canada.ca
       port: 443
       protocol: HTTPS
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              storage-ns: "true"
       tls:
         mode: Terminate
         certificateRefs:
