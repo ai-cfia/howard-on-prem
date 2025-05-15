@@ -19,9 +19,9 @@ spec:
           image: ollama/ollama:0.6.8
           ports:
           - containerPort: 11434
-          # resources:
-          #   limits:
-          #     nvidia.com/gpu: 1
+          resources:
+            limits:
+              nvidia.com/gpu: 1
           volumeMounts:
             - name: ollama-volume
               mountPath: /root/.ollama
