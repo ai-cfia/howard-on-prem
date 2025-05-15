@@ -21,4 +21,4 @@ spec:
               X-Forwarded-Host: "keycloak.inspection.alpha.canada.ca"
       backendRefs:
         - name: keycloak
-          port: 8080
+          port: 80
