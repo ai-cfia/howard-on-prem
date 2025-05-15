@@ -27,5 +27,6 @@ resources:
   - chromadb/deployment.yaml
   - chromadb/configmap.yaml
   - chromadb/pvcs.yaml
+  - chromadb/configenv.yaml
   - gateway.yaml
   - httproute.yaml

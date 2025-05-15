@@ -17,6 +17,9 @@ spec:
       containers:
         - name: chromadb
           image: chromadb/chroma:1.0.9
+          envFrom:
+            - configMapRef:
+                name: chromadb-configenv
           resources:
             requests:
               cpu: 2
