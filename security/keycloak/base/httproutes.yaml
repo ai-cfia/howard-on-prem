@@ -17,8 +17,10 @@ spec:
         - type: RequestHeaderModifier
           requestHeaderModifier:
             add:
-              X-Forwarded-Proto: "https"
-              X-Forwarded-Host: "keycloak.inspection.alpha.canada.ca"
+              - name: X-Forwarded-Proto
+                value: "https"
+              - name: X-Forwarded-Host
+                value: "keycloak.inspection.alpha.canada.ca"
       backendRefs:
         - name: keycloak
           port: 80
