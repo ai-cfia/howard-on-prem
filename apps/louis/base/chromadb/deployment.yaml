@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: chromadb
-          image: chromadb/chroma:1.0.9
+          image: chromadb/chroma:0.6.3
           envFrom:
             - configMapRef:
                 name: chromadb-configenv
