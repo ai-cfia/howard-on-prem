@@ -4,7 +4,7 @@ metadata:
   name: acia-cfia-dev-cluster
 spec:
   description: "ACIA-CFIA dev cluster"
-  imageName: ghcr.io/cloudnative-pg/postgresql:15.3
+  imageName: ghcr.io/cloudnative-pg/postgresql:15-standard-bookworm
   instances: 2
   primaryUpdateStrategy: unsupervised
 
