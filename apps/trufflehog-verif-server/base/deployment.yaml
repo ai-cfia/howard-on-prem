@@ -24,7 +24,7 @@ spec:
                       - app-worker
       containers:
         - name: trufflehog-verif-server
-          image: ghcr.io/ai-cfia/trufflehog-verif-server:1.0.1
+          image: ghcr.io/ai-cfia/trufflehog-verif-server:1.0.2
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
