@@ -31,6 +31,8 @@ spec:
           env:
             - name: DOCLING_SERVE_ENABLE_UI
               value: "true"
+            - name: DOCLING_SERVE_MAX_SYNC_WAIT
+              value: "1800"
             # - name: DOCLING_SERVE_ARTIFACTS_PATH
             #   value: "/app/artifacts"
           resources:
