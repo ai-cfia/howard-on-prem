@@ -7,3 +7,6 @@ spec:
   backupOwnerReference: self
   cluster:
     name: acia-cfia-prod-cluster
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io
