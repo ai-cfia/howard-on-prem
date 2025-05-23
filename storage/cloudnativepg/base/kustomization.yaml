@@ -5,6 +5,8 @@ resources:
   - acia-cfia-dev-cluster/cluster.yaml
   - acia-cfia-dev-cluster/secrets.yaml
   - acia-cfia-dev-cluster/backup.yaml
+  - acia-cfia-dev-cluster/barman-objectstore.yaml
+  - acia-cfia-dev-cluster/barmancloud-deployment.yaml
 
   - database/fertiscan-preview.yaml
   - database/nachet-dev.yaml
