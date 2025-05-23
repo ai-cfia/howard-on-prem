@@ -9,9 +9,16 @@ spec:
     server: https://kubernetes.default.svc
     namespace: cloudnativepg
   sources:
-    - repoURL: https://github.com/cloudnative-pg/artifacts/
-      path: manifests
-      targetRevision: main
+    - chart: cloudnative-pg
+      helm:
+        releaseName: cloudnative-pg
+        valueFiles:
+          - $values/storage/cloudnativepg/helm/values.yaml
+      repoURL: https://cloudnative-pg.io/charts/
+      targetRevision: 0.24.0
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       path: storage/cloudnativepg/base/
       targetRevision: HEAD
