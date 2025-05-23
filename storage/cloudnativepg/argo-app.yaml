@@ -11,7 +11,7 @@ spec:
   sources:
     - repoURL: https://github.com/cloudnative-pg/artifacts/
       path: manifests
-      targetRevision: release-1.26
+      targetRevision: main
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       path: storage/cloudnativepg/base/
       targetRevision: HEAD
