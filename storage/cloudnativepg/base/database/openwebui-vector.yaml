@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: openwebuivector
+spec:
+  name: openwebuivector
+  owner: openwebui
+  cluster:
+    name: acia-cfia-dev-cluster

@@ -12,6 +12,7 @@ resources:
   - database/finesse-internal.yaml
   - database/litellm.yaml
   - database/openwebui.yaml
+  - database/openwebui-vector.yaml
   - database/keycloak-database.yaml
   - database/nachet-prod.yaml
   - database/memos.yaml
