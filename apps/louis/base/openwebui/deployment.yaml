@@ -22,7 +22,7 @@ spec:
               memory: 8G
             limits:
               cpu: 8
-              memory: 8Gi
+              memory: 32Gi
           ports:
             - containerPort: 8080
           envFrom:
