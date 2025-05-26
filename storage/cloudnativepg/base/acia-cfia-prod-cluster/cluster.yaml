@@ -12,7 +12,7 @@ spec:
     pg_hba:
       - host all all 0.0.0.0/0 md5
 
-  managed:  
+  managed:
     roles:
       - name: nachet
         ensure: present
@@ -29,7 +29,7 @@ spec:
 
   plugins:
     - name: barman-cloud.cloudnative-pg.io
-      isWALArchiver: true
+      isWALArchiver: false
       parameters:
         barmanObjectName: acia-cfia-prod-cluster-store
 
