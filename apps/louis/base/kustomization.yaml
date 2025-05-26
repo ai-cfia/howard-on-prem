@@ -27,5 +27,9 @@ resources:
   - chromadb/deployment.yaml
   - chromadb/configmap.yaml
   - chromadb/pvcs.yaml
+  - vllm/secrets.yaml
+  - vllm/pvc.yaml
+  - vllm/model-bge-reranker-v2-m3.yaml
+  - vllm/model-snowflake-arctic-embed2.yaml
   - gateway.yaml
   - httproute.yaml
