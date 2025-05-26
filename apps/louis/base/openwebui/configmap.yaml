@@ -11,5 +11,6 @@ data:
   ENABLE_LOGIN_FORM: "true"
   ENABLE_ADMIN_CHAT_ACCESS: "false"
   VECTOR_DB: "pgvector"
+  GLOBAL_LOG_LEVEL: "DEBUG"
   # CHROMA_HTTP_HOST: "chromadb-service.louis.svc.cluster.local"
   # CHROMA_HTTP_PORT: "8000"
