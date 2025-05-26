@@ -19,7 +19,7 @@ spec:
           image: vllm/vllm-openai:v0.8.5
           command: ["/bin/sh", "-c"]
           args: [
-            "vllm serve Snowflake/snowflake-arctic-embed-l-v2.0 --task embed --trust-remote-code --max_num_batched_tokens 2048 --max_model_len 8192"
+            "vllm serve Snowflake/snowflake-arctic-embed-l-v2.0 --task embed --trust-remote-code --max_num_batched_tokens 8192 --max_model_len 8192"
           ]
           envFrom:
             - secretRef:
