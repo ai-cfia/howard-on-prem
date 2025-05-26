@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowflake-arctic-embed2-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: snowflake-arctic-embed2
+  template:
+    metadata:
+      labels:
+        app: snowflake-arctic-embed2
+    spec:
+      containers:
+        - name: snowflake-arctic-embed2
+          image: vllm/vllm-openai:latest
+          command: ["/bin/sh", "-c"]
+          args: [
+            "vllm serve Snowflake/snowflake-arctic-embed-l-v2.0 --task embed --trust-remote-code --enable-chunked-prefill --max_num_batched_tokens 1024"
+          ]
+          envFrom:
+            - secretRef:
+                name: huggingface-secrets
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              cpu: "4"
+              memory: 8G
+              nvidia.com/gpu: "1"
+            requests:
+              cpu: "2"
+              memory: 4G
+              nvidia.com/gpu: "1"
+          volumeMounts:
+            - name: cache-volume
+              mountPath: /root/.cache/huggingface
+            - name: shm
+              mountPath: /dev/shm
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - ai-lab-1
+      volumes:
+        - name: cache-volume
+          persistentVolumeClaim:
+            claimName: snowflake-arctic-embed2-pvc
+        # vLLM needs to access the host's shared memory for tensor parallel inference.
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: "2Gi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: snowflake-arctic-embed2-service
+spec:
+  type: ClusterIP
+  selector:
+    app: snowflake-arctic-embed2
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
