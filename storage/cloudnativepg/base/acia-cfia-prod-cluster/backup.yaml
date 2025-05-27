@@ -3,7 +3,7 @@ kind: ScheduledBackup
 metadata:
   name: acia-cfia-prod-cluster-backup
 spec:
-  schedule: "0 0 * * 5"  # Friday midnight (UTC)
+  schedule: "0 0 0 * * 5"  # Go CRON -> Friday midnight (UTC)
   backupOwnerReference: self
   cluster:
     name: acia-cfia-prod-cluster
