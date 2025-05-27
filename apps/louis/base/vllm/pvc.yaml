@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: bge-reranker-v2-m3
+  name: bge-reranker-v2-m3-pvc
+spec:
+  storageClassName: ceph-hot-block
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 10Gi
+  volumeMode: Filesystem
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: snowflake-arctic-embed2
+  name: snowflake-arctic-embed2-pvc
+spec:
+  storageClassName: ceph-hot-block
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 10Gi
+  volumeMode: Filesystem
