@@ -18,8 +18,8 @@ spec:
           image: ghcr.io/ai-cfia/open-webui:git-eb5c47f
           resources:
             requests:
-              cpu: 2
-              memory: 8G
+              cpu: 4
+              memory: 16G
             limits:
               cpu: 8
               memory: 32Gi
