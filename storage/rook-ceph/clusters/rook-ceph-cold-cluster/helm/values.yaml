@@ -104,6 +104,7 @@ cephClusterSpec:
                   operator: In
                   values:
                     - ai-worker
+                    - control-plane
       # podAffinity:
       # podAntiAffinity:
       # topologySpreadConstraints:
