@@ -107,9 +107,10 @@ cephClusterSpec:
       # podAffinity:
       # podAntiAffinity:
       # topologySpreadConstraints:
-      # tolerations:
-      # - key: storage-node
-      #   operator: Exists
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
     # The above placement information can also be specified for mon, osd, and mgr components
     # mon:
     # Monitor deployments may contain an anti-affinity rule for avoiding monitor
