@@ -18,7 +18,7 @@ spec:
           restartPolicy: OnFailure
           containers:
             - name: etcd-backup
-              image: quay.io/coreos/etcd:v3.5.12
+              image: bitnami/etcd:3.5.12
               command:
                 - /bin/sh
                 - -c
