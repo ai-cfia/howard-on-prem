@@ -423,12 +423,12 @@ csi:
 
   # -- Array of tolerations in YAML format which will be added to CephCSI plugin DaemonSet
   pluginTolerations:
-  #    - key: key
-  #      operator: Exists
-  #      effect: NoSchedule
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
 
   # -- The node labels for affinity of the CephCSI RBD plugin DaemonSet [^1]
-  pluginNodeAffinity: # key1=value1,value2; key2=value3
+  pluginNodeAffinity: "type=ai-worker,control-plane"
 
   # -- Enable Ceph CSI Liveness sidecar deployment
   enableLiveness: false
