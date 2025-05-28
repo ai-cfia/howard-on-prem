@@ -19,6 +19,9 @@ spec:
           containers:
             - name: etcd-backup
               image: bitnami/etcd:3.5.12
+              securityContext:
+                runAsUser: 0
+                runAsGroup: 0
               command:
                 - /bin/sh
                 - -c
