@@ -47,6 +47,7 @@ resources:
   - ../../storage/pgadmin/
   - ../../storage/minio/
   - ../../storage/velero/
+  - ../../storage/etcd-backup/
 
   # Monitoring applications
   # - ../../monitoring/k8s-dashboard/

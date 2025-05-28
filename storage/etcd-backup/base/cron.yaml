@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: etcd-snapshot-cron
+spec:
+  schedule: "0 23 * * 5"  # Every friday at 23h00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            node-role.kubernetes.io/control-plane: ""
+          tolerations:
+            - key: "node-role.kubernetes.io/control-plane"
+              operator: "Exists"
+              effect: "NoSchedule"
+          hostNetwork: true
+          restartPolicy: OnFailure
+          containers:
+            - name: etcd-backup
+              image: quay.io/coreos/etcd:v3.5.12
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  export ETCDCTL_API=3
+                  etcdctl \
+                    --endpoints=https://127.0.0.1:2379 \
+                    --cacert=/etc/etcd/pki/ca.crt \
+                    --cert=/etc/etcd/pki/server.crt \
+                    --key=/etc/etcd/pki/server.key \
+                    snapshot save /backup/etcd-snapshot-$(date +%F-%H%M%S).db
+              volumeMounts:
+                - name: backup-vol
+                  mountPath: /backup
+                - name: etcd-certs
+                  mountPath: /etc/etcd/pki
+                  readOnly: true
+          volumes:
+            - name: backup-vol
+              persistentVolumeClaim:
+                claimName: etcd-backup-pvc
+            - name: etcd-certs
+              hostPath:
+                path: /etc/kubernetes/pki/etcd
+                type: Directory

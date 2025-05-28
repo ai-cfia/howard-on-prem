@@ -374,6 +374,7 @@ schedules:
       storageLocation: default # velero backup on azure
       includedNamespaces:
         - "minio" # cloudnativepg backups are stored in minio
+        - "kube-system" # etcd database backup
 
       includedResources:
         - persistentvolumeclaims
