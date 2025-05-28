@@ -428,7 +428,7 @@ csi:
       effect: "NoSchedule"
 
   # -- The node labels for affinity of the CephCSI RBD plugin DaemonSet [^1]
-  pluginNodeAffinity: "type=ai-worker,control-plane"
+  pluginNodeAffinity: "type=ai-worker,app-worker,control-plane"
 
   # -- Enable Ceph CSI Liveness sidecar deployment
   enableLiveness: false
