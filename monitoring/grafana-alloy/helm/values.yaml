@@ -241,7 +241,7 @@ alloy:
 
       prometheus.scrape "container_metrics" {
         scrape_interval = "60s"
-        targets = prometheus.exporter.cadvisor.container_metrics.targets
+        targets = discovery.kubernetes.pods.targets
         job_name = "container_metrics"
         forward_to = [prometheus.relabel.container_labels.receiver]
       }
