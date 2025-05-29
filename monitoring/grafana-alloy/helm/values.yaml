@@ -243,7 +243,7 @@ alloy:
         scrape_interval = "60s"
         targets = prometheus.exporter.cadvisor.container_metrics.targets
         job_name = "container_metrics"
-        forward_to = [prometheus.remote_write.to_mimir.receiver]
+        forward_to = [prometheus.relabel.container_labels.receiver]
       }
 
       prometheus.scrape "blackbox_metrics" {
