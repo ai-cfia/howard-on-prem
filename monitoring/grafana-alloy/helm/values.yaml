@@ -223,12 +223,11 @@ alloy:
       prometheus.scrape "kubelet_cadvisor" {
         scrape_interval = "60s"
         job_name        = "kubelet_cadvisor"
-
         targets = [
           {
-            __address__ = "localhost:10250"
-            __scheme__  = "https"
-            __metrics_path__ = "/metrics/cadvisor"
+            __address__ = "localhost:10250",
+            __scheme__  = "https",
+            __metrics_path__ = "/metrics/cadvisor",
           },
         ]
 
