@@ -14,6 +14,10 @@ alloy:
     content: |-
       livedebugging { enabled = true }
 
+      discovery.kubernetes "pods" {
+        role = "pod"
+      }
+
       prometheus.exporter.unix "node_metrics" { include_exporter_metrics = true }
       prometheus.exporter.cadvisor "container_metrics" {}
       prometheus.exporter.process "process_metrics" {
@@ -239,6 +243,25 @@ alloy:
         scrape_interval = "60s"
         targets = prometheus.exporter.cadvisor.container_metrics.targets
         job_name = "container_metrics"
+
+        relabel_configs = [
+          {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_pod_name"]
+            target_label = "pod"
+          },
+          {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_namespace"]
+            target_label = "namespace"
+          },
+          {
+            action = "replace"
+            source_labels = ["__meta_kubernetes_pod_container_name"]
+            target_label = "container"
+          }
+        ]
+
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
