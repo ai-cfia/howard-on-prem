@@ -261,7 +261,7 @@ alloy:
         scrape_interval = "60s"
         targets = discovery.relabel.container_labels.output
         job_name = "container_metrics"
-        forward_to = [prometheus.relabel.container_labels.receiver]
+        forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
 
       prometheus.scrape "blackbox_metrics" {
