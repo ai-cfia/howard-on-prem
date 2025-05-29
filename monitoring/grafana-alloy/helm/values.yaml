@@ -177,25 +177,6 @@ alloy:
         }
       }
 
-      discovery.relabel "container_labels" {
-        targets = discovery.kubernetes.pods.targets
-
-        rule {
-          source_labels = ["__meta_kubernetes_pod_name"]
-          target_label  = "pod"
-        }
-
-        rule {
-          source_labels = ["__meta_kubernetes_namespace"]
-          target_label  = "namespace"
-        }
-
-        rule {
-          source_labels = ["__meta_kubernetes_pod_container_name"]
-          target_label  = "container"
-        }
-      }
-
       prometheus.scrape "argocd" {
         scrape_interval = "60s"
         targets = [
@@ -259,7 +240,7 @@ alloy:
 
       prometheus.scrape "container_metrics" {
         scrape_interval = "60s"
-        targets = discovery.relabel.container_labels.output
+        targets = discovery.kubernetes.pods.targets
         job_name = "container_metrics"
         forward_to = [prometheus.remote_write.to_mimir.receiver]
       }
