@@ -19,7 +19,6 @@ alloy:
       }
 
       prometheus.exporter.unix "node_metrics" { include_exporter_metrics = true }
-      prometheus.exporter.cadvisor "container_metrics" {}
       prometheus.exporter.process "process_metrics" {
         matcher {
           name = "{{.Comm}}"
@@ -178,6 +177,25 @@ alloy:
         }
       }
 
+      discovery.relabel "container_labels" {
+        targets = discovery.kubernetes.pods.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label  = "pod"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          target_label  = "container"
+        }
+      }
+
       prometheus.scrape "argocd" {
         scrape_interval = "60s"
         targets = [
@@ -241,7 +259,7 @@ alloy:
 
       prometheus.scrape "container_metrics" {
         scrape_interval = "60s"
-        targets = discovery.kubernetes.pods.targets
+        targets = discovery.relabel.container_labels.output
         job_name = "container_metrics"
         forward_to = [prometheus.relabel.container_labels.receiver]
       }
@@ -260,28 +278,6 @@ alloy:
           action        = "keep"
           source_labels = ["__name__"]
           regex         = "kubelet_volume_.*|kubelet_persistentvolumeclaim_.*|kubelet_persistentvolume_.*"
-        }
-      }
-
-      prometheus.relabel "container_labels" {
-        forward_to = [prometheus.remote_write.to_mimir.receiver]
-
-        rule {
-          action        = "replace"
-          source_labels = ["__meta_kubernetes_pod_name"]
-          target_label  = "pod"
-        }
-
-        rule {
-          action        = "replace"
-          source_labels = ["__meta_kubernetes_namespace"]
-          target_label  = "namespace"
-        }
-
-        rule {
-          action        = "replace"
-          source_labels = ["__meta_kubernetes_pod_container_name"]
-          target_label  = "container"
         }
       }
 
