@@ -18,7 +18,7 @@ resources:
   - ../../apps/gpt-researcher/
   - ../../apps/memos/
   - ../../apps/trufflehog-verif-server/
-  # - ../../apps/insect-project/
+  - ../../apps/insect-project/
 
   # Example of deployment, ingress, pvc's, etc...
   # - ../../apps/examples/
