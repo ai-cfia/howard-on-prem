@@ -5,7 +5,7 @@ metadata:
 spec:
   addresses:
     - type: IPAddress
-      value: 10.140.79.54
+      value: 10.140.79.25
   gatewayClassName: cilium
   listeners:
     - name: https-labelstudio
