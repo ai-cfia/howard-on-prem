@@ -18,6 +18,7 @@ resources:
   - database/nachet-prod.yaml
   - database/memos.yaml
   - database/mlflow.yaml
+  - database/labelstudio.yaml
 
   - acia-cfia-prod-cluster/cluster.yaml
   - acia-cfia-prod-cluster/secrets.yaml
