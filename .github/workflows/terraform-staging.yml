@@ -1,4 +1,4 @@
-name: Terraform plan and apply
+name: Terraform staging plan and apply
 
 on:
   pull_request:
@@ -22,15 +22,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install MinIO client
+        run: |
+          curl -sO https://dl.min.io/client/mc/release/linux-amd64/mc
+          chmod +x mc
+          sudo mv mc /usr/local/bin/mc
+
+      - name: Configure mc (MinIO client)
+        run: |
+          mc alias set minio https://minio.inspection.alpha.canada.ca "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY" > /dev/null 2>&1
+
       - name: Download tfvars from MinIO
-        uses: yakubique/minio-download@v1.1.1
-        with:
-          endpoint: https://minio.inspection.alpha.canada.ca
-          access_key: ${{ secrets.MINIO_ACCESS_KEY }}
-          secret_key: ${{ secrets.MINIO_SECRET_KEY }}
-          bucket: terraform-staging-vars
-          source: /staging.tfvars
-          target: './'
+        run: |
+          mc cp minio/terraform-staging-vars/staging.tfvars ./terraform/staging/staging.tfvars
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -38,7 +42,7 @@ jobs:
           terraform_version: 1.6.6
 
       - name: Terraform Init
-        working-directory: ./terraform
+        working-directory: ./terraform/staging
         run: terraform init
 
       - name: Terraform Plan
