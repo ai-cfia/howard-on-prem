@@ -9,12 +9,7 @@ spec:
       sectionName: tcp-pytorchdev
       kind: Gateway
   rules:
-    - forwardTo:
-        - service:
-            name: pytorchdevssh-svc
-            port: 22
-            namespace: ailab-shared
-    #  - backendRefs:
-    #     - name: pytorchdevssh-svc
-    #       namespace: ailab-shared
-    #       port: 22
+    - backendRefs:
+      - name: pytorchdevssh-svc
+        namespace: ailab-shared
+        port: 22

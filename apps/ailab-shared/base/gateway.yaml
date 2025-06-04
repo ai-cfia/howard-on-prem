@@ -11,15 +11,4 @@ spec:
   listeners:
     - name: tcp-pytorchdev
       port: 443
-      protocol: TLS
-      hostname: pytorchdev.inspection.alpha.canada.ca
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: pytorchdev-tls
-            kind: Secret
-      routes:
-        kind: TCPRoute
-        selector:
-          matchLabels:
-            name: pytorchdev-tcp
+      protocol: TCP
