@@ -1,0 +1,61 @@
+name: Terraform staging plan and apply
+
+on:
+  pull_request:
+    types:
+      - opened
+      - closed
+      - synchronize
+
+jobs:
+  deploy:
+    runs-on: on-prem-gh-runners
+
+    env:
+      # Azure authentication + minio creds
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+      MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install MinIO client
+        run: |
+          curl -sO https://dl.min.io/client/mc/release/linux-amd64/mc
+          chmod +x mc
+          sudo mv mc /usr/local/bin/mc
+
+      - name: Download tfvars from MinIO to project root
+        run: |
+          mc alias set minio https://minio.inspection.alpha.canada.ca "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
+          mc cp minio/terraform-staging-vars/staging.tfvars ./terraform/staging/staging.tfvars
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.2
+
+      - name: Terraform Init
+        working-directory: ./terraform/staging
+        run: |
+          terraform init \
+            -backend-config="access_key=$MINIO_ACCESS_KEY" \
+            -backend-config="secret_key=$MINIO_SECRET_KEY"
+
+      - name: Terraform Plan
+        working-directory: ./terraform/staging
+        run: terraform plan -var-file=staging.tfvars
+
+      - name: Terraform Apply
+        working-directory: ./terraform/staging
+        run: terraform apply -var-file=staging.tfvars -auto-approve
