@@ -1,0 +1,384 @@
+# -- Create a default IngressClass for Traefik
+ingressClass:  # @schema additionalProperties: false
+  enabled: true
+  isDefaultClass: false
+  name: ""
+
+# Traefik experimental features
+experimental:
+  # -- Defines whether all plugins must be loaded successfully for Traefik to start
+  abortOnPluginFailure: true
+  fastProxy:
+    # -- Enables the FastProxy implementation.
+    enabled: false
+    # -- Enable debug mode for the FastProxy implementation.
+    debug: false
+  kubernetesGateway:
+    # -- Enable traefik experimental GatewayClass CRD
+    enabled: true
+  # -- Enable traefik experimental plugins
+  plugins: {}
+  # demo:
+  #   moduleName: github.com/traefik/plugindemo
+  #   version: v0.2.1
+
+gateway:
+  # -- When providers.kubernetesGateway.enabled, deploy a default gateway
+  enabled: true
+  # -- Set a custom name to gateway
+  name: ""
+  # -- By default, Gateway is created in the same `Namespace` than Traefik.
+  namespace: ""
+  # -- Additional gateway annotations (e.g. for cert-manager.io/issuer)
+  annotations: {}
+  # -- [Infrastructure](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels)
+  infrastructure: {}
+  # -- Define listeners
+  listeners:
+    web:
+      # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
+      # The port must match a port declared in ports section.
+      port: 8000
+      # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname)
+      hostname: ""
+      # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
+      protocol: HTTP
+      # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
+      namespacePolicy:  # @schema type:[string, null]
+    # websecure listener is disabled by default because certificateRefs needs to be added,
+    # or you may specify TLS protocol with Passthrough mode and add "--providers.kubernetesGateway.experimentalChannel=true" in additionalArguments section.
+    # websecure:
+    #   # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
+    #   # The port must match a port declared in ports section.
+    #   port: 8443
+    #   # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname)
+    #   hostname:
+    #   # Specify expected protocol on this listener See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
+    #   protocol: HTTPS
+    #   # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces)
+    #   namespacePolicy:
+    #   # -- Add certificates for TLS or HTTPS protocols. See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.GatewayTLSConfig)
+    #   certificateRefs:
+    #   # -- TLS behavior for the TLS session initiated by the client. See [TLSModeType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.TLSModeType).
+    #   mode:
+
+gatewayClass:  # @schema additionalProperties: false
+  # -- When providers.kubernetesGateway.enabled and gateway.enabled, deploy a default gatewayClass
+  enabled: true
+  # -- Set a custom name to GatewayClass
+  name: ""
+  # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
+  labels: {}
+
+ingressRoute:
+  dashboard:
+    # -- Create an IngressRoute for the dashboard
+    enabled: false
+    # -- Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
+    annotations: {}
+    # -- Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
+    labels: {}
+    # -- The router match rule used for the dashboard ingressRoute
+    matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+    # -- The internal service used for the dashboard ingressRoute
+    services:
+      - name: api@internal
+        kind: TraefikService
+    # -- Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure).
+    # By default, it's using traefik entrypoint, which is not exposed.
+    # /!\ Do not expose your dashboard without any protection over the internet /!\
+    entryPoints: ["traefik"]
+    # -- Additional ingressRoute middlewares (e.g. for authentication)
+    middlewares: []
+    # -- TLS options (e.g. secret containing certificate)
+    tls: {}
+  healthcheck:
+    # -- Create an IngressRoute for the healthcheck probe
+    enabled: false
+    # -- Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
+    annotations: {}
+    # -- Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
+    labels: {}
+    # -- The router match rule used for the healthcheck ingressRoute
+    matchRule: PathPrefix(`/ping`)
+    # -- The internal service used for the healthcheck ingressRoute
+    services:
+      - name: ping@internal
+        kind: TraefikService
+    # -- Specify the allowed entrypoints to use for the healthcheck ingress route, (e.g. traefik, web, websecure).
+    # By default, it's using traefik entrypoint, which is not exposed.
+    entryPoints: ["traefik"]
+    # -- Additional ingressRoute middlewares (e.g. for authentication)
+    middlewares: []
+    # -- TLS options (e.g. secret containing certificate)
+    tls: {}
+
+providers:  # @schema additionalProperties: false
+  kubernetesCRD:
+    # -- Load Kubernetes IngressRoute provider
+    enabled: true
+    # -- Allows IngressRoute to reference resources in namespace other than theirs
+    allowCrossNamespace: false
+    # -- Allows to reference ExternalName services in IngressRoute
+    allowExternalNameServices: false
+    # -- Allows to return 503 when there is no endpoints available
+    allowEmptyServices: true
+    # -- When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled.
+    ingressClass: ""
+    # labelSelector: environment=production,method=traefik
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+    namespaces: []
+    # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+    nativeLBByDefault: false
+
+  kubernetesIngress:
+    # -- Load Kubernetes Ingress provider
+    enabled: true
+    # -- Allows to reference ExternalName services in Ingress
+    allowExternalNameServices: false
+    # -- Allows to return 503 when there is no endpoints available
+    allowEmptyServices: true
+    # -- When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed.
+    ingressClass:  # @schema type:[string, null]
+    # labelSelector: environment=production,method=traefik
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+    namespaces: []
+    # IP used for Kubernetes Ingress endpoints
+    publishedService:
+      # -- Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice)
+      enabled: true
+      # -- Override path of Kubernetes Service used to copy status from. Format: namespace/servicename.
+      # Default to Service deployed with this Chart.
+      pathOverride: ""
+    # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+    nativeLBByDefault: false
+
+  kubernetesGateway:
+    # -- Enable Traefik Gateway provider for Gateway API
+    enabled: true
+    # -- Toggles support for the Experimental Channel resources (Gateway API release channels documentation).
+    # This option currently enables support for TCPRoute and TLSRoute.
+    experimentalChannel: false
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+    namespaces: []
+    # -- A label selector can be defined to filter on specific GatewayClass objects only.
+    labelselector: ""
+    # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+    nativeLBByDefault: false
+    statusAddress:
+      # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
+      ip: ""
+      # -- This Hostname will get copied to the Gateway status.addresses.
+      hostname: ""
+      # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
+      service:
+        enabled: true
+        name: ""
+        namespace: ""
+
+  file:
+    # -- Create a file provider
+    enabled: false
+    # -- Allows Traefik to automatically watch for file changes
+    watch: true
+    # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)
+    content: ""
+
+ports:
+  traefik:
+    port: 8080
+    # -- Use hostPort if set.
+    hostPort:  # @schema type:[integer, null]; minimum:0
+    # -- Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
+    # means it's listening on all your interfaces and all your IPs. You may want
+    # to set this value if you need traefik to listen on specific interface
+    # only.
+    hostIP:  # @schema type:[string, null]
+
+    # Defines whether the port is exposed if service.type is LoadBalancer or
+    # NodePort.
+    #
+    # -- You SHOULD NOT expose the traefik port on production deployments.
+    # If you want to access it from outside your cluster,
+    # use `kubectl port-forward` or create a secure ingress
+    expose:
+      default: false
+    # -- The exposed port for this service
+    exposedPort: 8080
+    # -- The port protocol (TCP/UDP)
+    protocol: TCP
+  web:
+    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+    # asDefault: true
+    port: 8000
+    # hostPort: 8000
+    # containerPort: 8000
+    expose:
+      default: true
+    exposedPort: 80
+    ## -- Different target traefik port on the cluster, useful for IP type LB
+    targetPort:  # @schema type:[string, integer, null]; minimum:0
+    # The port protocol (TCP/UDP)
+    protocol: TCP
+    # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
+    nodePort:  # @schema type:[integer, null]; minimum:0
+    redirections:
+      # -- Port Redirections
+      # Added in 2.2, one can make permanent redirects via entrypoints.
+      # Same sets of parameters: to, scheme, permanent and priority.
+      # https://docs.traefik.io/routing/entrypoints/#redirection
+      entryPoint: {}
+    forwardedHeaders:
+      # -- Trust forwarded headers information (X-Forwarded-*).
+      trustedIPs: []
+      insecure: false
+    proxyProtocol:
+      # -- Enable the Proxy Protocol header parsing for the entry point
+      trustedIPs: []
+      insecure: false
+    # -- Set transport settings for the entrypoint; see also
+    # https://doc.traefik.io/traefik/routing/entrypoints/#transport
+    transport:
+      respondingTimeouts:
+        readTimeout:   # @schema type:[string, integer, null]
+        writeTimeout:  # @schema type:[string, integer, null]
+        idleTimeout:   # @schema type:[string, integer, null]
+      lifeCycle:
+        requestAcceptGraceTimeout:  # @schema type:[string, integer, null]
+        graceTimeOut:               # @schema type:[string, integer, null]
+      keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
+      keepAliveMaxTime:             # @schema type:[string, integer, null]
+  websecure:
+    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+    # asDefault: true
+    port: 8443
+    hostPort:  # @schema type:[integer, null]; minimum:0
+    containerPort:  # @schema type:[integer, null]; minimum:0
+    expose:
+      default: true
+    exposedPort: 443
+    ## -- Different target traefik port on the cluster, useful for IP type LB
+    targetPort:  # @schema type:[string, integer, null]; minimum:0
+    ## -- The port protocol (TCP/UDP)
+    protocol: TCP
+    # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
+    nodePort:  # @schema type:[integer, null]; minimum:0
+    # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol)
+    appProtocol:  # @schema type:[string, null]
+    # -- See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#allowacmebypass)
+    allowACMEByPass: false
+    http3:
+      ## -- Enable HTTP/3 on the entrypoint
+      ## Enabling it will also enable http3 experimental feature
+      ## https://doc.traefik.io/traefik/routing/entrypoints/#http3
+      ## There are known limitations when trying to listen on same ports for
+      ## TCP & UDP (Http3). There is a workaround in this chart using dual Service.
+      ## https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741
+      enabled: false
+      advertisedPort:  # @schema type:[integer, null]; minimum:0
+    forwardedHeaders:
+        # -- Trust forwarded headers information (X-Forwarded-*).
+      trustedIPs: []
+      insecure: false
+    proxyProtocol:
+      # -- Enable the Proxy Protocol header parsing for the entry point
+      trustedIPs: []
+      insecure: false
+    # -- See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#transport)
+    transport:
+      respondingTimeouts:
+        readTimeout:   # @schema type:[string, integer, null]
+        writeTimeout:  # @schema type:[string, integer, null]
+        idleTimeout:   # @schema type:[string, integer, null]
+      lifeCycle:
+        requestAcceptGraceTimeout:  # @schema type:[string, integer, null]
+        graceTimeOut:               # @schema type:[string, integer, null]
+      keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
+      keepAliveMaxTime:             # @schema type:[string, integer, null]
+    # --  See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#tls)
+    tls:
+      enabled: true
+      options: ""
+      certResolver: ""
+      domains: []
+    # -- One can apply Middlewares on an entrypoint
+    # https://doc.traefik.io/traefik/middlewares/overview/
+    # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
+    # -- /!\ It introduces here a link between your static configuration and your dynamic configuration /!\
+    # It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace
+    #   - namespace-name1@kubernetescrd
+    #   - namespace-name2@kubernetescrd
+    middlewares: []
+  metrics:
+    # -- When using hostNetwork, use another port to avoid conflict with node exporter:
+    # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
+    port: 9100
+    # -- You may not want to expose the metrics port on production deployments.
+    # If you want to access it from outside your cluster,
+    # use `kubectl port-forward` or create a secure ingress
+    expose:
+      default: false
+    # -- The exposed port for this service
+    exposedPort: 9100
+    # -- The port protocol (TCP/UDP)
+    protocol: TCP
+
+service:
+  enabled: true
+  ## -- Single service is using `MixedProtocolLBService` feature gate.
+  ## -- When set to false, it will create two Service, one for TCP and one for UDP.
+  single: true
+  type: LoadBalancer
+  # -- Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
+  annotations: {}
+  # -- Additional annotations for TCP service only
+  annotationsTCP: {}
+  # -- Additional annotations for UDP service only
+  annotationsUDP: {}
+  # -- Additional service labels (e.g. for filtering Service by custom labels)
+  labels: {}
+  # -- Additional entries here will be added to the service spec.
+  # -- Cannot contain type, selector or ports entries.
+  spec: {}
+  # externalTrafficPolicy: Cluster
+  # loadBalancerIP: "1.2.3.4"
+  # clusterIP: "2.3.4.5"
+  loadBalancerSourceRanges: []
+  # - 192.168.0.1/32
+  # - 172.16.0.0/16
+  ## -- Class of the load balancer implementation
+  # loadBalancerClass: service.k8s.aws/nlb
+  externalIPs: []
+  # - 1.2.3.4
+  ## One of SingleStack, PreferDualStack, or RequireDualStack.
+  # ipFamilyPolicy: SingleStack
+  ## List of IP families (e.g. IPv4 and/or IPv6).
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services
+  # ipFamilies:
+  #   - IPv4
+  #   - IPv6
+  ##
+  additionalServices: {}
+  ## -- An additional and optional internal Service.
+  ## Same parameters as external Service
+  # internal:
+  #   type: ClusterIP
+  #   # labels: {}
+  #   # annotations: {}
+  #   # spec: {}
+  #   # loadBalancerSourceRanges: []
+  #   # externalIPs: []
+  #   # ipFamilies: [ "IPv4","IPv6" ]
+
+# -- This example pod anti-affinity forces the scheduler to put traefik pods
+# -- on nodes where no other traefik pods are scheduled.
+# It should be used when hostNetwork: true to prevent port conflicts
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: type
+              operator: In
+              values:
+                - app-worker

@@ -26,6 +26,7 @@ resources:
   # Networking applications
   - ../../networking/cilium/
   - ../../networking/nginx/
+  - ../../networking/traefik/
 
   # Gitops applications
   - ../argocd/
