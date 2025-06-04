@@ -66,7 +66,7 @@ gatewayClass:  # @schema additionalProperties: false
   # -- When providers.kubernetesGateway.enabled and gateway.enabled, deploy a default gatewayClass
   enabled: true
   # -- Set a custom name to GatewayClass
-  name: ""
+  name: "traefik"
   # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
   labels: {}
 
