@@ -22,4 +22,4 @@ spec:
         kind: TCPRoute
         selector:
           matchLabels:
-            app: pytorchdevssh-svc
+            name: pytorchdev-tcp
