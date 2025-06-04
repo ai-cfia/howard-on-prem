@@ -17,10 +17,3 @@ terraform {
 provider "azurerm" {
   features {}
 }
-
-module "az-rg" {
-  source = "../modules/az-rg"
-
-  resource_group_name = var.resource_group_name
-  location            = var.location
-}
