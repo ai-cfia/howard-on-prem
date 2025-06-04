@@ -41,7 +41,7 @@ spec:
           stdin: true
           env:
             - name: JSON_LOG
-              value: 1
+              value: "1"
             - name: LABEL_STUDIO_HOST
               value: https://labelstudio.inspection.alpha.canada.ca
           envFrom:
