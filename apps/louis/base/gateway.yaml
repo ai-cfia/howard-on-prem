@@ -62,3 +62,12 @@ spec:
         certificateRefs:
           - name: chromadb-tls
             kind: Secret
+    - name: https-labelstudio
+      hostname: labelstudio.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: labelstudio-tls
+            kind: Secret

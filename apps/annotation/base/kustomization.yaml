@@ -6,5 +6,4 @@ resources:
 - labelstudio/secrets.yaml
 - labelstudio/labelstudio.yaml
 - labelstudio/certificates.yaml
-- gateway.yaml
 - httproute.yaml

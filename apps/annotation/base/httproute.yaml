@@ -5,7 +5,7 @@ metadata:
   name: labelstudio-backend-route
 spec:
   parentRefs:
-    - name: annotation-gateway
+    - name: louis-gateway
       sectionName: https-labelstudio
   hostnames:
     - labelstudio.inspection.alpha.canada.ca
