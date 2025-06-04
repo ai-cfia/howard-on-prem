@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: labelstudio
-  namespace: ailab-shared
+  namespace: annotation
 spec:
   replicas: 1
   revisionHistoryLimit: 3
