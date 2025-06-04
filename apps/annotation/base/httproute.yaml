@@ -15,5 +15,5 @@ spec:
             type: PathPrefix
             value: "/"
       backendRefs:
-        - name: labelstudio-service
+        - name: labelstudio-svc
           port: 8080
