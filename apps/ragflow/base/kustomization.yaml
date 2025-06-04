@@ -8,7 +8,7 @@ resources:
   - mysql/deployment.yaml
   - mysql/mysql-config.yaml
   - ragflow/deployment.yaml
-  - ragflow/gateway.yaml
+  # - ragflow/gateway.yaml
   - ragflow/httproute.yaml
   - ragflow/nginx-config.yaml
   - ragflow/secrets.yaml

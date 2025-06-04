@@ -80,3 +80,57 @@ spec:
                 operator: In
                 values:
                   - annotation
+    - name: https-ragflow
+      hostname: ragflow.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: ragflow-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - ragflow
+    - name: https-ragflow-api
+      hostname: ragflow-api.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: ragflow-api-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - ragflow
+    - name: https-ragflow-mcp
+      hostname: ragflow-mcp.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: ragflow-mcp-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - ragflow

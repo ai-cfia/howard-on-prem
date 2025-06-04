@@ -4,7 +4,9 @@ metadata:
   name: ragflow-route
 spec:
   parentRefs:
-    - name: ragflow-gateway
+    # - name: ragflow-gateway
+    - name: louis-gateway
+      namespace: louis
       sectionName: https-ragflow
   hostnames:
     - ragflow.inspection.alpha.canada.ca
@@ -23,7 +25,9 @@ metadata:
   name: ragflow-api-route
 spec:
   parentRefs:
-    - name: ragflow-gateway
+    # - name: ragflow-gateway
+    - name: louis-gateway
+      namespace: louis
       sectionName: https-ragflow-api
   hostnames:
     - ragflow-api.inspection.alpha.canada.ca
@@ -42,7 +46,9 @@ metadata:
   name: ragflow-mcp-route
 spec:
   parentRefs:
-    - name: ragflow-gateway
+    # - name: ragflow-gateway
+    - name: louis-gateway
+      namespace: louis
       sectionName: https-ragflow-mcp
   hostnames:
     - ragflow-mcp.inspection.alpha.canada.ca
