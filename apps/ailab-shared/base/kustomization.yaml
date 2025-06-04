@@ -5,3 +5,6 @@ resources:
   - alpine.yaml
   - pytorchdev.yaml
   - sharedpvc.yaml
+  - gateway.yaml
+  - tcproute.yaml
+  - certificates.yaml
