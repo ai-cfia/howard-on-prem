@@ -31,6 +31,7 @@ jobs:
       - name: Download tfvars from MinIO to project root
         run: |
           mc alias set minio https://minio.inspection.alpha.canada.ca "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
+          mc ls minio/terraform-staging-vars
           mc cp minio/terraform-staging-vars/staging.tfvars ./staging.tfvars
 
       - name: Setup Terraform
