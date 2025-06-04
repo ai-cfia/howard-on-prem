@@ -1,0 +1,50 @@
+name: Terraform plan and apply
+
+on:
+  pull_request:
+    types:
+      - opened
+      - closed
+      - synchronize
+
+jobs:
+  deploy:
+    runs-on: on-prem-gh-runners
+
+    env:
+      # Azure authentication
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download tfvars from MinIO
+        uses: yakubique/minio-download@v1.1.1
+        with:
+          endpoint: https://minio.inspection.alpha.canada.ca
+          access_key: ${{ secrets.MINIO_ACCESS_KEY }}
+          secret_key: ${{ secrets.MINIO_SECRET_KEY }}
+          bucket: terraform-staging-vars
+          source: /staging.tfvars
+          target: './'
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.6
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: ./terraform
+        run: terraform plan -var-file=staging.tfvars
+
+      - name: Terraform Apply
+        working-directory: ./terraform
+        run: terraform apply -var-file=staging.tfvars -auto-approve

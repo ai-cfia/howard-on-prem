@@ -24,3 +24,8 @@ jobs:
   check-commit-author:
     uses: ai-cfia/github-workflows/.github/workflows/workflow-check-author-email.yml@main
     secrets: inherit
+
+  terraform-check:
+    uses: ai-cfia/github-workflows/.github/workflows/workflow-terraform-check.yml@main
+    with:
+      config-file-path: '.tflint.hcl'
