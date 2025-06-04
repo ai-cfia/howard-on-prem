@@ -18,3 +18,8 @@ spec:
         certificateRefs:
           - name: pytorchdev-tls
             kind: Secret
+      routes:
+        kind: TCPRoute
+        selector:
+          matchLabels:
+            app: pytorchdevssh-svc
