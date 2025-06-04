@@ -71,16 +71,13 @@ kind: Service
 metadata:
   name: pytorchdevssh-svc
 spec:
-  clusterIP: 10.96.0.58
-  type: NodePort
+  type: ClusterIP
   selector:
     app: pytorchdev
   ports:
     - protocol: TCP
       port: 22
       targetPort: 22
-      nodePort: 30022
-      name: ssh
 
 # ---
 # apiVersion: v1

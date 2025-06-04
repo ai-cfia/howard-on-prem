@@ -2,7 +2,7 @@
 ingressClass:  # @schema additionalProperties: false
   enabled: true
   isDefaultClass: false
-  name: ""
+  name: "traefik"
 
 # Traefik experimental features
 experimental:
@@ -158,7 +158,7 @@ providers:  # @schema additionalProperties: false
     enabled: true
     # -- Toggles support for the Experimental Channel resources (Gateway API release channels documentation).
     # This option currently enables support for TCPRoute and TLSRoute.
-    experimentalChannel: false
+    experimentalChannel: true
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
     namespaces: []
     # -- A label selector can be defined to filter on specific GatewayClass objects only.

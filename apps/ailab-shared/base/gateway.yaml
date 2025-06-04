@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: ailab-shared-gateway
+spec:
+  addresses:
+    - type: IPAddress
+      value: 10.140.79.7
+  gatewayClassName: traefik
+  listeners:
+    - name: tcp-pytorchdev
+      port: 443
+      protocol: TLS
+      hostname: pytorchdev.inspection.alpha.canada.ca
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: pytorchdev-tls
+            kind: Secret
