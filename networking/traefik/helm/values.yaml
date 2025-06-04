@@ -382,3 +382,7 @@ affinity:
               operator: In
               values:
                 - app-worker
+
+additionalArguments:
+  - "--providers.kubernetesGateway.experimentalChannel=true"
+  - "--entrypoints.tcpservice.address=:587/tcp"
