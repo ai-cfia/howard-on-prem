@@ -1,13 +1,13 @@
 terraform {
   backend "s3" {
-    endpoint                = "https://minio.inspection.alpha.canada.ca"
-    bucket                  = "terraform-staging-state"
-    key                     = "tfstagingstate.tfstate"
-    access_key              = var.minio_access_key
-    secret_key              = var.minio_secret_key
-    skip_metadata_api_check = true
-    skip_region_validation  = true
-    force_path_style        = true
+    endpoint                    = "https://minio.inspection.alpha.canada.ca"
+    bucket                      = "terraform-staging-state"
+    key                         = "tfstagingstate.tfstate"
+    skip_credentials_validation = true # Skip AWS related checks and validations
+    skip_requesting_account_id  = true
+    skip_metadata_api_check     = true
+    skip_region_validation      = true
+    force_path_style            = true
   }
 }
 

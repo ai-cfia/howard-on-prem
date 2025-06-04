@@ -47,7 +47,10 @@ jobs:
 
       - name: Terraform Init
         working-directory: ./terraform/staging
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config="access_key=$MINIO_ACCESS_KEY" \
+            -backend-config="secret_key=$MINIO_SECRET_KEY"
 
       - name: Terraform Plan
         working-directory: ./terraform/staging
