@@ -35,9 +35,9 @@ jobs:
       - name: ls
         run: |
           ls
-      - name: Download tfvars from MinIO
+      - name: Download staging.tfvars from MinIO
         run: |
-          mc cp minio/terraform-staging-vars/staging.tfvars ./terraform/staging/staging.tfvars
+          mc cp minio/terraform-staging-vars/staging.tfvars ./terraform/staging/
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
