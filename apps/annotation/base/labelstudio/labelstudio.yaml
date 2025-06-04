@@ -53,8 +53,8 @@ spec:
             - name: labelstudio-shared-volume
               mountPath: /ailab
           securityContext:
-            # runAsUser: 1000
-            # runAsGroup: 1000
+            runAsUser: 1001
+            runAsGroup: 1001
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: true
             capabilities:
