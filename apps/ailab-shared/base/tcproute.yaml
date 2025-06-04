@@ -10,6 +10,6 @@ spec:
       kind: Gateway
   rules:
      - backendRefs:
-        - name: pytorchdev-svc
+        - name: pytorchdevssh-svc
           namespace: ailab-shared
           port: 22
