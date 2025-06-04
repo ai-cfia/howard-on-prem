@@ -10,5 +10,5 @@ spec:
   gatewayClassName: traefik
   listeners:
     - name: tcp-pytorchdev
-      port: 443
+      port: 587
       protocol: TCP
