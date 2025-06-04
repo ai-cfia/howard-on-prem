@@ -131,6 +131,19 @@ spec:
         passwordSecret:
           name: mlflow-user-creds
 
+      - name: labelstudio
+        ensure: present
+        comment: "Owner of labelstudio database"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: labelstudio-user-creds
+
   plugins:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true

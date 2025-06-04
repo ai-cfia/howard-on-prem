@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: annotation-gateway
+spec:
+  addresses:
+    - type: IPAddress
+      value: 10.140.79.34
+  gatewayClassName: cilium
+  listeners:
+    - name: https-labelstudio
+      hostname: labelstudio.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: labelstudio-tls
+            kind: Secret

@@ -1,0 +1,19 @@
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: labelstudio-backend-route
+spec:
+  parentRefs:
+    - name: annotation-gateway
+      sectionName: https-labelstudio
+  hostnames:
+    - labelstudio.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: labelstudio-service
+          port: 8000
