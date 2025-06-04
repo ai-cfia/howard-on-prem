@@ -53,7 +53,9 @@ spec:
             - name: JSON_LOG
               value: "1"
             - name: LABEL_STUDIO_HOST
-              value: https://labelstudio.inspection.alpha.canada.ca
+              value: "https://labelstudio.inspection.alpha.canada.ca"
+            - name: CSRF_TRUSTED_ORIGINS
+              value: "https://labelstudio.inspection.alpha.canada.ca"
           envFrom:
             - secretRef:
                 name: labelstudio-secrets
