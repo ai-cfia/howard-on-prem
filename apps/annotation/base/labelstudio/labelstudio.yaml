@@ -93,5 +93,5 @@ spec:
     app: labelstudio
   ports:
     - protocol: TCP
-      port: 8000
+      port: 8080
       targetPort: 8080

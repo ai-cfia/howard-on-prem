@@ -16,4 +16,4 @@ spec:
             value: "/"
       backendRefs:
         - name: labelstudio-service
-          port: 8000
+          port: 8080
