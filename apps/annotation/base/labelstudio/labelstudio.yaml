@@ -24,6 +24,16 @@ spec:
                     operator: In
                     values:
                       - app-worker
+      initContainers:
+        - name: fix-data-volume-permissions
+          image: alpine:3
+          command:
+            - sh
+            - -c
+            - "chown -R 1001:1001 /label-studio/data && chmod -R 755 /label-studio/data"
+          volumeMounts:
+            - name: labelstudio-pvc
+              mountPath: /label-studio/data
       containers:
         - name: labelstudio
           image: heartexlabs/label-studio:1.18.0
