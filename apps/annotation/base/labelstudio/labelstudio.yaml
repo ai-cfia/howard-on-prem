@@ -46,7 +46,7 @@ spec:
           # limits:
           #   nvidia.com/gpu: 1
           ports:
-            - containerPort: 8000
+            - containerPort: 8080
           tty: true
           stdin: true
           env:
@@ -94,4 +94,4 @@ spec:
   ports:
     - protocol: TCP
       port: 8000
-      targetPort: 8000
+      targetPort: 8080
