@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: labelstudio
+spec:
+  name: labelstudio
+  owner: labelstudio
+  cluster:
+    name: acia-cfia-dev-cluster

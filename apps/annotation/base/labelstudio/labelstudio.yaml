@@ -1,0 +1,87 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: labelstudio
+  namespace: ailab-shared
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: labelstudio
+  template:
+    metadata:
+      labels:
+        app: labelstudio
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+        - name: labelstudio
+          image: heartexlabs/label-studio:1.18.0
+          imagePullPolicy: Always
+          command: ["label-studio-uwsgi"]
+          # resources:
+          #   requests:
+          #     cpu: 16
+          #     memory: 64Gi
+          # limits:
+          #   nvidia.com/gpu: 1
+          ports:
+            - containerPort: 8000
+          tty: true
+          stdin: true
+          env:
+            - name: JSON_LOG
+              value: 1
+            - name: LABEL_STUDIO_HOST
+              value: https://labelstudio.inspection.alpha.canada.ca
+          envFrom:
+            - secretRef:
+                name: labelstudio-secrets
+          volumeMounts:
+            - name: labelstudio-pvc
+              mountPath: /label-studio/data
+            - name: labelstudio-shared-volume
+              mountPath: /ailab
+          securityContext:
+            # runAsUser: 1000
+            # runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: true
+            capabilities:
+              add:
+                - SETUID
+                - SETGID
+                - DAC_OVERRIDE
+              drop:
+                - ALL_OTHERS
+      volumes:
+        - name: labelstudio-shared-volume
+          persistentVolumeClaim:
+            claimName: labelstudio-shared-pvc
+        - name: labelstudio-pvc
+          persistentVolumeClaim:
+            claimName: labelstudio-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: labelstudio-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: labelstudio
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
