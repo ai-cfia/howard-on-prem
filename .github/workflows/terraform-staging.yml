@@ -32,7 +32,7 @@ jobs:
         run: |
           mc alias set minio https://minio.inspection.alpha.canada.ca "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
           mc ls minio/terraform-staging-vars
-          mc cp minio/terraform-staging-vars/staging.tfvars ./staging.tfvars
+          mc cp minio/terraform-staging-vars/staging.tfvars ./terraform/staging/staging.tfvars
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -45,8 +45,8 @@ jobs:
 
       - name: Terraform Plan
         working-directory: ./terraform/staging
-        run: terraform plan -var-file=../../staging.tfvars
+        run: terraform plan -var-file=staging.tfvars
 
       - name: Terraform Apply
         working-directory: ./terraform/staging
-        run: terraform apply -var-file=../../staging.tfvars -auto-approve
+        run: terraform apply -var-file=staging.tfvars -auto-approve
