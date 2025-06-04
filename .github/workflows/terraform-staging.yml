@@ -28,16 +28,10 @@ jobs:
           chmod +x mc
           sudo mv mc /usr/local/bin/mc
 
-      - name: Configure mc (MinIO client)
+      - name: Download tfvars from MinIO to project root
         run: |
           mc alias set minio https://minio.inspection.alpha.canada.ca "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
-
-      - name: ls
-        run: |
-          ls
-      - name: Download staging.tfvars from MinIO
-        run: |
-          mc cp minio/terraform-staging-vars/staging.tfvars ./terraform/staging/
+          mc cp minio/terraform-staging-vars/staging.tfvars ./staging.tfvars
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -49,9 +43,9 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: ./terraform
-        run: terraform plan -var-file=staging.tfvars
+        working-directory: ./terraform/staging
+        run: terraform plan -var-file=../../staging.tfvars
 
       - name: Terraform Apply
-        working-directory: ./terraform
-        run: terraform apply -var-file=staging.tfvars -auto-approve
+        working-directory: ./terraform/staging
+        run: terraform apply -var-file=../../staging.tfvars -auto-approve
