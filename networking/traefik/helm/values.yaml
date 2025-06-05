@@ -325,7 +325,7 @@ ports:
   tcp-custom:
     port: 18080  # or another internal port
     expose:
-      default: false
+      default: true
     exposedPort: 80
     protocol: TCP
 
