@@ -326,7 +326,7 @@ ports:
     port: 18080  # or another internal port
     expose:
       default: true
-    exposedPort: 587
+    exposedPort: 22
     protocol: TCP
 
 service:
