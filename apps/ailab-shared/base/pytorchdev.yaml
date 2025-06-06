@@ -22,7 +22,7 @@ spec:
                 - key: kubernetes.io/hostname
                   operator: In
                   values:
-                    - ai-lab-1
+                    - ai-lab-2
       containers:
         - name: pytorchdev
           # image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050803
@@ -78,17 +78,3 @@ spec:
     - protocol: TCP
       port: 22
       targetPort: 22
-
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: jsantos-webtop-config-pvc
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   volumeMode: Filesystem
-#   storageClassName: ceph-cold-filesystem
-#   resources:
-#     requests:
-#       storage: 200Gi

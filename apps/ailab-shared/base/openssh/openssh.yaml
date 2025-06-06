@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openssh
+  namespace: ailab-shared
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: openssh
+  template:
+    metadata:
+      labels:
+        app: openssh
+    spec:
+      affinity:
+        nodeAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - ai-lab-1
+                    - ai-lab-2
+      containers:
+        - name: openssh
+          image: ghcr.io/ai-cfia/docker-ssh:v3.0.2-ailab
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 2
+              memory: 4Gi
+          ports:
+            - containerPort: 2222
+          envFrom:
+            - configMapRef:
+                name: openssh-configenv
+            - secretRef:
+                name: openssh-secrets
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: ssh_host_keys
+              mountPath: /etc/ssh/ssh_host_keys/
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: ssh_host_keys
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openssh-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: openssh
+  ports:
+    - protocol: TCP
+      port: 2222
+      targetPort: 2222
