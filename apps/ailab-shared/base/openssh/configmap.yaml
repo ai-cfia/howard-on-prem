@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openssh-configenv
+data:
+  ALLOWED_IPS: "AllowUsers tunnel"
+  ALLOWED_DEST: "pytorchdevssh-svc.ailab-shared.svc.cluster.local:22 pytorchtrainssh-svc.ailab-shared.svc.cluster.local:22"
+  DEBUG: "true"
+  PGID: "9999"
+  PUID: "9999"
+  SSH_GROUP: "tunnelgroup"
+  SSH_USER: "tunnel"
+  SSH_PORT: "2222"
+  SSH_HOST_KEY_DIR: "/etc/ssh/ssh_host_keys/"
