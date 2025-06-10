@@ -13,3 +13,35 @@ spec:
       - name: openssh-svc
         namespace: ailab-shared
         port: 2222
+
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: pytorchdev-tcp
+spec:
+  parentRefs:
+    - name: ailab-shared-gateway
+      sectionName: tcp-pytorchdev
+      kind: Gateway
+  rules:
+    - backendRefs:
+      - name: pytorchdevssh-svc
+        namespace: ailab-shared
+        port: 22
+
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: pytorchtrain-tcp
+spec:
+  parentRefs:
+    - name: ailab-shared-gateway
+      sectionName: tcp-pytorchtrain
+      kind: Gateway
+  rules:
+    - backendRefs:
+      - name: pytorchtrainssh-svc
+        namespace: ailab-shared
+        port: 22

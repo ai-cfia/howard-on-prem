@@ -12,3 +12,9 @@ spec:
     - name: tcp-openssh
       port: 18081
       protocol: TCP
+    - name: tcp-pytorchdev
+      port: 18082
+      protocol: TCP
+    - name: tcp-pytorchtrain
+      port: 18083
+      protocol: TCP
