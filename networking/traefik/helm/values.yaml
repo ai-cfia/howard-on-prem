@@ -162,7 +162,7 @@ providers:  # @schema additionalProperties: false
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
     namespaces: []
     # -- A label selector can be defined to filter on specific GatewayClass objects only.
-    labelselector: "app=ailab-shared"
+    labelselector: ""
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
     statusAddress:
@@ -323,7 +323,7 @@ ports:
     # -- The port protocol (TCP/UDP)
     protocol: TCP
   tcp-custom:
-    port: 18080  # or another internal port
+    port: 18081  # or another internal port
     expose:
       default: true
     exposedPort: 22
