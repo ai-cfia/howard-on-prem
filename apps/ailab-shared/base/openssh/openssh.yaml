@@ -43,12 +43,12 @@ spec:
           volumeMounts:
             - name: tmp
               mountPath: /tmp
-            - name: ssh_host_keys
+            - name: sshhostkeys
               mountPath: /etc/ssh/ssh_host_keys
       volumes:
         - name: tmp
           emptyDir: {}
-        - name: ssh_host_keys
+        - name: sshhostkeys
           emptyDir:
             medium: Memory
             sizeLimit: 1Gi
