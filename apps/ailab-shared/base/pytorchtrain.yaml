@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: alpine
+  name: pytorchtrain
   namespace: ailab-shared
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: alpine
+      app: pytorchtrain
   template:
     metadata:
       labels:
-        app: alpine
+        app: pytorchtrain
     spec:
       affinity:
         nodeAffinity:
@@ -22,35 +22,45 @@ spec:
                 - key: kubernetes.io/hostname
                   operator: In
                   values:
-                    - ai-lab-2
+                    - ai-lab-1
       containers:
-        - name: alpine
-          image: docker.io/alpine:3.21
+        - name: pytorchtrain
+          image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050803
           imagePullPolicy: Always
-          command: ["/bin/sh", "-c"]
-          args: ["tail -f /dev/null"]
-          # envFrom:
-          #   - secretRef:
-          #       name: ailab-shared-secrets
+          resources:
+            requests:
+              cpu: 16
+              memory: 64Gi
+          limits:
+            nvidia.com/gpu: 1
           ports:
-            - containerPort: 80
+            - containerPort: 22
           volumeMounts:
             - name: tmp
               mountPath: /tmp
             - name: ailab-shared-volume
               mountPath: /ailab
+            - name: dshm
+              mountPath: /dev/shm
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: false
+            # runAsUser: 1000
+            # runAsGroup: 1000
             readOnlyRootFilesystem: false
-            allowPrivilegeEscalation: false
+            allowPrivilegeEscalation: true
             capabilities:
+              add:
+                - SETUID
+                - SETGID
+                - DAC_OVERRIDE
               drop:
-                - ALL
+                - ALL_OTHERS
       volumes:
         - name: tmp
           emptyDir: {}
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Gi
         - name: ailab-shared-volume
           persistentVolumeClaim:
             claimName: ailab-shared-pvc
@@ -58,13 +68,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: alpine-svc
+  name: pytorchtrainssh-svc
 spec:
-  clusterIP: None
+  type: ClusterIP
   selector:
-    app: alpine
+    app: pytorchtrain
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
-      name: http
+      port: 22
+      targetPort: 22

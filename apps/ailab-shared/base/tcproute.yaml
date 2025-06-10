@@ -2,14 +2,14 @@
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
-  name: pytorchdev-tcp
+  name: openssh-tcp
 spec:
   parentRefs:
     - name: ailab-shared-gateway
-      sectionName: tcp-pytorchdev
+      sectionName: tcp-openssh
       kind: Gateway
   rules:
     - backendRefs:
-      - name: pytorchdevssh-svc
+      - name: openssh-svc
         namespace: ailab-shared
-        port: 22
+        port: 2222
