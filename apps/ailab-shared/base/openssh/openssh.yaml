@@ -44,7 +44,7 @@ spec:
             - name: tmp
               mountPath: /tmp
             - name: ssh_host_keys
-              mountPath: /etc/ssh/ssh_host_keys/
+              mountPath: /etc/ssh/ssh_host_keys
       volumes:
         - name: tmp
           emptyDir: {}
