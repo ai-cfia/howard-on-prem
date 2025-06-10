@@ -193,7 +193,7 @@ ports:
     # means it's listening on all your interfaces and all your IPs. You may want
     # to set this value if you need traefik to listen on specific interface
     # only.
-    hostIP: 10.140.79.37 # @schema type:[string, null]
+    hostIP: 10.140.79.13 # @schema type:[string, null]
 
     # Defines whether the port is exposed if service.type is LoadBalancer or
     # NodePort.
