@@ -13,6 +13,7 @@ grafana:
     #   auto_assign_org_id: 1
     log:
       level: debug
+    revisionHistoryLimit: 5
     server:
       root_url: https://grafana.inspection.alpha.canada.ca
     auth.generic_oauth:
