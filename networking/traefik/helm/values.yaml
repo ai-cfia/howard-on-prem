@@ -323,7 +323,7 @@ ports:
     # -- The port protocol (TCP/UDP)
     protocol: TCP
   tcp-custom:
-    port: 18081  # or another internal port
+    port: 18080  # or another internal port
     expose:
       default: true
     exposedPort: 22
