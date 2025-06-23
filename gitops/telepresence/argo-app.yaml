@@ -1,0 +1,23 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: telepresence
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    namespace: telepresence
+    server: https://kubernetes.default.svc
+  sources:
+    - chart: telepresence-oss
+      helm:
+        valueFiles:
+          - $values/gitops/telepresence/helm/values.yaml
+      repoURL: oci://ghcr.io/telepresenceio/telepresence-oss
+      targetRevision: 2.23.1-rc.0
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
