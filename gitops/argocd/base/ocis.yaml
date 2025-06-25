@@ -20,7 +20,7 @@ metadata:
   labels:
     argocd.argoproj.io/secret-type: repository
 stringData:
-  url: oci://registry-1.docker.io/bitnamicharts
+  url: registry-1.docker.io/bitnamicharts
   name: bitnamicharts-oci
   type: helm
   enableOCI: "true"
@@ -34,7 +34,7 @@ metadata:
   labels:
     argocd.argoproj.io/secret-type: repository
 stringData:
-  url: oci://ghcr.io/telepresenceio/telepresence-oss
+  url: ghcr.io/telepresenceio/telepresence-oss
   name: telepresence-oci
   type: helm
   enableOCI: "true"
