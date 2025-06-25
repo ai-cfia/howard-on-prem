@@ -16,7 +16,7 @@ spec:
       helm:
         valueFiles:
           - $values/gitops/telepresence/helm/values.yaml
-      repoURL: oci://ghcr.io/telepresenceio/telepresence-oss
+      repoURL: ghcr.io/telepresenceio/telepresence-oss
       targetRevision: 2.23.1
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
