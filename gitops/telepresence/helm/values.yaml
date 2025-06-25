@@ -1,0 +1,177 @@
+################################################################################
+## Deployment Configuration
+################################################################################
+
+# The Traffic Manager only support running with one replica at the moment.
+# Configuring the replicaCount will be added in future versions of Telepresence
+
+replicaCount: 1
+
+# The Telepresence client will try to ensure that the Traffic Manager image is
+# up to date and from the right registry. If you are changing the value below,
+# ensure that the tag is the same as the client version and that the
+# TELEPRESENCE_REGISTRY environment variable is equal to image.repository.
+#
+# The client will default to ghcr.io/telepresenceio/tel2:{{CLIENT_VERSION}}
+
+image:
+  registry: ghcr.io/telepresenceio
+  name: tel2
+  pullPolicy: IfNotPresent
+
+apiPort: 8081
+
+securityContext:
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+################################################################################
+## Traffic Manager Service Configuration
+################################################################################
+
+service:
+  type: ClusterIP
+
+################################################################################
+## Traffic Manager Configuration
+################################################################################
+
+# The log level of the Traffic Manager.
+logLevel: info
+
+# GRPC configuration for the Traffic Manager.
+# This is identical to the grpc configuration for local clients.
+# See https://www.telepresence.io/docs/latest/reference/config/#grpc for more info
+grpc:
+  # Max time that the traffic-manager or traffic-agent will keep an idle client connection alive
+  connectionTTL: 24h
+
+  # maxReceiveSize is a quantity that configures the maximum message size that the traffic
+  # manager will service.
+  maxReceiveSize: 4Mi
+
+# podCIDRStrategy controls what strategy the traffic-manager will use for finding out what
+# CIDRs the cluster is using for its pods. Valid values are:
+#
+#  nodePodCIDRs extract CIDRs from the podCIDR and podCIDRs field of the Node Spec.
+#  coverPodIPs  extract IPs from the podIP and podIPs field of the Pod Status and compute the CIDRs needed to cover those IPs.
+#  environment  use CIDRs listed in the space separated POD_CIDRS environment variable verbatim.
+#  auto         first try nodePodCIDRs and if that fails, tru coverPodIPs
+#
+# Default: auto
+podCIDRStrategy: auto
+
+# maxNamespaceSpecificWatchers configures the threshold for when the traffic-manager switches from using one set of
+# watchers for each managed namespace to using cluster-wide watchers. This threshold only applies when using a
+# namespaceSelector, and only when the traffic-manager is permitted to list the cluster's namespaces.
+maxNamespaceSpecificWatchers: 10
+
+managerRbac:
+  # Default: true
+  create: true
+
+timeouts:
+  # The duration the traffic manager should wait for an agent to arrive (i.e., to be registered in the traffic manager's state)
+  # Default: 30s
+  agentArrival: 30s
+
+################################################################################
+## Agent Injector Configuration
+################################################################################
+agentInjector:
+  enabled: true
+  name: agent-injector
+  secret:
+    name: mutator-webhook-tls
+  certificate:
+     # The method used by the agent-injector to access the generated secret.
+    # Possible options: watch or mount
+    #
+    # Default watch
+    accessMethod: watch
+
+    # The method used to generate the TLS certificate for the agent-injector.
+    #
+    # Possible options: helm, supplied, or certmanager.
+    #
+    # If set to `supplied`, ensure your Secret is in the same namespace as the traffic-manager,
+    # and that `.agentInjector.secret.name` is set to its name.
+    # See the Secret in `agentInjectorWebhook.yaml` for the expected structure of the data.
+    # NOTE: If the Secret values update, the helm chart MUST be re-applied to ensure the
+    # MutatingWebhookConfiguration uses the new values.
+    #
+    # Default: helm
+    method: helm
+
+    # The certmanager configuration block
+    #
+    certmanager:
+      commonName: agent-injector
+      duration: 2160h0m0s
+      issuerRef:
+        name: telepresence
+        kind: Issuer
+
+  injectPolicy: OnDemand
+  webhook:
+    name: agent-injector-webhook
+    admissionReviewVersions: ["v1"]
+    servicePath: /traffic-agent
+    port: 443
+    failurePolicy: Ignore
+    reinvocationPolicy: IfNeeded
+    sideEffects: None
+    timeoutSeconds: 5
+
+################################################################################
+## Telepresence traffic-agent configuration
+################################################################################
+agent:
+  appProtocolStrategy: http2Probe
+  port: 9900
+  mountPolicies:
+    "/tmp": Local
+  image:
+    pullPolicy: IfNotPresent
+  initContainer:
+    enabled: true
+
+################################################################################
+## Telepresence API Server Configuration
+################################################################################
+telepresenceAPI: {}
+  # The port on agent's localhost where the API service can be found
+  # Default: 0
+  # port: 0
+
+# Values specific to the helm chart hooks for managing upgrade/deleting
+hooks:
+  busybox:
+    registry: docker.io
+    image: busybox
+    tag: latest
+    imagePullSecrets: []
+
+  curl:
+    registry: docker.io
+    image: "curlimages/curl"
+    tag: 8.1.1
+    imagePullSecrets: []
+    pullPolicy: IfNotPresent
+
+client:
+  dns:
+    # Tell client's DNS resolver to never send names with these suffixes to the cluster side resolver
+    excludeSuffixes: [".com", ".io", ".net", ".org", ".ru"]
+
+# Controls which workload kinds are recognized by Telepresence
+workloads:
+  deployments:
+    enabled: true
+  replicaSets:
+    enabled: true
+  statefulSets:
+    enabled: true
+  argoRollouts:
+    enabled: true

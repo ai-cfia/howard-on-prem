@@ -24,3 +24,17 @@ stringData:
   name: bitnamicharts-oci
   type: helm
   enableOCI: "true"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: telepresence-oci
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  url: oci://ghcr.io/telepresenceio/telepresence-oss
+  name: telepresence-oci
+  type: helm
+  enableOCI: "true"
