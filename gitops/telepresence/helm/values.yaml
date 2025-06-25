@@ -174,4 +174,4 @@ workloads:
   statefulSets:
     enabled: true
   argoRollouts:
-    enabled: true
+    enabled: false
