@@ -13,8 +13,6 @@ spec:
     - repoURL: https://github.com/external-secrets/external-secrets
       targetRevision: v0.18.1
       path: config/crds/bases
-      kustomize:
-        version: v1
     - chart: external-secrets
       repoURL: https://charts.external-secrets.io
       targetRevision: 0.18.1
