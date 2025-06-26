@@ -9,6 +9,10 @@ spec:
     server: https://kubernetes.default.svc
     namespace: eso
   sources:
+    # CRD's
+    - repoURL: https://github.com/external-secrets/external-secrets
+      targetRevision: v0.18.1
+      path: config/crds/bases
     - chart: external-secrets
       repoURL: https://charts.external-secrets.io
       targetRevision: 0.18.1
@@ -19,10 +23,6 @@ spec:
         parameters:
           - name: installCRDs
             value: "false"
-    # CRD's
-    - repoURL: https://github.com/external-secrets/external-secrets
-      targetRevision: v0.18.1
-      path: config/crds/bases
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
