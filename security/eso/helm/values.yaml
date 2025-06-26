@@ -4,7 +4,7 @@ replicaCount: 1
 revisionHistoryLimit: 4
 
 # -- If set, install and upgrade CRDs through helm chart.
-installCRDs: true
+installCRDs: false
 
 # Need to add the CA cert from vault.
 # More information here:

@@ -13,6 +13,8 @@ spec:
     - repoURL: https://github.com/external-secrets/external-secrets
       targetRevision: v0.18.1
       path: config/crds/bases
+      kustomize:
+        version: v1
     - chart: external-secrets
       repoURL: https://charts.external-secrets.io
       targetRevision: 0.18.1
@@ -22,7 +24,7 @@ spec:
           - $values/security/eso/helm/values.yaml
         parameters:
           - name: installCRDs
-            value: "true"
+            value: "false"
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
