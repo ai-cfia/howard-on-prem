@@ -39,14 +39,15 @@ automountServiceAccountToken: true
 ## Affinity settings for pod assignment
 ## Can be defined as either a dict or string. String is useful for `tpl` templating.
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-affinity: {}
-# affinity: |
-#   podAntiAffinity:
-#     requiredDuringSchedulingIgnoredDuringExecution:
-#       - labelSelector:
-#           matchLabels:
-#             {{- include "kube-state-metrics.selectorLabels" . | indent 10 }}
-#         topologyKey: kubernetes.io/hostname
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: type
+              operator: In
+              values:
+                - app-worker
 
 ## Tolerations for pod assignment
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
