@@ -4,7 +4,7 @@ replicaCount: 1
 revisionHistoryLimit: 4
 
 # -- If set, install and upgrade CRDs through helm chart.
-installCRDs: true
+installCRDs: false
 
 # Need to add the CA cert from vault.
 # More information here:
@@ -20,13 +20,13 @@ extraVolumeMounts: []
 
 crds:
   # -- If true, create CRDs for Cluster External Secret.
-  createClusterExternalSecret: true
+  createClusterExternalSecret: false
   # -- If true, create CRDs for Cluster Secret Store.
-  createClusterSecretStore: true
+  createClusterSecretStore: false
   # -- If true, create CRDs for Cluster Generator.
-  createClusterGenerator: true
+  createClusterGenerator: false
   # -- If true, create CRDs for Push Secret.
-  createPushSecret: true
+  createPushSecret: false
   annotations: {}
   conversion:
     # -- If webhook is set to false this also needs to be set to false otherwise the kubeapi will be hammered because the conversion is looking for a webhook endpoint.
