@@ -13,13 +13,13 @@ spec:
       repoURL: https://charts.external-secrets.io
       targetRevision: 0.18.1
       helm:
-        skipCrds: true  # important
+        skipCrds: false
         releaseName: external-secrets
         valueFiles:
           - $values/security/eso/helm/values.yaml
         parameters:
           - name: installCRDs
-            value: "false"  # important aussi
+            value: "true"
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
@@ -32,29 +32,3 @@ spec:
       selfHeal: true
   dependsOn:
     - eso-crds
-
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: eso-crds
-  namespace: argocd
-spec:
-  project: default
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: eso
-  sources:
-    - chart: external-secrets
-      repoURL: https://charts.external-secrets.io
-      targetRevision: 0.18.1
-      helm:
-        skipCrds: false
-        releaseName: external-secrets-crds
-        parameters:
-          - name: installCRDs
-            value: "true"
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
