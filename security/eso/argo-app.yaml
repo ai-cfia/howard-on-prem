@@ -22,7 +22,7 @@ spec:
           - $values/security/eso/helm/values.yaml
         parameters:
           - name: installCRDs
-            value: "false"
+            value: "true"
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
