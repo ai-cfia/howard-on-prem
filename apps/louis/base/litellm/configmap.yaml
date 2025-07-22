@@ -59,6 +59,11 @@ data:
             api_base: os.environ/OPENAI_GPT41_API_ENDPOINT
             api_key: os.environ/OPENAI_GPT41_API_KEY
             api_version: os.environ/OPENAI_GPT41_API_VERSION
+        - model_name: ollama/phi4-reasoning:14b-plus-q8_0
+          litellm_params:
+            model: ollama/phi4-reasoning:14b-plus-q8_0
+            api_base: os.environ/OLLAMA_API_ENDPOINT
+            api_key: os.environ/OLLAMA_API_KEY
         - model_name: text-embedding-3-large
           litellm_params:
             model: azure/text-embedding-3-large
