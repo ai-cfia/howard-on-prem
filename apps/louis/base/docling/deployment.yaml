@@ -37,10 +37,10 @@ spec:
             #   value: "/app/artifacts"
           resources:
             requests:
-              cpu: "4"
+              cpu: "2"
               memory: 4Gi
             limits:
-              cpu: "8"
+              cpu: "4"
               memory: 8Gi
               nvidia.com/gpu: "1"
 #           volumeMounts:
