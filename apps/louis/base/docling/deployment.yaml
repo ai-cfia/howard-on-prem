@@ -24,7 +24,7 @@ spec:
                       - app-worker
       containers:
         - name: docling
-          image: ghcr.io/docling-project/docling-serve-cpu:v0.10.1
+          image: ghcr.io/docling-project/docling-serve-cu124:v1.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 5001
@@ -37,11 +37,12 @@ spec:
             #   value: "/app/artifacts"
           resources:
             requests:
-              cpu: 4
+              cpu: "4"
               memory: 4Gi
             limits:
-              cpu: 8
+              cpu: "8"
               memory: 8Gi
+              nvidia.com/gpu: "1"
 #           volumeMounts:
 #             - name: artifacts
 #               mountPath: /app/artifacts
