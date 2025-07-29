@@ -44,7 +44,7 @@ spec:
                       - ai-lab-4
       containers:
         - name: nachet-azurite
-          image: mcr.microsoft.com/azure-storage/azurite
+          image: mcr.microsoft.com/azure-storage/azurite:3.34.0
           command: ["/bin/sh", "-c"]
           args: ['azurite --loose --blobHost 0.0.0.0 --blobPort 10000  --location /workspace --debug /workspace/debug.log']
           ports:
