@@ -60,7 +60,7 @@ spec:
         emptyDir: {}
       - name: ailab-shared
         persistentVolumeClaim:
-          claimName: tcardin-webtop-shared-pvc
+          claimName: jsantos-webtop-shared-pvc
 
 ---
 apiVersion: v1
@@ -89,21 +89,3 @@ spec:
   resources:
     requests:
       storage: 20Gi
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: tcardin-webtop-shared-pvc
-  namespace: webtop
-  finalizers:
-    - kubernetes.io/pvc-protection
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 14Ti
-  volumeName: pvc-a45fb23a-fd99-4797-94da-ac0077141f89-webtop
-  storageClassName: ceph-cold-filesystem
-  volumeMode: Filesystem
