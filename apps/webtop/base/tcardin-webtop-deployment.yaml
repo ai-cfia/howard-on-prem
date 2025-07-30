@@ -1,16 +1,15 @@
-apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stavakoli-webtop
+  name: tcardin-webtop
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stavakoli-webtop
+      app: tcardin-webtop
   template:
     metadata:
       labels:
-        app: stavakoli-webtop
+        app: tcardin-webtop
     spec:
       affinity:
         nodeAffinity:
@@ -33,7 +32,7 @@ spec:
           value: ""
         envFrom:
         - secretRef:
-            name: stavakoli-webtop-secrets
+            name: tcardin-webtop-secrets
         volumeMounts:
         - name: config
           mountPath: /config
@@ -55,19 +54,22 @@ spec:
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: stavakoli-webtop-config-pvc
+          claimName: tcardin-webtop-config-pvc
       - name: docker-graph-storage
         emptyDir: {}
+      - name: ailab-shared
+        persistentVolumeClaim:
+          claimName: tcardin-webtop-shared-pvc
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: stavakoli-webtop-service
+  name: tcardin-webtop-service
 spec:
   type: ClusterIP
   selector:
-    app: stavakoli-webtop
+    app: tcardin-webtop
   ports:
   - protocol: TCP
     port: 3000
@@ -77,7 +79,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: stavakoli-webtop-config-pvc
+  name: tcardin-webtop-config-pvc
 spec:
   accessModes:
     - ReadWriteOnce
@@ -86,3 +88,21 @@ spec:
   resources:
     requests:
       storage: 20Gi
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: tcardin-webtop-shared-pvc
+  namespace: webtop
+  finalizers:
+    - kubernetes.io/pvc-protection
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 14Ti
+  volumeName: pvc-a45fb23a-fd99-4797-94da-ac0077141f89-webtop
+  storageClassName: ceph-cold-filesystem
+  volumeMode: Filesystem
