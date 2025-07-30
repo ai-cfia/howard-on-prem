@@ -20,7 +20,7 @@ spec:
                 - key: kubernetes.io/hostname
                   operator: In
                   values:
-                    - ai-lab-3
+                    - ai-lab-2
       containers:
       - name: webtop
         image: lscr.io/linuxserver/webtop:ubuntu-xfce
