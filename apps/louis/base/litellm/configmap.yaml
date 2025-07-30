@@ -59,6 +59,18 @@ data:
             api_base: os.environ/OPENAI_GPT41_API_ENDPOINT
             api_key: os.environ/OPENAI_GPT41_API_KEY
             api_version: os.environ/OPENAI_GPT41_API_VERSION
+        - model_name: gpt-4.1-mini
+          litellm_params:
+            model: azure/gpt-4.1-mini
+            api_base: os.environ/OPENAI_GPT41_MINI_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT41_MINI_API_KEY
+            api_version: os.environ/OPENAI_GPT41_MINI_API_VERSION
+        - model_name: gpt-4.1-nano
+          litellm_params:
+            model: azure/gpt-4.1-nano
+            api_base: os.environ/OPENAI_GPT41_NANO_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT41_NANO_API_KEY
+            api_version: os.environ/OPENAI_GPT41_NANO_API_VERSION
         - model_name: ollama/phi4-reasoning:14b-plus-q8_0
           litellm_params:
             model: ollama/phi4-reasoning:14b-plus-q8_0
