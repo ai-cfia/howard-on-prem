@@ -61,6 +61,7 @@ resources:
   # MLOps
   - ../../mlops/nvidia/
   - ../../mlops/mlflow/
+  - ../../mlops/triton/
 
   # Infrastructure and configuration applications
 
