@@ -37,6 +37,8 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
+        - name: ailab-shared
+          mountPath: /ailab
       - name: docker-dind
         image: docker:dind
         securityContext:
