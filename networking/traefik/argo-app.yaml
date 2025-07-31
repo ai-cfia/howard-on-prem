@@ -17,7 +17,7 @@ spec:
         valueFiles:
           - $values/networking/traefik/helm/values.yaml
       repoURL: https://traefik.github.io/charts
-      targetRevision: 36.3.0
+      targetRevision: 37.0.0
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
