@@ -15,7 +15,7 @@ spec:
         valueFiles:
           - $values/storage/velero/helm/values.yaml
       repoURL: https://vmware-tanzu.github.io/helm-charts
-      targetRevision: 10.0.11
+      targetRevision: 10.0.12
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
