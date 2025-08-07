@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: triton-inference-server
+  namespace: triton
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.13
+    ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: cilium
+  tls:
+  - hosts:
+    - triton.inspection.alpha.canada.ca
+    secretName: triton-tls
+  rules:
+  - host: triton.inspection.alpha.canada.ca
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: triton-inference-server
+            port:
+              number: 8000
