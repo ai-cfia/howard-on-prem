@@ -47,7 +47,7 @@ spec:
   sources:
     - repoURL: https://github.com/external-secrets/external-secrets.git
       path: config/crds/bases
-      targetRevision: v0.18.2
+      targetRevision: v0.19.0
   syncPolicy:
     automated:
       prune: true
