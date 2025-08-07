@@ -40,12 +40,12 @@ spec:
         resources:
           requests:
             nvidia.com/gpu: 1
-            memory: "4Gi"
-            cpu: "2"
+            memory: "2Gi"
+            cpu: "1"
           limits:
             nvidia.com/gpu: 1
-            memory: "8Gi"
-            cpu: "4"
+            memory: "4Gi"
+            cpu: "2"
         volumeMounts:
         - name: models
           mountPath: /models
@@ -79,10 +79,10 @@ spec:
           claimName: triton-models-pvc
       affinity:
         nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
+          preferredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: type
-                operator: In
-                values:
-                - ai-worker
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - ai-worker
