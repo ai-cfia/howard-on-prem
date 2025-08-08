@@ -53,6 +53,30 @@ data:
             api_base: os.environ/OPENAI_O4_MINI_API_ENDPOINT
             api_key: os.environ/OPENAI_O4_MINI_API_KEY
             api_version: os.environ/OPENAI_O4_MINI_API_VERSION
+        - model_name: gpt-5
+          litellm_params:
+            model: azure/gpt-5
+            api_base: os.environ/OPENAI_GPT5_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT5_API_KEY
+            api_version: os.environ/OPENAI_GPT5_API_VERSION
+        - model_name: gpt-5-mini
+          litellm_params:
+            model: azure/gpt-5-mini
+            api_base: os.environ/OPENAI_GPT5_MINI_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT5_MINI_API_KEY
+            api_version: os.environ/OPENAI_GPT5_MINI_API_VERSION
+        - model_name: gpt-5-nano
+          litellm_params:
+            model: azure/gpt-5-nano
+            api_base: os.environ/OPENAI_GPT5_NANO_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT5_NANO_API_KEY
+            api_version: os.environ/OPENAI_GPT5_NANO_API_VERSION
+        - model_name: gpt-5-chat
+          litellm_params:
+            model: azure/gpt-5-chat
+            api_base: os.environ/OPENAI_GPT5_CHAT_API_ENDPOINT
+            api_key: os.environ/OPENAI_GPT5_CHAT_API_KEY
+            api_version: os.environ/OPENAI_GPT5_CHAT_API_VERSION
         - model_name: gpt-4.1
           litellm_params:
             model: azure/gpt-4.1
