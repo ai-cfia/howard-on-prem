@@ -22,14 +22,7 @@ spec:
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
-    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      path: security/cosign/base
-      targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - ServerSideApply=true
-      - Replace=true

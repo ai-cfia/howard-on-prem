@@ -1,25 +1,16 @@
-# ClusterImagePolicy
-# This policy requires all images to be signed
-apiVersion: policy.sigstore.dev/v1beta1
-kind: ClusterImagePolicy
-metadata:
-  name: github-actions-policy
-  namespace: cosign
-  annotations:
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-spec:
-  images:
-    # Apply to all images
-    - glob: "**"
-  authorities:
-    # Keyless verification (Fulcio + Rekor)
-    - keyless:
-        # Public Fulcio instance
-        url: https://fulcio.sigstore.dev
-        identities:
-          # Only accept signatures from GitHub Actions
-          - issuer: https://token.actions.githubusercontent.com
-            subjectRegexp: "^https://github.com/ai-cfia/.*$"
-      # Transparency log verification
-      ctlog:
-        url: https://rekor.sigstore.dev
+# ---- Created manually ---- 
+# apiVersion: policy.sigstore.dev/v1beta1
+# kind: ClusterImagePolicy
+# metadata:
+#   name: github-actions-policy
+# spec:
+#   images:
+#     - glob: "**"
+#   authorities:
+#     - keyless:
+#         url: https://fulcio.sigstore.dev
+#         identities:
+#           - issuer: https://token.actions.githubusercontent.com
+#             subjectRegexp: "^https://github.com/ai-cfia/.*$"
+#       ctlog:
+#         url: https://rekor.sigstore.dev
