@@ -41,6 +41,7 @@ resources:
   - ../../security/vault/
   - ../../security/keycloak/
   - ../../security/trivy/
+  - ../../security/cosign/
 
   # Storage applications
   - ../../storage/rook-ceph/operator/

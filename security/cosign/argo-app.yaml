@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cosign
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cosign
+  sources:
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      path: security/cosign/base
+      targetRevision: HEAD
