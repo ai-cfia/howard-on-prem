@@ -5,6 +5,8 @@ kind: ClusterImagePolicy
 metadata:
   name: github-actions-policy
   namespace: cosign
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   images:
     # Apply to all images
