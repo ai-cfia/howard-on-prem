@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cosign
+  name: policy-controller
   namespace: argocd
 spec:
   project: default
@@ -9,6 +9,25 @@ spec:
     server: https://kubernetes.default.svc
     namespace: cosign
   sources:
+    - chart: policy-controller
+      repoURL: https://sigstore.github.io/helm-charts
+      targetRevision: 0.6.15
+      helm:
+        releaseName: policy-controller
+        valueFiles:
+          - $values/security/cosign/helm/values.yaml
+        parameters:
+          - name: installCRDs
+            value: "true"
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      targetRevision: HEAD
+      ref: values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       path: security/cosign/base
       targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

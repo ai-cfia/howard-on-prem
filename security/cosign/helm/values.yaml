@@ -1,0 +1,46 @@
+# Policy Controller Helm values
+# https://github.com/sigstore/helm-charts/tree/main/charts/policy-controller
+
+installCRDs: true
+
+loglevel: info
+
+webhook:
+  replicaCount: 1
+  failurePolicy: Fail
+  
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+  
+  podSecurityContext:
+    enabled: true
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsUser: 1000
+    capabilities:
+      drop:
+        - ALL
+  
+  # Service
+  service:
+    type: ClusterIP
+    port: 443
+  
+  # Apply only to ns with the label
+  namespaceSelector:
+    matchExpressions:
+      - key: policy.sigstore.dev/include
+        operator: In
+        values: ["true"]
+  
+  podDisruptionBudget:
+    enabled: false
+    minAvailable: 1
+
+serviceMonitor:
+  enabled: false
