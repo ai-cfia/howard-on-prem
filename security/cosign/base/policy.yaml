@@ -1,16 +1,16 @@
-# ---- Created manually ---- 
-# apiVersion: policy.sigstore.dev/v1beta1
-# kind: ClusterImagePolicy
-# metadata:
-#   name: github-actions-policy
-# spec:
-#   images:
-#     - glob: "**"
-#   authorities:
-#     - keyless:
-#         url: https://fulcio.sigstore.dev
-#         identities:
-#           - issuer: https://token.actions.githubusercontent.com
-#             subjectRegexp: "^https://github.com/ai-cfia/.*$"
-#       ctlog:
-#         url: https://rekor.sigstore.dev
+---- Created manually ---- 
+apiVersion: policy.sigstore.dev/v1beta1
+kind: ClusterImagePolicy
+metadata:
+  name: github-actions-policy
+spec:
+  images:
+    - glob: "**"
+  authorities:
+    - keyless:
+        url: https://fulcio.sigstore.dev
+        identities:
+          - issuer: https://token.actions.githubusercontent.com
+            subject: "^https://github.com/ai-cfia/.*$"
+      ctlog:
+        url: https://rekor.sigstore.dev
