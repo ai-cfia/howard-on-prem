@@ -17,7 +17,7 @@ spec:
         valueFiles:
           - $values/networking/cilium/helm/values.yaml
       repoURL: https://helm.cilium.io/
-      targetRevision: 1.18.0
+      targetRevision: 1.18.1
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
