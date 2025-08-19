@@ -33,7 +33,7 @@ resources:
   - ../argocd/
   - ../on-prem-gh-runners/
   - ../argocd-metrics-server/
-  - ../telepresence/
+  # - ../telepresence/
 
   # Security applications
   - ../../security/cert-manager/
