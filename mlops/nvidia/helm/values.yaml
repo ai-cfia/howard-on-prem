@@ -180,9 +180,9 @@ devicePlugin:
     # Create a ConfigMap (default: false)
     create: false
     # ConfigMap name (either existing or to create a new one with create=true above)
-    name: ""
+    name: "time-slicing-config-ai-lab-1"
     # Default config name within the ConfigMap
-    default: ""
+    default: "ai-lab-1"
     # Data section for the ConfigMap to create (i.e only applies when create=true)
     data: {}
   # MPS related configuration for the plugin
