@@ -63,6 +63,5 @@ spec:
   selector:
     app: subscription-manager
   ports:
-    - port: 80
-      targetPort: 5000
+    - port: 5000
   type: ClusterIP
