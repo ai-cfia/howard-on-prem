@@ -37,8 +37,7 @@ spec:
             name: subscription-manager-secrets
         volumeMounts:
         - name: app-data
-          mountPath: /app
-          subPath: data
+          mountPath: /app/data
       volumes:
       - name: app-data
         persistentVolumeClaim:
