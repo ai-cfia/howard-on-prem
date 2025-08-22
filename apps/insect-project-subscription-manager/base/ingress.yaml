@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: subscription-manager
   annotations:
-    lbipam.cilium.io/ips: 10.140.79.27
+    lbipam.cilium.io/ips: 10.140.79.28
     ingress.cilium.io/loadbalancer-mode: dedicated
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
