@@ -17,6 +17,6 @@ spec:
               key: client-secret
             subscriptionID: b72bb8e9-f530-4d72-bc2f-5ad441b65787
             tenantID: 18b5a5ed-1d86-41d3-94a0-bc27dae32ab2
-            resourceGroupName: rg-acia-cfia-aks-staging
+            resourceGroupName: rg-acia-cfia-howard
             hostedZoneName: inspection.alpha.canada.ca
             environment: AzurePublicCloud
