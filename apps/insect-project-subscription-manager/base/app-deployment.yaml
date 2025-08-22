@@ -29,7 +29,7 @@ spec:
         - containerPort: 5000
         env:
         - name: REDIS_HOST
-          value: "redis.subscription-manager.svc.cluster.local"
+          value: "redis.insect-project.svc.cluster.local"
         - name: REDIS_PORT
           value: "6379"
         envFrom:
