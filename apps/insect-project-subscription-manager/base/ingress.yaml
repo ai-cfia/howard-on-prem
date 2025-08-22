@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: subscription-manager
+  annotations:
+    lbipam.cilium.io/ips: 10.140.79.27
+    ingress.cilium.io/loadbalancer-mode: dedicated
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: cilium
+  tls:
+  - hosts:
+    - insect.inspection.alpha.canada.ca
+    secretName: subscription-manager-tls
+  rules:
+  - host: insect.inspection.alpha.canada.ca
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: subscription-manager
+            port:
+              number: 80

@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: insect-project-subscription-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  destination:
+    namespace: insect-project
+    server: https://kubernetes.default.svc
+  sources:
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      path: apps/insect-project-subscription-manager/base/
+      targetRevision: HEAD

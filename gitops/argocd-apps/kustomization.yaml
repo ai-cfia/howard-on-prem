@@ -20,6 +20,7 @@ resources:
   - ../../apps/memos/
   - ../../apps/trufflehog-verif-server/
   - ../../apps/insect-project/
+  - ../../apps/insect-project-subscription-manager/
 
   # Example of deployment, ingress, pvc's, etc...
   # - ../../apps/examples/

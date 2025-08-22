@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscription-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subscription-manager
+  template:
+    metadata:
+      labels:
+        app: subscription-manager
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+      - name: subscription-manager
+        image: ghcr.io/ai-cfia/insect-project-subscription-manager:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+        - name: REDIS_HOST
+          value: "redis.subscription-manager.svc.cluster.local"
+        - name: REDIS_PORT
+          value: "6379"
+        envFrom:
+        - secretRef:
+            name: subscription-manager-secrets
+        volumeMounts:
+        - name: app-data
+          mountPath: /app
+          subPath: data
+      volumes:
+      - name: app-data
+        persistentVolumeClaim:
+          claimName: app-data-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ceph-hot-block
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: subscription-manager
+spec:
+  selector:
+    app: subscription-manager
+  ports:
+    - port: 80
+      targetPort: 5000
+  type: ClusterIP
