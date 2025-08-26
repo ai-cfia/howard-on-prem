@@ -17,7 +17,7 @@ spec:
         valueFiles:
           - $values/gitops/telepresence/helm/values.yaml
       repoURL: ghcr.io/telepresenceio
-      targetRevision: 2.23.6
+      targetRevision: 2.24.0
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
