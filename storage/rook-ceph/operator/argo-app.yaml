@@ -24,3 +24,9 @@ spec:
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       path: storage/rook-ceph/operator/base/
       targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
