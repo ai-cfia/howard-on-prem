@@ -108,6 +108,32 @@ data:
             api_version: os.environ/OPENAI_TEXT_EMBEDDING_3_LARGE_API_VERSION
           model_info:
             mode: embedding
+        - model_name: adarm-text-embedding-3-large
+          litellm_params:
+            model: azure/adarm-text-embedding-3-large
+            api_base: os.environ/OPENAI_ADARM_TEXT_EMBEDDING_3_LARGE_API_ENDPOINT
+            api_key: os.environ/OPENAI_ADARM_TEXT_EMBEDDING_3_LARGE_API_KEY
+            api_version: os.environ/OPENAI_ADARM_TEXT_EMBEDDING_3_LARGE_API_VERSION
+          model_info:
+            mode: embedding
+        - model_name: adarm-gpt-4.1
+          litellm_params:
+            model: azure/adarm-gpt-4.1
+            api_base: os.environ/OPENAI_ADARM_GPT41_API_ENDPOINT
+            api_key: os.environ/OPENAI_ADARM_GPT41_API_KEY
+            api_version: os.environ/OPENAI_ADARM_GPT41_API_VERSION
+        - model_name: adarm-gpt-5
+          litellm_params:
+            model: azure/adarm-gpt-5
+            api_base: os.environ/OPENAI_ADARM_GPT5_API_ENDPOINT
+            api_key: os.environ/OPENAI_ADARM_GPT5_API_KEY
+            api_version: os.environ/OPENAI_ADARM_GPT5_API_VERSION
+        - model_name: adarm-gpt-4o
+          litellm_params:
+            model: azure/adarm-gpt-4o
+            api_base: os.environ/OPENAI_ADARM_GPT4O_API_ENDPOINT
+            api_key: os.environ/OPENAI_ADARM_GPT4O_API_KEY
+            api_version: os.environ/OPENAI_ADARM_GPT4O_API_VERSION
       litellm_settings:
         cache: false
         callbacks:
