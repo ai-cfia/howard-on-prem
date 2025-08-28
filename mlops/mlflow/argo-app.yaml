@@ -11,7 +11,7 @@ spec:
   sources:
     - chart: mlflow
       repoURL: https://community-charts.github.io/helm-charts
-      targetRevision: 1.6.1
+      targetRevision: 1.6.2
       helm:
         releaseName: mlflow
         valueFiles:
