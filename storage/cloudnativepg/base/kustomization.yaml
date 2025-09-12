@@ -19,6 +19,7 @@ resources:
   - database/memos.yaml
   - database/mlflow.yaml
   - database/labelstudio.yaml
+  - database/harbor.yaml
 
   - acia-cfia-prod-cluster/cluster.yaml
   - acia-cfia-prod-cluster/secrets.yaml
