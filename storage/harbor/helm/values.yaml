@@ -45,6 +45,9 @@ persistence:
     trivy:
       storageClass: "ceph-cold-block"
       size: 5Gi
+    redis:
+      storageClass: "ceph-hot-block"
+      size: 1Gi
 
 trivy:
   enabled: true
