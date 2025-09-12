@@ -144,6 +144,19 @@ spec:
         passwordSecret:
           name: labelstudio-user-creds
 
+      - name: harbor
+        ensure: present
+        comment: "Owner of harbor database"
+        login: true
+        createdb: true
+        createrole: false
+        inherit: true
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: harbor-user-creds
+
   plugins:
     - name: barman-cloud.cloudnative-pg.io
       isWALArchiver: true

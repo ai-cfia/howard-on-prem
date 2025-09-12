@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: harbor-database
+spec:
+  name: harbor
+  owner: harbor
+  cluster:
+    name: acia-cfia-dev-cluster

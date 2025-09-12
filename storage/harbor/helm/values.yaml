@@ -1,0 +1,62 @@
+expose:
+  type: ingress
+  tls:
+    enabled: true
+    certSource: secret
+    secret:
+      secretName: "harbor-tls"
+  ingress:
+    hosts:
+      core: harbor.inspection.alpha.canada.ca
+    className: "cilium"
+    annotations:
+      lbipam.cilium.io/ips: 10.140.79.8
+      ingress.cilium.io/loadbalancer-mode: dedicated
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+
+externalURL: https://harbor.inspection.alpha.canada.ca
+
+existingSecretAdminPassword: "harbor-admin-secret"
+existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
+
+database:
+  type: external
+  external:
+    host: "acia-cfia-dev-cluster-rw.cloudnativepg.svc.cluster.local"
+    port: "5432"
+    username: "harbor"
+    coreDatabase: "harbor"
+    existingSecret: "harbor-database-secret"
+
+redis:
+  type: internal
+
+persistence:
+  enabled: true
+  resourcePolicy: "keep"
+  persistentVolumeClaim:
+    registry:
+      storageClass: "ceph-cold-block"
+      size: 50Gi
+    jobservice:
+      jobLog:
+        storageClass: "ceph-cold-block"
+        size: 1Gi
+    trivy:
+      storageClass: "ceph-cold-block"
+      size: 5Gi
+
+trivy:
+  enabled: true
+
+core:
+  replicas: 1
+  
+jobservice:
+  replicas: 1
+
+registry:
+  replicas: 1
+
+portal:
+  replicas: 1
