@@ -17,7 +17,7 @@ spec:
         valueFiles:
           - $values/storage/rook-ceph/clusters/rook-ceph-hot-cluster/helm/values.yaml
       repoURL: https://charts.rook.io/release
-      targetRevision: v1.18.0
+      targetRevision: v1.18.2
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
