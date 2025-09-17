@@ -11,7 +11,7 @@ spec:
   sources:
     - chart: policy-controller
       repoURL: https://sigstore.github.io/helm-charts
-      targetRevision: 0.10.3
+      targetRevision: 0.10.4
       helm:
         releaseName: policy-controller
         valueFiles:
