@@ -41,11 +41,11 @@ spec:
           requests:
             nvidia.com/gpu: 1
             memory: "30Gi"
-            cpu: "12"
+            cpu: "4"
           limits:
             nvidia.com/gpu: 1
             memory: "60Gi"
-            cpu: "24"
+            cpu: "8"
         volumeMounts:
         - name: models
           mountPath: /models
