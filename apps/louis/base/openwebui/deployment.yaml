@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: open-webui
-          image: ghcr.io/ai-cfia/open-webui:git-eb5c47f
+          image: ghcr.io/ai-cfia/open-webui:v0.6.30-cfia-04
           resources:
             requests:
               cpu: 4
