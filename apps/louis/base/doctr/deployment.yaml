@@ -18,14 +18,26 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: In
-                  values:
-                    - ai-lab-1
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - ai-lab-1
       containers:
         - name: doctr
           image: ghcr.io/ai-cfia/doctr:doctr-web-v1.0.0-cfia-01
           imagePullPolicy: Always
+          command:
+            [
+              "uvicorn",
+              "app.main:app",
+              "--reload",
+              "--workers",
+              "1",
+              "--host",
+              "0.0.0.0",
+              "--port",
+              "8080",
+            ]
           ports:
             - containerPort: 8080
           resources:
