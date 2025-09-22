@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doctr-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: doctr
+  template:
+    metadata:
+      labels:
+        app: doctr
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - ai-lab-1
+      containers:
+        - name: doctr
+          image: ghcr.io/ai-cfia/doctr:doctr-web-v1.0.0-cfia-01
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "2"
+              memory: 4Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
+              nvidia.com/gpu: "1"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: doctr-service
+spec:
+  selector:
+    app: doctr
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

@@ -33,3 +33,5 @@ resources:
   - vllm/model-snowflake-arctic-embed2.yaml
   - gateway.yaml
   - httproute.yaml
+  - doctr/deployment.yaml
+  - doctr/certificates.yaml

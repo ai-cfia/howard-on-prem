@@ -98,6 +98,15 @@ spec:
                 operator: In
                 values:
                   - librechat
+    - name: https-doctr
+      hostname: doctr.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: doctr-tls
+            kind: Secret
     # - name: https-ragflow
     #   hostname: ragflow.inspection.alpha.canada.ca
     #   port: 443

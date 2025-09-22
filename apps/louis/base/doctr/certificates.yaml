@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: doctr-tls
+spec:
+  secretName: doctr-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: doctr.inspection.alpha.canada.ca
+  dnsNames:
+    - doctr.inspection.alpha.canada.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
