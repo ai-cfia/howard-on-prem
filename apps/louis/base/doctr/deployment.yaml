@@ -24,7 +24,7 @@ spec:
                       - ai-lab-1
       containers:
         - name: doctr
-          image: ghcr.io/ai-cfia/doctr:doctr-web-v1.0.0-cfia-01
+          image: ghcr.io/ai-cfia/doctr:doctr-web-v1.0.0-cfia-04
           imagePullPolicy: Always
           command:
             [
