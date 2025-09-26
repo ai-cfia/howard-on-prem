@@ -17,7 +17,7 @@ spec:
         valueFiles:
           - $values/gitops/argocd-metrics-server/helm/values.yaml
       repoURL: https://charts.christianhuth.de
-      targetRevision: 1.0.7
+      targetRevision: 1.0.8
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
