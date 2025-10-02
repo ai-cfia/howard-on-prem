@@ -1,0 +1,56 @@
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: nachet-gateway
+spec:
+  addresses:
+    - type: IPAddress
+      value: 10.140.79.16
+  gatewayClassName: cilium
+  listeners:
+    - name: https-nachet-frontend
+      hostname: nachet.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: nachet-frontend-tls
+            kind: Secret
+    - name: https-nachet-backend
+      hostname: nachet-backend.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: nachet-backend-tls
+            kind: Secret
+    - name: https-nachet-blob
+      hostname: nachet-blob.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: nachet-blob-tls
+            kind: Secret
+    - name: https-nachet-dev-op
+      hostname: nachet-dev-op.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: nachet-dev-op-tls
+            kind: Secret
+    # - name: https-nachet-backend-dev-op
+    #   hostname: nachet-dev-op.inspection.alpha.canada.ca
+    #   port: 443
+    #   protocol: HTTPS
+    #   tls:
+    #     mode: Terminate
+    #     certificateRefs:
+    #       - name: nachet-backend-dev-op-tls
+    #         kind: Secret

@@ -1,0 +1,100 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nachet-backend-dev-op
+  namespace: nachet-dev
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: nachet-dev-op
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: nachet-dev-op
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - nachet-dev-op
+              topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - ai-lab-2
+      containers:
+        - name: nachet-dev-op
+          image: ghcr.io/ai-cfia/nachet-backend:1.16.0
+          command: ["/bin/sh", "-c"]
+          args: ['uv run hypercorn -b :8080 app/main:app']
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: nachet-dev-op-secrets
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 300
+          resources:
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+            limits:
+              memory: "8Gi"
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nachet-dev-op-pdb
+  namespace: nachet-dev
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nachet-dev-op
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nachet-dev-op-svc
+  namespace: nachet-dev
+spec:
+  clusterIP: None
+  selector:
+    app: nachet-dev-op
+  ports:
+    - protocol: TCP
+      port: 8080

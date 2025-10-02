@@ -4,16 +4,16 @@ A production-ready, GitOps-driven Kubernetes platform for the Canadian Food Insp
 
 ## 📋 Table of Contents
 
-- [About the Project](#about-the-project)
-- [Architecture Overview](#architecture-overview)
-- [Technology Stack](#technology-stack)
-- [How Components Work Together](#how-components-work-together)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Security Features](#security-features)
-- [Monitoring and Observability](#monitoring-and-observability)
-- [Contributing](#contributing)
-- [License](#license)
+- [About the Project](#-about-the-project)
+- [Architecture Overview](#️-architecture-overview)
+- [Technology Stack](#-technology-stack)
+- [How Components Work Together](#-how-components-work-together)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Security Features](#-security-features)
+- [Monitoring and Observability](#-monitoring-and-observability)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ## 🎯 About the Project
 
@@ -143,60 +143,70 @@ graph TB
 ## 🔄 How Components Work Together
 
 ### 1. **GitOps Workflow**
-```
+
+```text
 Developer → Git Push → ArgoCD → Kubernetes → Application
                            ↓
                      Sync & Reconcile
 ```
+
 - Developers commit changes to Git repository
 - ArgoCD monitors repository for changes
 - Automatic synchronization deploys updates
 - Self-healing ensures desired state
 
 ### 2. **Security Flow**
-```
+
+```text
 User → Keycloak Auth → Application → Vault (via ESO) → Secrets
            ↓                              ↓
       OIDC Token                    K8s Secrets
 ```
+
 - All applications use Keycloak for SSO
 - Vault stores sensitive credentials
 - External Secrets Operator syncs to Kubernetes
 - TLS everywhere via cert-manager
 
 ### 3. **Data Pipeline**
-```
+
+```text
 Application → PostgreSQL (Primary)
      ↓              ↓
   MinIO         Backup
      ↓              ↓
   Ceph         Barman/MinIO
 ```
+
 - Applications use CloudNativePG for databases
 - Automatic backups to MinIO
 - Rook-Ceph provides persistent volumes
 - Velero handles disaster recovery
 
 ### 4. **Observability Pipeline**
-```
+
+```text
 Application → Alloy Agent → Loki (Logs)
                     ↓     → Mimir (Metrics)  → Grafana
                     ↓     → Tempo (Traces)
               OpenTelemetry
 ```
+
 - Unified collection via Grafana Alloy
 - Centralized storage for all telemetry
 - Grafana provides unified visualization
 - Alert routing through Grafana
 
 ### 5. **AI/ML Workflow**
-```
+
+```text
 Data Scientists → Jupyter/AI Lab → Train Model → MLflow
                                         ↓
                                   Model Registry
                                         ↓
                                  Triton/vLLM → API
 ```
+
 - Shared AI Lab environment for development
 - MLflow tracks experiments and models
 - Production serving via Triton or vLLM
@@ -204,7 +214,7 @@ Data Scientists → Jupyter/AI Lab → Train Model → MLflow
 
 ## 📁 Project Structure
 
-```
+```text
 howard-on-prem/
 ├── apps/                    # Business applications
 │   ├── fertiscan/          # Fertilizer inspection app
@@ -244,25 +254,29 @@ howard-on-prem/
 
 ### Initial Setup
 
-1. **Bootstrap ArgoCD**
+### 1. **Bootstrap ArgoCD**
+
 ```bash
 kubectl create namespace argocd
 kubectl apply -k gitops/argocd/
 ```
 
-2. **Configure Git Repository**
+### 2. **Configure Git Repository**
+
 ```bash
 argocd repo add https://github.com/your-org/howard-on-prem \
   --username <username> \
   --password <token>
 ```
 
-3. **Deploy Applications**
+### 3. **Deploy Applications**
+
 ```bash
 kubectl apply -f gitops/argocd-apps/
 ```
 
-4. **Access ArgoCD UI**
+### 4. **Access ArgoCD UI**
+
 ```bash
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 # Navigate to https://localhost:8080
@@ -271,6 +285,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 ### Environment Configuration
 
 Each environment (dev/staging/prod) can be configured through:
+
 - Kustomize overlays for environment-specific values
 - Helm values files in respective directories
 - ArgoCD ApplicationSets for multi-environment deployments
@@ -317,6 +332,7 @@ Each environment (dev/staging/prod) can be configured through:
 ### Alerting
 
 Configured alerts for:
+
 - Resource exhaustion
 - Application errors
 - Security events
@@ -354,6 +370,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 For issues and questions:
+
 - Create an issue in the repository
 - Contact the DevSecOps team
 - Check the documentation in `/docs`
