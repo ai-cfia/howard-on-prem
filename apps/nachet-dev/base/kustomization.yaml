@@ -17,4 +17,4 @@ resources:
   - certificates.yaml
   - gateway.yaml
   - httproute.yaml
-  - nachet-dev-op-deployment.yaml
+  - nachet-dev-op-deployment.yml
