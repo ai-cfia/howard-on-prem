@@ -77,12 +77,18 @@ spec:
               mountPath: /.cache
             - name: tmp-volume
               mountPath: /tmp
+            - name: venv-volume
+              mountPath: /app/.venv
       volumes:
         - name: cache-volume
           emptyDir:
             medium: Memory
             sizeLimit: 1G
         - name: tmp-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1G
+        - name: venv-volume
           emptyDir:
             medium: Memory
             sizeLimit: 1G
