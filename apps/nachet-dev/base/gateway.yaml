@@ -45,6 +45,15 @@ spec:
         certificateRefs:
           - name: nachet-dev-op-tls
             kind: Secret
+    - name: https-nachet-staging-op
+      hostname: nachet-staging-op.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: nachet-staging-op-tls
+            kind: Secret
     # - name: https-nachet-backend-dev-op
     #   hostname: nachet-dev-op.inspection.alpha.canada.ca
     #   port: 443
