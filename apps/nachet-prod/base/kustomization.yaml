@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nachet-prod
+
+resources:
+  - nachet-prod-op-deployment.yml
+  - secrets.yaml

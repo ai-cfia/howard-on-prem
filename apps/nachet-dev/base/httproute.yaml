@@ -1,41 +1,41 @@
----
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
-metadata:
-  name: nachet-frontend-route
-spec:
-  parentRefs:
-    - name: nachet-gateway
-      sectionName: https-nachet-frontend
-  hostnames:
-    - nachet.inspection.alpha.canada.ca
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: "/"
-      backendRefs:
-        - name: nachet-frontend-svc
-          port: 3000
----
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
-metadata:
-  name: nachet-backend-route
-spec:
-  parentRefs:
-    - name: nachet-gateway
-      sectionName: https-nachet-backend
-  hostnames:
-    - nachet-backend.inspection.alpha.canada.ca
-  rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: "/"
-      backendRefs:
-        - name: nachet-backend-svc
-          port: 8080
+# ---
+# apiVersion: gateway.networking.k8s.io/v1beta1
+# kind: HTTPRoute
+# metadata:
+#   name: nachet-frontend-route
+# spec:
+#   parentRefs:
+#     - name: nachet-gateway
+#       sectionName: https-nachet-frontend
+#   hostnames:
+#     - nachet.inspection.alpha.canada.ca
+#   rules:
+#     - matches:
+#         - path:
+#             type: PathPrefix
+#             value: "/"
+#       backendRefs:
+#         - name: nachet-frontend-svc
+#           port: 3000
+# ---
+# apiVersion: gateway.networking.k8s.io/v1beta1
+# kind: HTTPRoute
+# metadata:
+#   name: nachet-backend-route
+# spec:
+#   parentRefs:
+#     - name: nachet-gateway
+#       sectionName: https-nachet-backend
+#   hostnames:
+#     - nachet-backend.inspection.alpha.canada.ca
+#   rules:
+#     - matches:
+#         - path:
+#             type: PathPrefix
+#             value: "/"
+#       backendRefs:
+#         - name: nachet-backend-svc
+#           port: 8080
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
@@ -92,6 +92,26 @@ spec:
             value: "/"
       backendRefs:
         - name: nachet-staging-op-svc
+          port: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: nachet-prod-op-route
+spec:
+  parentRefs:
+    - name: nachet-gateway
+      sectionName: https-nachet-prod-op
+  hostnames:
+    - nachet.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: nachet-prod-op-svc
+          namespace: nachet-prod
           port: 8080
 # ---
 # apiVersion: gateway.networking.k8s.io/v1beta1

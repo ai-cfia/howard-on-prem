@@ -1,14 +1,15 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nachet-backend
+  name: nachet-backend-prod-op
   namespace: nachet-prod
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: nachet-backend
+      app: nachet-prod-op
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,7 +18,7 @@ spec:
   template:
     metadata:
       labels:
-        app: nachet-backend
+        app: nachet-prod-op
     spec:
       securityContext:
         runAsNonRoot: true
@@ -32,7 +33,7 @@ spec:
                   - key: app
                     operator: In
                     values:
-                      - nachet-backend
+                      - nachet-prod-op
               topologyKey: "kubernetes.io/hostname"
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -43,58 +44,77 @@ spec:
                     values:
                       - ai-lab-2
       containers:
-        - name: nachet-backend
-          image: ghcr.io/ai-cfia/nachet-backend:152-Debug-Nachet-Datastore
+        - name: nachet-prod-op
+          image: ghcr.io/ai-cfia/nachet-backend:2.3.0
           command: ["/bin/sh", "-c"]
-          args: ['hypercorn -b :8080 app:app']
+          args: ["uv run hypercorn -b :8080 app/main:app"]
           imagePullPolicy: Always
           envFrom:
             - secretRef:
-                name: nachet-backend-secrets
+                name: nachet-prod-op-secrets
           ports:
             - containerPort: 8080
           livenessProbe:
             httpGet:
               path: /health
               port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 10
+            initialDelaySeconds: 120
+            periodSeconds: 300
           resources:
             requests:
-              cpu: "1"
-              memory: "1Gi"
-            limits:
               cpu: "2"
               memory: "2Gi"
+            limits:
+              memory: "8Gi"
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
             capabilities:
               drop:
                 - ALL
+          volumeMounts:
+            - name: cache-volume
+              mountPath: /.cache
+            - name: tmp-volume
+              mountPath: /tmp
+            - name: venv-volume
+              mountPath: /app/.venv
+      volumes:
+        - name: cache-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1G
+        - name: tmp-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1G
+        - name: venv-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 1G
 
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: nachet-backend-pdb
+  name: nachet-prod-op-pdb
   namespace: nachet-prod
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: nachet-backend
+      app: nachet-prod-op
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nachet-backend-svc
+  name: nachet-prod-op-svc
   namespace: nachet-prod
 spec:
   clusterIP: None
   selector:
-    app: nachet-backend
+    app: nachet-prod-op
   ports:
     - protocol: TCP
       port: 8080
