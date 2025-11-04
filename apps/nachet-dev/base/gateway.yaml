@@ -55,7 +55,7 @@ spec:
           - name: nachet-staging-op-tls
             kind: Secret
     - name: https-nachet-prod-op
-      hostname: nachet-prod-op.inspection.alpha.canada.ca
+      hostname: nachet.inspection.alpha.canada.ca
       port: 443
       protocol: HTTPS
       tls:
