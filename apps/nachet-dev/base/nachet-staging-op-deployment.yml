@@ -45,7 +45,7 @@ spec:
                       - ai-lab-4
       containers:
         - name: nachet-staging-op
-          image: ghcr.io/ai-cfia/nachet-backend:2.3.0
+          image: ghcr.io/ai-cfia/nachet-backend:2.4.0
           command: ["/bin/sh", "-c"]
           args: ["uv run hypercorn -b :8080 app/main:app"]
           imagePullPolicy: Always
