@@ -49,7 +49,7 @@ spec:
         inherit: true
         replication: false
         bypassrls: false
-        connectionLimit: 10
+        connectionLimit: 100
         passwordSecret:
           name: nachet-dev-user-creds
 
