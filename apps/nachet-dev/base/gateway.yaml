@@ -9,24 +9,6 @@ spec:
       value: 10.140.79.16
   gatewayClassName: cilium
   listeners:
-    # - name: https-nachet-frontend
-    #   hostname: nachet.inspection.alpha.canada.ca
-    #   port: 443
-    #   protocol: HTTPS
-    #   tls:
-    #     mode: Terminate
-    #     certificateRefs:
-    #       - name: nachet-frontend-tls
-    #         kind: Secret
-    # - name: https-nachet-backend
-    #   hostname: nachet-backend.inspection.alpha.canada.ca
-    #   port: 443
-    #   protocol: HTTPS
-    #   tls:
-    #     mode: Terminate
-    #     certificateRefs:
-    #       - name: nachet-backend-tls
-    #         kind: Secret
     - name: https-nachet-blob
       hostname: nachet-blob.inspection.alpha.canada.ca
       port: 443
