@@ -42,7 +42,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ai-lab-2
+                      - ai-lab-4
       containers:
         - name: nachet-staging-op
           image: ghcr.io/ai-cfia/nachet-backend:2.3.0
