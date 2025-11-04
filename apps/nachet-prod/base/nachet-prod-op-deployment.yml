@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nachet-backend-prod-op
+  name: nachet-prod-op
   namespace: nachet-prod
 spec:
   replicas: 1
@@ -65,7 +65,7 @@ spec:
               cpu: "2"
               memory: "2Gi"
             limits:
-              memory: "8Gi"
+              memory: "4Gi"
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false

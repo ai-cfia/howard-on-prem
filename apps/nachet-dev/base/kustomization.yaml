@@ -4,18 +4,18 @@ kind: Kustomization
 namespace: nachet-dev
 
 resources:
-  - nachet-backend-deployment.yml
+  # - nachet-backend-deployment.yml
+  # - nachet-frontend-deployment.yml
+  # - ingress.yaml
   - nachet-swin-27-spp-model-deployment.yaml
-  - nachet-rcnn-model-deployment.yaml
-  - nachet-blob-storage-mock.yml
-  - nachet-frontend-deployment.yml
   - nachet-swin-22-spp-model-deployment.yaml
   - nachet-swin-model-deployment.yaml
-  # - ingress.yaml
-  - secrets.yaml
+  - nachet-rcnn-model-deployment.yaml
+  - nachet-blob-storage-mock.yml
   - landing-403-nachet.yaml
-  - certificates.yaml
+  - secrets.yaml
   - gateway.yaml
   - httproute.yaml
+  - certificates.yaml
   - nachet-dev-op-deployment.yml
-  # - nachet-staging-op-deployment.yml
+  - nachet-staging-op-deployment.yml
