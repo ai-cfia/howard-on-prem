@@ -58,9 +58,11 @@ spec:
             httpGet:
               path: /health
               port: 8080
-              host: localhost
-            initialDelaySeconds: 120
-            periodSeconds: 300
+              httpHeaders:
+                - name: Host
+                  value: nachet-dev-op-svc.nachet-dev.svc.cluster.local
+            initialDelaySeconds: 60
+            periodSeconds: 60
           resources:
             requests:
               cpu: "2"
