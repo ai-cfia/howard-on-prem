@@ -58,6 +58,7 @@ spec:
             httpGet:
               path: /health
               port: 8080
+              host: localhost
             initialDelaySeconds: 120
             periodSeconds: 300
           resources:
