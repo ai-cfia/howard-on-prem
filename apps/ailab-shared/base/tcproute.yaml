@@ -45,3 +45,19 @@ spec:
       - name: pytorchtrainssh-svc
         namespace: ailab-shared
         port: 22
+
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: seedlab-pytorch-tcp
+spec:
+  parentRefs:
+    - name: ailab-shared-gateway
+      sectionName: tcp-seedlab-pytorch
+      kind: Gateway
+  rules:
+    - backendRefs:
+      - name: seedlab-pytorch-svc
+        namespace: ailab-shared
+        port: 22
