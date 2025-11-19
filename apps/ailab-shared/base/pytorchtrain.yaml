@@ -23,6 +23,8 @@ spec:
                   operator: In
                   values:
                     - ai-lab-1
+      imagePullSecrets:
+        - name: ghcr-image-pull-secret
       containers:
         - name: pytorchtrain
           # image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050803
