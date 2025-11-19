@@ -27,7 +27,7 @@ spec:
                     - ai-lab-2
       containers:
         - name: openssh
-          image: ghcr.io/ai-cfia/docker-ssh:v3.0.2-ailab
+          image: ghcr.io/ai-cfia/docker-ssh:v3.0.3-ailab
           imagePullPolicy: Always
           resources:
             requests:
