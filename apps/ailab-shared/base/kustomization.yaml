@@ -10,3 +10,4 @@ resources:
   - sharedpvc.yaml
   - gateway.yaml
   - tcproute.yaml
+  - seedlab-pytorch.yaml

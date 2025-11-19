@@ -26,12 +26,12 @@ spec:
       containers:
         - name: pytorchtrain
           # image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050803
-          image: ghcr.io/ai-cfia/pytorch-cpu:jupyter-ssh-pytorch-2.6.0-2025051201
+          image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-25-devenv:2025111301
           imagePullPolicy: Always
           resources:
             requests:
-              cpu: 16
-              memory: 64Gi
+              cpu: 8
+              memory: 32Gi
           limits:
             nvidia.com/gpu: 1
           ports:
