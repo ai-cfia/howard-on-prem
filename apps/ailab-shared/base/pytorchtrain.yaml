@@ -32,13 +32,13 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              cpu: 8
+              cpu: "8"              
               memory: 16Gi
-              nvidia.com/gpu: 1
+              nvidia.com/gpu: "1"
             limits:
-              cpu: 8
+              cpu: "8"
               memory: 32Gi
-              nvidia.com/gpu: 1
+              nvidia.com/gpu: "1"
           ports:
             - containerPort: 22
           volumeMounts:
