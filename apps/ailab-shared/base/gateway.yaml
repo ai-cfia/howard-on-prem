@@ -12,12 +12,24 @@ spec:
     - name: tcp-openssh
       port: 18080
       protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: tcp-pytorchdev
       port: 18082
       protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: tcp-pytorchtrain
       port: 18083
       protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: tcp-seedlab-pytorch
       port: 18084
       protocol: TCP
+      allowedRoutes:
+        namespaces:
+          from: All

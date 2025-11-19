@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lightrag-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: lightrag
+  template:
+    metadata:
+      labels:
+        app: lightrag
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - app-worker
+      containers:
+        - name: lightrag
+          image: ghcr.io/hkuds/lightrag:1.3.8
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5001
+          env:
+            - name: DOCLING_SERVE_ENABLE_UI
+              value: "true"
+            - name: DOCLING_SERVE_MAX_SYNC_WAIT
+              value: "1800"
+            # - name: DOCLING_SERVE_ARTIFACTS_PATH
+            #   value: "/app/artifacts"
+          resources:
+            requests:
+              cpu: 4
+              memory: 4Gi
+            limits:
+              cpu: 8
+              memory: 8Gi
+#           volumeMounts:
+#             - name: artifacts
+#               mountPath: /app/artifacts
+#       volumes:
+#         - name: artifacts
+#           persistentVolumeClaim:
+#             claimName: docling-pvc
+
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: docling-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: ceph-hot-block
+#   resources:
+#     requests:
+#       storage: 50Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docling-service
+spec:
+  selector:
+    app: docling
+  ports:
+    - protocol: TCP
+      port: 5001
+      targetPort: 5001
