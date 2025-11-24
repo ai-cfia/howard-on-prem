@@ -53,7 +53,7 @@ resources:
   - ../../storage/minio/
   - ../../storage/velero/
   - ../../storage/etcd-backup/
-  - ../../storage/harbor/
+  # - ../../storage/harbor/
 
   # Monitoring applications
   # - ../../monitoring/k8s-dashboard/
