@@ -151,7 +151,7 @@ spec:
         - name: ghcr-image-pull-secret
       containers:
         - name: nachet-classifier-swin-27spp-triton
-          image: ghcr.io/ai-cfia/nachet-model-ccds/classifier-swinv2-27spp:t25.10-p2.9.1-cpu-2025112601
+          image: ghcr.io/ai-cfia/nachet-model-ccds/classifier-swinv2-27spp:t25.10-p2.9.1-cpu-2025112602
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
