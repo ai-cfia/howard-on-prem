@@ -14,6 +14,7 @@ spec:
       labels:
         app: bge-reranker-v2-m3
     spec:
+      runtimeClassName: nvidia
       containers:
         - name: bge-reranker-v2-m3
           image: vllm/vllm-openai:v0.11.2
