@@ -134,6 +134,19 @@ toolkit:
   resources: {}
   installDir: "/usr/local/nvidia"
 
+validator:
+  repository: nvcr.io/nvidia
+  image: gpu-operator
+  # If version is not specified, then default is to use chart.AppVersion
+  #version: ""
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: []
+  env: []
+  args: []
+  resources: {}
+  plugin:
+    env: []
+
 devicePlugin:
   enabled: true
   repository: nvcr.io/nvidia
