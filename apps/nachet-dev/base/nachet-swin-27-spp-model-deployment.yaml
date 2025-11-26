@@ -152,14 +152,14 @@ spec:
       containers:
         - name: nachet-classifier-swin-27spp-triton
           image: ghcr.io/ai-cfia/nachet-model-ccds/classifier-swinv2-27spp:t25.10-p2.9.1-cpu-2025111301
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
-          # volumeMounts:
-          #   - name: logs
-          #     mountPath: /app/logs
-          #   - name: tmp
-          #     mountPath: /tmp
+          volumeMounts:
+            - name: logs
+              mountPath: /app/logs
+            - name: tmp
+              mountPath: /tmp
           livenessProbe:
             httpGet:
               path: /v2/health/ready
@@ -182,15 +182,15 @@ spec:
             capabilities:
               drop:
                 - ALL
-      # volumes:
-      #   - name: tmp
-      #     emptyDir:
-      #       medium: Memory
-      #       sizeLimit: 500Mi
-      #   - name: logs
-      #     emptyDir:
-      #       medium: Memory
-      #       sizeLimit: 500Mi
+      volumes:
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 500Mi
+        - name: logs
+          emptyDir:
+            medium: Memory
+            sizeLimit: 500Mi
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
