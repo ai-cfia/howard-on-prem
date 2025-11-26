@@ -23,7 +23,7 @@ operator:
                   - ai-worker
 
 driver:
-  enabled: false
+  enabled: true
   nvidiaDriverCRD:
     enabled: false
     deployDefaultCR: true
@@ -39,7 +39,7 @@ driver:
   usePrecompiled: false
   repository: nvcr.io/nvidia
   image: driver
-  version: "570.86.15"
+  version: "580.95.05"
   imagePullPolicy: IfNotPresent
   imagePullSecrets: []
   startupProbe:
