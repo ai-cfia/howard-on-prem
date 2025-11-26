@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: snowflake-arctic-embed2
-          image: vllm/vllm-openai:v0.8.5
+          image: vllm/vllm-openai:v0.11.2
           command: ["/bin/sh", "-c"]
           args: [
             "vllm serve Snowflake/snowflake-arctic-embed-l-v2.0 --task embed --trust-remote-code --max_num_batched_tokens 8192 --max_model_len 8192"
