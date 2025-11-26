@@ -89,7 +89,7 @@ driver:
     repository: nvcr.io/nvidia/cloud-native
     # When choosing a different version of k8s-driver-manager, DO NOT downgrade to a version lower than v0.6.4
     # to ensure k8s-driver-manager stays compatible with gpu-operator starting from v24.3.0
-    version: v0.8.0
+    version: v0.9.0
     imagePullPolicy: IfNotPresent
     env:
       - name: ENABLE_GPU_POD_EVICTION
@@ -127,7 +127,7 @@ toolkit:
   enabled: true
   repository: nvcr.io/nvidia/k8s
   image: container-toolkit
-  version: v1.17.4-ubuntu22.04
+  version: v1.18.0
   imagePullPolicy: IfNotPresent
   imagePullSecrets: []
   env: []
@@ -138,7 +138,7 @@ devicePlugin:
   enabled: true
   repository: nvcr.io/nvidia
   image: k8s-device-plugin
-  version: v0.17.0
+  version: v0.18.0
   imagePullPolicy: IfNotPresent
   imagePullSecrets: []
   args: []
