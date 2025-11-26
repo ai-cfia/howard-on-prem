@@ -106,3 +106,112 @@ spec:
   ports:
     - protocol: TCP
       port: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nachet-classifier-swin-27spp-triton
+  namespace: nachet-dev
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: nachet-classifier-swin-27spp-triton
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: nachet-classifier-swin-27spp-triton
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - nachet-classifier-swin-27spp-triton
+              topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - ai-lab-2
+      imagePullSecrets:
+        - name: ghcr-image-pull-secret
+      containers:
+        - name: nachet-classifier-swin-27spp-triton
+          image: ghcr.io/ai-cfia/nachet-model-ccds/classifier-swinv2-27spp:t25.10-p2.9.1-cpu-2025111301
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          # volumeMounts:
+          #   - name: logs
+          #     mountPath: /app/logs
+          #   - name: tmp
+          #     mountPath: /tmp
+          livenessProbe:
+            httpGet:
+              path: /v2/health/ready
+              port: 8000
+            initialDelaySeconds: 120
+            periodSeconds: 120
+          resources:
+            requests:
+              cpu: "4"
+              memory: "4Gi"
+            limits:
+              cpu: "4"
+              memory: "8Gi"
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 1000
+            runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      # volumes:
+      #   - name: tmp
+      #     emptyDir:
+      #       medium: Memory
+      #       sizeLimit: 500Mi
+      #   - name: logs
+      #     emptyDir:
+      #       medium: Memory
+      #       sizeLimit: 500Mi
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nachet-classifier-swin-27spp-triton-pdb
+  namespace: nachet-dev
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nachet-classifier-swin-27spp-triton
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nachet-classifier-swin-27spp-triton-svc
+  namespace: nachet-dev
+spec:
+  clusterIP: None
+  selector:
+    app: nachet-classifier-swin-27spp-triton
+  ports:
+    - protocol: TCP
+      port: 8000
