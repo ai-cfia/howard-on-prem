@@ -24,6 +24,9 @@ spec:
           envFrom:
             - secretRef:
                 name: huggingface-secrets
+          env:
+            - name: VLLM_LOGGING_LEVEL
+              value: "DEBUG"
           ports:
             - containerPort: 8000
           resources:
