@@ -7,8 +7,8 @@ resources:
   # - nachet-backend-deployment.yml
   # - nachet-frontend-deployment.yml
   # - ingress.yaml
+  # - nachet-swin-22-spp-model-deployment.yaml
   - nachet-swin-27-spp-model-deployment.yaml
-  - nachet-swin-22-spp-model-deployment.yaml
   - nachet-swin-model-deployment.yaml
   - nachet-rcnn-model-deployment.yaml
   - nachet-blob-storage-mock.yml

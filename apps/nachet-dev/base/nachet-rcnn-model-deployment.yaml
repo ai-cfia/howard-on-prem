@@ -154,12 +154,7 @@ spec:
       containers:
         - name: nachet-rcnn-detector-triton
           image: ghcr.io/ai-cfia/nachet-model-ccds/detector-rcnn-15spp:t25.10-p2.9.1-cpu-2025111301
-          imagePullPolicy: Always
-          # command: ["/bin/sh", "-c"]
-          # args: ['./startup.sh']
-          # envFrom:
-          #   - secretRef:
-          #       name: nachet-rcnn-detector-secrets
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
           volumeMounts:
