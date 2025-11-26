@@ -8,7 +8,7 @@ hostPaths:
 
   # driverInstallDir represents the root at which driver files including libraries,
   # config files, and executables can be found.
-  driverInstallDir: "/usr"
+  driverInstallDir: "/"
 
 
 operator:
