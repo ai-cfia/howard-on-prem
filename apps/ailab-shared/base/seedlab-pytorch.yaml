@@ -32,11 +32,11 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              cpu: "8"
+              cpu: "4"
               memory: 16Gi
               nvidia.com/gpu: "1"
             limits:
-              cpu: "8"
+              cpu: "4"
               memory: 32Gi
               nvidia.com/gpu: "1"
           ports:
