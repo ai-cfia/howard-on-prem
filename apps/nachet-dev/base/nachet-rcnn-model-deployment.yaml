@@ -149,6 +149,8 @@ spec:
                     operator: In
                     values:
                       - ai-lab-2
+      imagePullSecrets:
+        - name: ghcr-image-pull-secret
       containers:
         - name: nachet-rcnn-detector-triton
           image: ghcr.io/ai-cfia/nachet-model-ccds/detector-rcnn-15spp:t25.10-p2.9.1-cpu-2025111301
