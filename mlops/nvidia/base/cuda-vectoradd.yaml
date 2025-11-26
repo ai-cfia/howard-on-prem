@@ -5,6 +5,8 @@ metadata:
   name: cuda-vectoradd
 spec:
   restartPolicy: OnFailure
+  nodeSelector:
+    type: ai-worker
   containers:
   - name: cuda-vectoradd
     image: "nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda11.7.1-ubuntu20.04"
