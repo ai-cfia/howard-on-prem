@@ -6,7 +6,7 @@ resources:
   - ../../apps/ailab-shared/
   - ../../apps/annotation/
   # - ../../apps/fertiscan-preview/
-  - ../../apps/fertiscan/
+  # - ../../apps/fertiscan/
   # - ../../apps/finesse/
   # - ../../apps/finesse-internal/
   - ../../apps/louis/
