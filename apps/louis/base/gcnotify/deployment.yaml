@@ -28,7 +28,7 @@ spec:
         - name: gcnotify
           image: ghcr.io/ai-cfia/gc_notify:2025120901
           imagePullPolicy: Always
-          environment:
+          env:
             - name: OCR_API_URL
               value: "http://doctr-service.louis.svc.cluster.local:8080/ocr/"
           ports:
