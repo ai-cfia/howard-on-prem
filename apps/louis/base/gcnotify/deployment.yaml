@@ -22,6 +22,8 @@ spec:
                     operator: In
                     values:
                       - ai-lab-3
+      imagePullSecrets:
+        - name: ghcr-image-pull-secret
       containers:
         - name: gcnotify
           image: ghcr.io/ai-cfia/gcnotify:2025120901
