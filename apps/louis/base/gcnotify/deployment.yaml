@@ -30,7 +30,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: OCR_API_URL
-              value: "http://doctr-service.louis.svc.cluster.local:8080/ocr/"
+              value: "http://doctr-service.louis.svc.cluster.local:8080/"
           ports:
             - containerPort: 8501
           resources:
