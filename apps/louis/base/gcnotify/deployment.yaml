@@ -26,7 +26,7 @@ spec:
         - name: ghcr-image-pull-secret
       containers:
         - name: gcnotify
-          image: ghcr.io/ai-cfia/gcnotify:2025120901
+          image: ghcr.io/ai-cfia/gc_notify:2025120901
           imagePullPolicy: Always
           environment:
             - name: OCR_API_URL
