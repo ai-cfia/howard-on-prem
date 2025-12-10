@@ -107,6 +107,15 @@ spec:
         certificateRefs:
           - name: doctr-tls
             kind: Secret
+    - name: https-gcnotify
+      hostname: gcnotify.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: gcnotify-tls
+            kind: Secret
     # - name: https-ragflow
     #   hostname: ragflow.inspection.alpha.canada.ca
     #   port: 443

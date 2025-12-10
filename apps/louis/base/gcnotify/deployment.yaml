@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gcnotify-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: gcnotify
+  template:
+    metadata:
+      labels:
+        app: gcnotify
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - ai-lab-3
+      containers:
+        - name: gcnotify
+          image: ghcr.io/ai-cfia/gcnotify:2025120901
+          imagePullPolicy: Always
+          environment:
+            - name: OCR_API_URL
+              value: "http://doctr-service.louis.svc.cluster.local:8080/ocr/"
+          ports:
+            - containerPort: 8501
+          resources:
+            requests:
+              cpu: "1"
+              memory: 4Gi
+            limits:
+              cpu: "1"
+              memory: 8Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gcnotify-service
+spec:
+  selector:
+    app: gcnotify
+  ports:
+    - protocol: TCP
+      port: 8501
+      targetPort: 8501

@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gcnotify-tls
+spec:
+  secretName: gcnotify-tls
+  duration: 2160h  # 90 days
+  renewBefore: 360h  # 15 days
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: gcnotify.inspection.alpha.canada.ca
+  dnsNames:
+    - gcnotify.inspection.alpha.canada.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io

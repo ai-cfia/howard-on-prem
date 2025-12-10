@@ -35,3 +35,5 @@ resources:
   - httproute.yaml
   - doctr/deployment.yaml
   - doctr/certificates.yaml
+  - gcnotify/deployment.yaml
+  - gcnotify/certificates.yaml
