@@ -18,7 +18,7 @@ spec:
           - $values/monitoring/metrics/metrics-server/helm/values.yaml
     - chart: kube-state-metrics
       repoURL: https://prometheus-community.github.io/helm-charts
-      targetRevision: 6.4.2
+      targetRevision: 7.0.0
       helm:
         releaseName: kube-state-metrics
         valueFiles:
