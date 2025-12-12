@@ -11,6 +11,7 @@ resources:
   - nachet-swin-27-spp-model-deployment.yaml
   - nachet-swin-model-deployment.yaml
   - nachet-rcnn-model-deployment.yaml
+  - nachet-sam-model-deployment.yaml
   - nachet-blob-storage-mock.yml
   - landing-403-nachet.yaml
   - secrets.yaml
