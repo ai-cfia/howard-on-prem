@@ -170,10 +170,10 @@ spec:
             periodSeconds: 120
           resources:
             requests:
-              cpu: "4"
-              memory: "4Gi"
+              cpu: "12"
+              memory: "8Gi"
             limits:
-              cpu: "4"
+              cpu: "12"
               memory: "8Gi"
           securityContext:
             runAsNonRoot: false

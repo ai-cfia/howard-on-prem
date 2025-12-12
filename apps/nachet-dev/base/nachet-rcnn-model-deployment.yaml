@@ -148,7 +148,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ai-lab-2
+                      - ai-lab-3
       imagePullSecrets:
         - name: ghcr-image-pull-secret
       containers:
@@ -170,11 +170,11 @@ spec:
             periodSeconds: 120
           resources:
             requests:
-              cpu: "4"
+              cpu: "12"
               memory: "4Gi"
             limits:
-              cpu: "4"
-              memory: "8Gi"
+              cpu: "12"
+              memory: "4Gi"
           securityContext:
             runAsNonRoot: false
             runAsUser: 1000
