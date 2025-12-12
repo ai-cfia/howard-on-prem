@@ -15,7 +15,7 @@ spec:
         valueFiles:
           - $values/storage/cloudnativepg/helm/values.yaml
       repoURL: https://cloudnative-pg.io/charts/
-      targetRevision: 0.26.1
+      targetRevision: 0.27.0
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       targetRevision: HEAD
       ref: values
