@@ -36,7 +36,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ai-lab-3
+                      - ai-lab-4
       containers:
         - name: nachet-swin-classifier
           image: ghcr.io/ai-cfia/nachet-backend:29-azureml-swin-classifier
