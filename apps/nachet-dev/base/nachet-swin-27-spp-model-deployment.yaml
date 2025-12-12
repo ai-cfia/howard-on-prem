@@ -146,7 +146,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ai-lab-2
+                      - ai-lab-3
       imagePullSecrets:
         - name: ghcr-image-pull-secret
       containers:
