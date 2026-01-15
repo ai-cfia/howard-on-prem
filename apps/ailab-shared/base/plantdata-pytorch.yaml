@@ -67,9 +67,9 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 16Gi
-        - name: seedlab-pytorch-volume
+        - name: plantdata-pytorch-volume
           persistentVolumeClaim:
-            claimName: seedlab-pytorch-pvc
+            claimName: plantdata-pytorch-pvc
 ---
 apiVersion: v1
 kind: Service
