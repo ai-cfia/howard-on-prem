@@ -11,3 +11,4 @@ resources:
   - gateway.yaml
   - tcproute.yaml
   - seedlab-pytorch.yaml
+  - plantdata-pytorch.yaml
