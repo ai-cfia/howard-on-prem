@@ -5,7 +5,7 @@ metadata:
   name: openssh-configenv
 data:
   ALLOWED_IPS: "AllowUsers tunnel"
-  ALLOWED_DEST: "pytorchdevssh-svc.ailab-shared.svc.cluster.local:22 pytorchtrainssh-svc.ailab-shared.svc.cluster.local:22 seedlab-pytorch-svc.ailab-shared.svc.cluster.local:22"
+  ALLOWED_DEST: "pytorchdevssh-svc.ailab-shared.svc.cluster.local:22 pytorchtrainssh-svc.ailab-shared.svc.cluster.local:22 seedlab-pytorch-svc.ailab-shared.svc.cluster.local:22 plantdata-pytorch-svc.ailab-shared.svc.cluster.local:22"
   DEBUG: "true"
   PGID: "9999"
   PUID: "9999"

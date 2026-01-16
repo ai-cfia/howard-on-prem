@@ -12,16 +12,16 @@ spec:
   storageClassName: ceph-cold-filesystem
   volumeMode: Filesystem
 
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: seedlab-shared-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 2Ti
-  storageClassName: ceph-cold-filesystem
-  volumeMode: Filesystem
+# ---
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: seedlab-shared-pvc
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   resources:
+#     requests:
+#       storage: 2Ti
+#   storageClassName: ceph-cold-filesystem
+#   volumeMode: Filesystem
