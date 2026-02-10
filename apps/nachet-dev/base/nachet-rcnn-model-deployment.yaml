@@ -36,7 +36,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ai-lab-2
+                      - ai-lab-1
       containers:
         - name: nachet-rcnn-detector
           image: ghcr.io/ai-cfia/nachet-backend:29-azureml-seed-detector

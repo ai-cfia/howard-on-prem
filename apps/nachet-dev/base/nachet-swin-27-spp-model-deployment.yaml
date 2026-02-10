@@ -36,7 +36,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                      - ai-lab-2
+                      - ai-lab-1
       containers:
         - name: nachet-swin-classifier-27-spp
           image: ghcr.io/ai-cfia/nachet-model-ccds/gpu-classifier-27spp-model-1:2025031216
