@@ -58,12 +58,8 @@ spec:
           #   initialDelaySeconds: 60
           #   periodSeconds: 10
           resources:
-            requests:
-              cpu: "4"
-              memory: "8Gi"
             limits:
-              cpu: "4"
-              memory: "8Gi"
+              nvidia.com/gpu: "1"
           securityContext:
             runAsNonRoot: false
             runAsUser: 1000
