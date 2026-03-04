@@ -4,6 +4,8 @@ metadata:
   name: subscription-manager
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: subscription-manager
@@ -24,26 +26,21 @@ spec:
                     values:
                       - app-worker
       containers:
-      - name: subscription-manager
-        image: ghcr.io/ai-cfia/insect-project-subscription-manager:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 5000
-        env:
-        - name: REDIS_HOST
-          value: "redis.insect-project.svc.cluster.local"
-        - name: REDIS_PORT
-          value: "6379"
-        envFrom:
-        - secretRef:
-            name: subscription-manager-secrets
-        volumeMounts:
-        - name: app-data
-          mountPath: /app/data
+        - name: subscription-manager
+          image: ghcr.io/ai-cfia/insect-project-subscription-manager:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - secretRef:
+                name: subscription-manager-secrets
+          volumeMounts:
+            - name: app-data
+              mountPath: /app/data
       volumes:
-      - name: app-data
-        persistentVolumeClaim:
-          claimName: app-data-pvc
+        - name: app-data
+          persistentVolumeClaim:
+            claimName: app-data-pvc
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
