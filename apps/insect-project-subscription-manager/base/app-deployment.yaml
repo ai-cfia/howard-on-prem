@@ -11,6 +11,8 @@ spec:
     metadata:
       labels:
         app: subscription-manager
+      annotations:
+        redeploy-timestamp: "2026-03-04T13:39:00"
     spec:
       affinity:
         nodeAffinity:
