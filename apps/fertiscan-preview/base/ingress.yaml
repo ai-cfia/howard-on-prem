@@ -37,7 +37,7 @@ spec:
               service:
                 name: fertiscan-frontend-preview-svc
                 port:
-                  number: 3000
+                  number: 80
           - path: /swagger(/|$)(.*)
             pathType: ImplementationSpecific
             backend:

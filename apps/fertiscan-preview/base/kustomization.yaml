@@ -6,4 +6,3 @@ resources:
   - frontend-deployment.yaml
   - secrets.yaml
   - ingress.yaml
-  - certificates.yaml
