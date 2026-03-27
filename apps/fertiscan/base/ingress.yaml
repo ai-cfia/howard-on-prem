@@ -1,27 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: fertiscan-backend-ingress
-  annotations:
-    lbipam.cilium.io/ips: 10.140.79.23
-    ingress.cilium.io/loadbalancer-mode: dedicated
-spec:
-  ingressClassName: cilium
-  rules:
-    - http:
-        paths:
-          - path: /api(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: fertiscan-backend-svc
-                port:
-                  number: 5000
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
   name: fertiscan-frontend-ingress
   annotations:
     lbipam.cilium.io/ips: 10.140.79.24
@@ -44,7 +23,14 @@ spec:
                 name: fertiscan-frontend-svc
                 port:
                   number: 3000
-          - path: /swagger(/|$)(.*)
+          - path: /docs(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: fertiscan-backend-svc
+                port:
+                  number: 5000
+          - path: /redoc(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:

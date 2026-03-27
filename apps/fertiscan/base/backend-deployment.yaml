@@ -22,16 +22,42 @@ spec:
                     operator: In
                     values:
                       - app-worker
+      initContainers:
+        - name: wait-for-dependencies
+          image: ghcr.io/ai-cfia/fertiscan-backend:main
+          imagePullPolicy: Always
+          command: ["uv", "run", "python", "-m", "app.backend_pre_start"]
+          envFrom:
+            - secretRef:
+                name: fertiscan-backend-secrets
+        - name: run-migrations
+          image: ghcr.io/ai-cfia/fertiscan-backend:main
+          imagePullPolicy: Always
+          command: ["uv", "run", "alembic", "upgrade", "head"]
+          envFrom:
+            - secretRef:
+                name: fertiscan-backend-secrets
+        - name: init-db
+          image: ghcr.io/ai-cfia/fertiscan-backend:main
+          imagePullPolicy: Always
+          command: ["uv", "run", "python", "-m", "app.db.init_db"]
+          envFrom:
+            - secretRef:
+                name: fertiscan-backend-secrets
+        - name: init-storage
+          image: ghcr.io/ai-cfia/fertiscan-backend:main
+          imagePullPolicy: Always
+          command: ["uv", "run", "python", "-m", "app.storage.init"]
+          envFrom:
+            - secretRef:
+                name: fertiscan-backend-secrets
       containers:
         - name: fertiscan-backend
-          image: ghcr.io/ai-cfia/fertiscan-backend:250
+          image: ghcr.io/ai-cfia/fertiscan-backend:main
           imagePullPolicy: Always
           envFrom:
             - secretRef:
                 name: fertiscan-backend-secrets
-          env:
-            - name: API_BASE_PATH
-              value: "/api"
           ports:
             - containerPort: 5000
           volumeMounts:
@@ -48,7 +74,7 @@ spec:
                 - ALL
       volumes:
         - name: tmp
-          emptyDir: {}      
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

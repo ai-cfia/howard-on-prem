@@ -24,13 +24,11 @@ spec:
                       - app-worker
       containers:
         - name: fertiscan-frontend
-          image: ghcr.io/ai-cfia/fertiscan-frontend:479
+          image: ghcr.io/ai-cfia/fertiscan-frontend:main
           imagePullPolicy: Always
-          env:
-            - name: NEXT_PUBLIC_DEBUG
-              value: "true"
-            - name: BACKEND_URL
-              value: "http://fertiscan-backend-svc.fertiscan:5000/api"
+          envFrom:
+            - secretRef:
+                name: fertiscan-backend-secrets
           ports:
             - containerPort: 3000
           livenessProbe:
