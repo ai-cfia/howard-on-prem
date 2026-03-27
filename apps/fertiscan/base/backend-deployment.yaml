@@ -24,14 +24,11 @@ spec:
                       - app-worker
       containers:
         - name: fertiscan-backend
-          image: ghcr.io/ai-cfia/fertiscan-backend:250
+          image: ghcr.io/ai-cfia/fertiscan-backend:main
           imagePullPolicy: Always
           envFrom:
             - secretRef:
                 name: fertiscan-backend-secrets
-          env:
-            - name: API_BASE_PATH
-              value: "/api"
           ports:
             - containerPort: 5000
           volumeMounts:
@@ -48,7 +45,7 @@ spec:
                 - ALL
       volumes:
         - name: tmp
-          emptyDir: {}      
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

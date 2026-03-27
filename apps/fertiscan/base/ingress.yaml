@@ -44,7 +44,14 @@ spec:
                 name: fertiscan-frontend-svc
                 port:
                   number: 3000
-          - path: /swagger(/|$)(.*)
+          - path: /docs(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: fertiscan-backend-svc
+                port:
+                  number: 5000
+          - path: /redoc(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
