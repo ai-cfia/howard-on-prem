@@ -4,13 +4,13 @@
   "repositoryCache": "disabled",
   "enabledManagers": ["argocd"],
   "argocd": {
-    "fileMatch": [
-      "^gitops/.*\\.ya?ml$",
-      "^mlops/.*\\.ya?ml$",
-      "^monitoring/.*\\.ya?ml$",
-      "^networking/.*\\.ya?ml$",
-      "^security/.*\\.ya?ml$",
-      "^storage/.*\\.ya?ml$"
+    "managerFilePatterns": [
+      "/^gitops/.*\.ya?ml$/",
+      "/^mlops/.*\.ya?ml$/",
+      "/^monitoring/.*\.ya?ml$/",
+      "/^networking/.*\.ya?ml$/",
+      "/^security/.*\.ya?ml$/",
+      "/^storage/.*\.ya?ml$/"
     ]
   },
   "separateMinorPatch": false,
