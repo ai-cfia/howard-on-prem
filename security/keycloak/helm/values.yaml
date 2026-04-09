@@ -57,6 +57,10 @@ image:
 extraEnvVars:
   - name: KC_LOG_LEVEL
     value: "DEBUG"
+  - name: KC_BOOTSTRAP_ADMIN_USERNAME
+    value: "adminUser"
+  - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+    value: "1234"
 ## Keycloak authentication parameters
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/keycloak#admin-credentials
 ##
