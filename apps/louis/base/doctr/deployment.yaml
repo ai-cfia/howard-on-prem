@@ -22,6 +22,8 @@ spec:
                     operator: In
                     values:
                       - ai-lab-1
+      imagePullSecrets:
+        - name: ghcr-image-pull-secret
       containers:
         - name: doctr
           image: ghcr.io/ai-cfia/doctr:doctr-web-v1.0.0-cfia-04
