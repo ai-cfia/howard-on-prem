@@ -49,6 +49,8 @@ spec:
               value: "otlp_grpc"
             - name: OTEL_ENDPOINT
               value: "http://alloy.monitoring.svc.cluster.local:4317"
+            - name: LITELLM_MIGRATION_DIR
+              value: "/tmp/litellm-migrations"
           resources:
             requests:
               cpu: 1000m
@@ -63,6 +65,8 @@ spec:
               mountPath: /.cache
             - name: npm-volume
               mountPath: /.npm
+            - name: migration-volume
+              mountPath: /tmp/litellm-migrations
 
       volumes:
         - name: config-volume
@@ -73,6 +77,10 @@ spec:
             medium: Memory
             sizeLimit: 1G
         - name: npm-volume
+          emptyDir:
+            medium: Memory
+            sizeLimit: 200Mi
+        - name: migration-volume
           emptyDir:
             medium: Memory
             sizeLimit: 200Mi
