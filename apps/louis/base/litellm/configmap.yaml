@@ -124,10 +124,9 @@ data:
             api_version: os.environ/OPENAI_ADARM_GPT41_API_VERSION
         - model_name: adarm-gpt-5
           litellm_params:
-            model: azure/gpt-5.4
+            model: openai/gpt-5.4
             api_base: os.environ/OPENAI_ADARM_GPT5_API_ENDPOINT
             api_key: os.environ/OPENAI_ADARM_GPT5_API_KEY
-            api_version: os.environ/OPENAI_ADARM_GPT5_API_VERSION
         - model_name: adarm-gpt-4o
           litellm_params:
             model: azure/adarm-gpt-4o
