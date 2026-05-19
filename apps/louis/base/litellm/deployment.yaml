@@ -38,8 +38,7 @@ spec:
       containers:
         - name: litellm
           image: ghcr.io/berriai/litellm-non_root:v1.85.0
-          command: ["/usr/local/bin/python"]
-          args: ["/usr/local/bin/litellm", "--port", "4000", "--config", "/app/proxy_server_config.yaml"]
+          args: ["--port", "4000", "--config", "/app/proxy_server_config.yaml"]
           envFrom:
             - secretRef:
                 name: litellm-secrets
