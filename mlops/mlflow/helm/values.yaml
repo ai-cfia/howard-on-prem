@@ -52,6 +52,11 @@ backendStore:
 # Keep this in sync with the public ingress hostname.
 extraEnvVars:
   MLFLOW_SERVER_ALLOWED_HOSTS: "mlflow.inspection.alpha.canada.ca"
+  MLFLOW_SERVER_CORS_ALLOWED_ORIGINS: "https://mlflow.inspection.alpha.canada.ca"
+
+extraFlags:
+  - allowedHosts: "mlflow.inspection.alpha.canada.ca"
+  - corsAllowedOrigins: "https://mlflow.inspection.alpha.canada.ca"
 
 # Add the ExternalSecret-backed Kubernetes Secret to the MLflow pod environment.
 # The secret should include AZURE_STORAGE_CONNECTION_STRING or AZURE_STORAGE_ACCESS_KEY.
