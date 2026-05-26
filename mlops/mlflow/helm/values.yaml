@@ -48,6 +48,16 @@ backendStore:
     # -- The key of the password in the existing database secret.
     passwordKey: "password"
 
+# MLflow 3.5+ rejects requests whose Host header is not explicitly trusted.
+# Keep this in sync with the public ingress hostname.
+extraEnvVars:
+  MLFLOW_SERVER_ALLOWED_HOSTS: "mlflow.inspection.alpha.canada.ca"
+
+# Add the ExternalSecret-backed Kubernetes Secret to the MLflow pod environment.
+# The secret should include AZURE_STORAGE_CONNECTION_STRING or AZURE_STORAGE_ACCESS_KEY.
+extraSecretNamesForEnvFrom:
+  - mlflow-secrets
+
 ingress:
   # -- Specifies if you want to create an ingress access
   enabled: true
