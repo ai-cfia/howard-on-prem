@@ -66,15 +66,14 @@ artifactRoot:
 extraEnvVars:
   MLFLOW_SERVER_ALLOWED_HOSTS: "mlflow.inspection.alpha.canada.ca"
   MLFLOW_SERVER_CORS_ALLOWED_ORIGINS: "https://mlflow.inspection.alpha.canada.ca"
-  MLFLOW_S3_ENDPOINT_URL: "http://rook-ceph-rgw-ceph-hot-objectstore.rook-ceph-hot-cluster.svc.cluster.local:80"
 
 extraArgs:
   allowedHosts: "mlflow.inspection.alpha.canada.ca"
   corsAllowedOrigins: "https://mlflow.inspection.alpha.canada.ca"
   uvicornOpts: "--workers 1"
 
-# Add ExternalSecret-backed Kubernetes Secrets to the MLflow pod environment.
-# mlflow-s3-secrets should include AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.
+# Add the ExternalSecret-backed Kubernetes Secret to the MLflow pod environment.
+# S3 artifact credentials and endpoint are provided by artifactRoot.s3.existingSecret.
 extraSecretNamesForEnvFrom:
   - mlflow-secrets
 
