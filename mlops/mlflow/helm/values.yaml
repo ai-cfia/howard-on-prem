@@ -51,6 +51,16 @@ backendStore:
     # -- The key of the password in the existing database secret.
     passwordKey: "password"
 
+artifactRoot:
+  s3:
+    enabled: true
+    bucket: "mlflow"
+    path: "artifacts"
+    existingSecret:
+      name: "mlflow-s3-secrets"
+      keyOfAccessKeyId: "AWS_ACCESS_KEY_ID"
+      keyOfSecretAccessKey: "AWS_SECRET_ACCESS_KEY"
+
 # MLflow 3.5+ rejects requests whose Host header is not explicitly trusted.
 # Keep this in sync with the public ingress hostname.
 extraEnvVars:
@@ -58,14 +68,15 @@ extraEnvVars:
   MLFLOW_SERVER_CORS_ALLOWED_ORIGINS: "https://mlflow.inspection.alpha.canada.ca"
   MLFLOW_SQLALCHEMYSTORE_POOL_SIZE: "2"
   MLFLOW_SQLALCHEMYSTORE_MAX_OVERFLOW: "0"
+  MLFLOW_S3_ENDPOINT_URL: "http://rook-ceph-rgw-ceph-hot-objectstore.rook-ceph-hot-cluster.svc.cluster.local:80"
 
 extraArgs:
   allowedHosts: "mlflow.inspection.alpha.canada.ca"
   corsAllowedOrigins: "https://mlflow.inspection.alpha.canada.ca"
   uvicornOpts: "--workers 1"
 
-# Add the ExternalSecret-backed Kubernetes Secret to the MLflow pod environment.
-# The secret should include AZURE_STORAGE_CONNECTION_STRING or AZURE_STORAGE_ACCESS_KEY.
+# Add ExternalSecret-backed Kubernetes Secrets to the MLflow pod environment.
+# mlflow-s3-secrets should include AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.
 extraSecretNamesForEnvFrom:
   - mlflow-secrets
 
