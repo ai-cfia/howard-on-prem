@@ -72,10 +72,11 @@ extraArgs:
   corsAllowedOrigins: "https://mlflow.inspection.alpha.canada.ca"
   uvicornOpts: "--workers 1"
 
-# Add the ExternalSecret-backed Kubernetes Secret to the MLflow pod environment.
-# S3 artifact credentials and endpoint are provided by artifactRoot.s3.existingSecret.
+# Add ExternalSecret-backed Kubernetes Secrets to the MLflow pod environment.
+# The S3 secret also provides MLFLOW_S3_ENDPOINT_URL from Vault.
 extraSecretNamesForEnvFrom:
   - mlflow-secrets
+  - mlflow-s3-secrets
 
 ingress:
   # -- Specifies if you want to create an ingress access
