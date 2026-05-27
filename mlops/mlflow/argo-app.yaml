@@ -17,8 +17,8 @@ spec:
         valueFiles:
           - $values/mlops/mlflow/helm/values.yaml
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
-      targetRevision: configure-mlflow-blob-storage
+      targetRevision: refs/heads/configure-mlflow-blob-storage
       ref: values
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       path: mlops/mlflow/base
-      targetRevision: configure-mlflow-blob-storage
+      targetRevision: refs/heads/configure-mlflow-blob-storage
