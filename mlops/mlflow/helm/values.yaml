@@ -66,8 +66,6 @@ artifactRoot:
 extraEnvVars:
   MLFLOW_SERVER_ALLOWED_HOSTS: "mlflow.inspection.alpha.canada.ca"
   MLFLOW_SERVER_CORS_ALLOWED_ORIGINS: "https://mlflow.inspection.alpha.canada.ca"
-  MLFLOW_SQLALCHEMYSTORE_POOL_SIZE: "2"
-  MLFLOW_SQLALCHEMYSTORE_MAX_OVERFLOW: "0"
   MLFLOW_S3_ENDPOINT_URL: "http://rook-ceph-rgw-ceph-hot-objectstore.rook-ceph-hot-cluster.svc.cluster.local:80"
 
 extraArgs:
