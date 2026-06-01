@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aimedev
+  name: yjdev
   namespace: ailab-shared
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: aimedev
+      app: yjdev
   template:
     metadata:
       labels:
-        app: aimedev
+        app: yjdev
     spec:
       affinity:
         nodeAffinity:
@@ -26,7 +26,7 @@ spec:
       imagePullSecrets:
         - name: ghcr-image-pull-secret
       containers:
-        - name: aimedev
+        - name: yjdev
           # image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050803
           image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-25-devenv:2025111301
           imagePullPolicy: Always
@@ -41,8 +41,8 @@ spec:
               mountPath: /tmp
             - name: dshm
               mountPath: /dev/shm
-            - name: aimedev-volume
-              mountPath: /aimedev
+            - name: yjdev-volume
+              mountPath: /yjdev
           securityContext:
             # runAsUser: 1000
             # runAsGroup: 1000
@@ -62,18 +62,18 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: 16Gi
-        - name: aimedev-volume
+        - name: yjdev-volume
           persistentVolumeClaim:
-            claimName: aimedev-pvc
+            claimName: yjdev-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: aimedevssh-svc
+  name: yjdevssh-svc
 spec:
   type: ClusterIP
   selector:
-    app: aimedev
+    app: yjdev
   ports:
     - protocol: TCP
       port: 22
@@ -83,7 +83,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: aimedev-pvc
+  name: yjdev-pvc
 spec:
   accessModes:
     - ReadWriteOnce

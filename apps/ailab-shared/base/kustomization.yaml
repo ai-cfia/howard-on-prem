@@ -12,4 +12,4 @@ resources:
   - tcproute.yaml
   - seedlab-pytorch.yaml
   - plantdata-pytorch.yaml
-  - aimedev.yaml
+  - yjdev.yaml
