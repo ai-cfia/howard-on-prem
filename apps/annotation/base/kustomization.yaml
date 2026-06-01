@@ -6,4 +6,7 @@ resources:
 - labelstudio/secrets.yaml
 - labelstudio/labelstudio.yaml
 - labelstudio/certificates.yaml
+- fiftyone/mongodb.yaml
+- fiftyone/fiftyone.yaml
+- fiftyone/certificates.yaml
 - httproute.yaml

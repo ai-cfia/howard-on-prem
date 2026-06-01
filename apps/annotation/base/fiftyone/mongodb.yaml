@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fiftyone-mongodb
+  labels:
+    app.kubernetes.io/name: fiftyone-mongodb
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  serviceName: fiftyone-mongodb
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fiftyone-mongodb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fiftyone-mongodb
+        app.kubernetes.io/part-of: fiftyone
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - ai-worker
+      containers:
+        - name: mongodb
+          image: mongo:7.0.26
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-c"]
+          args:
+            - exec mongod --noauth --bind_ip_all
+          ports:
+            - containerPort: 27017
+              name: mongodb
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+          readinessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app.kubernetes.io/name: fiftyone-mongodb
+          app.kubernetes.io/part-of: fiftyone
+      spec:
+        storageClassName: ceph-hot-block
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiftyone-mongodb
+  labels:
+    app.kubernetes.io/name: fiftyone-mongodb
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: fiftyone-mongodb
+  ports:
+    - name: mongodb
+      port: 27017
+      targetPort: 27017

@@ -1,0 +1,120 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiftyone
+  labels:
+    app.kubernetes.io/name: fiftyone
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fiftyone
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fiftyone
+        app.kubernetes.io/part-of: fiftyone
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - ai-worker
+      containers:
+        - name: fiftyone
+          image: voxel51/fiftyone:1.15.0-python3.9-20260502
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - -m
+            - fiftyone.server.main
+            - --port
+            - "5151"
+          env:
+            - name: FIFTYONE_DATABASE_URI
+              value: mongodb://fiftyone-mongodb:27017/fiftyone
+            - name: FIFTYONE_DEFAULT_APP_ADDRESS
+              value: 0.0.0.0
+            - name: FIFTYONE_DEFAULT_DATASET_DIR
+              value: /fiftyone/default
+            - name: FIFTYONE_DATASET_ZOO_DIR
+              value: /fiftyone/zoo/datasets
+            - name: FIFTYONE_MODEL_ZOO_DIR
+              value: /fiftyone/zoo/models
+          ports:
+            - containerPort: 5151
+              name: http
+          volumeMounts:
+            - name: workspace
+              mountPath: /fiftyone
+            - name: shared-data
+              mountPath: /ailab
+          startupProbe:
+            httpGet:
+              path: /
+              port: 5151
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 18
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5151
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5151
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+      volumes:
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: fiftyone-workspace-pvc
+        - name: shared-data
+          persistentVolumeClaim:
+            claimName: labelstudio-shared-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fiftyone-workspace-pvc
+  labels:
+    app.kubernetes.io/name: fiftyone
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  storageClassName: ceph-hot-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiftyone
+  labels:
+    app.kubernetes.io/name: fiftyone
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: fiftyone
+  ports:
+    - name: http
+      port: 5151
+      targetPort: 5151
