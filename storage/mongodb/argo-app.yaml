@@ -15,3 +15,9 @@ spec:
     - repoURL: https://github.com/ai-cfia/howard-on-prem.git
       path: storage/mongodb/base/
       targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

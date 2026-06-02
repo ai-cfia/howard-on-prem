@@ -8,5 +8,4 @@ resources:
   - labelstudio/labelstudio.yaml
   - labelstudio/certificates.yaml
   - fiftyone/fiftyone.yaml
-  - fiftyone/certificates.yaml
   - httproute.yaml
