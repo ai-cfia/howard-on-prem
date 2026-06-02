@@ -6,7 +6,8 @@ review workbench.
 ## Scope
 
 - The FiftyOne app runs as a single-replica Deployment.
-- MongoDB runs as a single-replica StatefulSet and stores FiftyOne metadata.
+- MongoDB is deployed as a shared storage service from `storage/mongodb` and
+  stores FiftyOne metadata.
 - This first pass intentionally skips MongoDB backups, clustering, and
   hardening so the team can validate the app, database connection, and
   persistence.
@@ -28,9 +29,15 @@ to the shared Gateway IP.
 
 ## Storage
 
-FiftyOne metadata is stored in MongoDB. Dataset media should be available to the
-FiftyOne pod through filesystem paths. For S3-compatible storage such as Ceph or
-MinIO, mount or sync the bucket into the pod before importing datasets.
+FiftyOne metadata is stored in the shared MongoDB service:
+
+```text
+mongodb://mongodb.mongodb.svc.cluster.local:27017/fiftyone
+```
+
+Dataset media should be available to the FiftyOne pod through filesystem paths.
+For S3-compatible storage such as Ceph or MinIO, mount or sync the bucket into
+the pod before importing datasets.
 
 The pod also mounts the annotation shared PVC at `/ailab`, matching the shared
 workspace pattern used by Label Studio and the AI Lab shared work containers.
@@ -39,9 +46,10 @@ workspace pattern used by Label Studio and the AI Lab shared work containers.
 
 ```bash
 kubectl get httproute -n annotation
-kubectl get pods,svc,statefulset,pvc -n annotation
+kubectl get pods,svc,pvc -n annotation
+kubectl get pods,svc,statefulset,pvc -n mongodb
 kubectl logs deploy/fiftyone -n annotation
-kubectl logs statefulset/fiftyone-mongodb -n annotation
+kubectl logs statefulset/mongodb -n mongodb
 kubectl rollout restart deploy/fiftyone -n annotation
 kubectl port-forward svc/fiftyone 5151:5151 -n annotation
 ```

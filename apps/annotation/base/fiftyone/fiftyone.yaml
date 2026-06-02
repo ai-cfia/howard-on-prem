@@ -39,7 +39,7 @@ spec:
             - "5151"
           env:
             - name: FIFTYONE_DATABASE_URI
-              value: mongodb://fiftyone-mongodb:27017/fiftyone
+              value: mongodb://mongodb.mongodb.svc.cluster.local:27017/fiftyone
             - name: FIFTYONE_DEFAULT_APP_ADDRESS
               value: 0.0.0.0
             - name: FIFTYONE_DEFAULT_DATASET_DIR

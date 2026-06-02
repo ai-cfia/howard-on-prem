@@ -1,0 +1,17 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mongodb
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  project: default
+  destination:
+    namespace: mongodb
+    server: https://kubernetes.default.svc
+  sources:
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      path: storage/mongodb/base/
+      targetRevision: HEAD

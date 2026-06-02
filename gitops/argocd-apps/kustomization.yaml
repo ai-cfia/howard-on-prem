@@ -1,3 +1,4 @@
+---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -49,6 +50,7 @@ resources:
   - ../../storage/rook-ceph/clusters/rook-ceph-cold-cluster/
   - ../../storage/rook-ceph/clusters/rook-ceph-hot-cluster/
   - ../../storage/cloudnativepg/
+  - ../../storage/mongodb/
   - ../../storage/pgadmin/
   - ../../storage/minio/
   - ../../storage/velero/
@@ -69,7 +71,8 @@ resources:
   # Infrastructure and configuration applications
 
 # This patch enforces a standardized sync policy for Argo CD applications:
-# - Enables automated sync with pruning (removes orphaned resources) and self-healing.
+# - Enables automated sync with pruning (removes orphaned resources) and
+#   self-healing.
 # - Adds a finalizer to ensure proper cascading deletion.
 # - Automatically creates namespaces if they don’t exist.
 # - Retains up to 4 revision history records.
