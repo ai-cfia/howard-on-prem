@@ -24,8 +24,8 @@ The custom FiftyOne image is built from:
 voxel51/fiftyone:1.15.0-python3.9-20260502
 ```
 
-and installs the following plugins from the pinned
-`voxel51/fiftyone-plugins` ref in the Dockerfile:
+and installs the following plugins from the pinned `voxel51/fiftyone-plugins`
+ref in the DevOps Dockerfile:
 
 ```text
 @voxel51/annotation
@@ -52,7 +52,8 @@ model-based similarity workflow loads FiftyOne Model Zoo models such as
 `resnet18-imagenet-torch`, which require Torch at runtime. The Brain
 visualization workflow uses UMAP by default, which requires `umap-learn`.
 
-The image is built and pushed by `.github/workflows/fiftyone-image.yml`.
+The image build is owned by the `ai-cfia/devops` repository under
+`dockerfiles/fiftyone`. This deployment only consumes the published image.
 
 ## Networking
 
