@@ -1,0 +1,51 @@
+---
+name: Build FiftyOne image
+
+"on":
+  pull_request:
+    paths:
+      - apps/annotation/base/fiftyone/Dockerfile
+      - .github/workflows/fiftyone-image.yml
+  push:
+    branches:
+      - main
+    paths:
+      - apps/annotation/base/fiftyone/Dockerfile
+      - .github/workflows/fiftyone-image.yml
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ghcr.io/ai-cfia/fiftyone
+  IMAGE_TAG: 1.15.0-python3.9-plugins-torch-20260604
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build FiftyOne image
+        uses: docker/build-push-action@v7
+        with:
+          context: apps/annotation/base/fiftyone
+          push: ${{ github.event_name != 'pull_request' }}
+          sbom: true
+          tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
