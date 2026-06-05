@@ -54,6 +54,12 @@ jobs:
         run: |
           set -eu
 
+          echo "Kubernetes context:"
+          kubectl config current-context || true
+
+          echo "Kubernetes identity:"
+          kubectl auth whoami || true
+
           failed=0
           for check in \
             "create jobs" \
@@ -62,11 +68,15 @@ jobs:
             "watch jobs" \
             "get pods" \
             "list pods" \
-            "get pods/log"
+            "get pods --subresource=log"
           do
-            result="$(kubectl auth can-i ${check} -n annotation)"
-            echo "${check}: ${result}"
-            if [ "${result}" != "yes" ]; then
+            set +e
+            output="$(kubectl auth can-i ${check} -n annotation 2>&1)"
+            status="$?"
+            set -e
+
+            echo "${check}: ${output}"
+            if [ "${status}" != "0" ] || [ "${output}" != "yes" ]; then
               failed=1
             fi
           done
@@ -92,6 +102,12 @@ jobs:
         run: |
           set -eu
 
+          echo "Kubernetes context:"
+          kubectl config current-context || true
+
+          echo "Kubernetes identity:"
+          kubectl auth whoami || true
+
           failed=0
           for check in \
             "create jobs" \
@@ -100,11 +116,15 @@ jobs:
             "watch jobs" \
             "get pods" \
             "list pods" \
-            "get pods/log"
+            "get pods --subresource=log"
           do
-            result="$(kubectl auth can-i ${check} -n annotation)"
-            echo "${check}: ${result}"
-            if [ "${result}" != "yes" ]; then
+            set +e
+            output="$(kubectl auth can-i ${check} -n annotation 2>&1)"
+            status="$?"
+            set -e
+
+            echo "${check}: ${output}"
+            if [ "${status}" != "0" ] || [ "${output}" != "yes" ]; then
               failed=1
             fi
           done
