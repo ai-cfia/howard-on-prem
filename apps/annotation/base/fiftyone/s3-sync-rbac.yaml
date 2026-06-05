@@ -34,7 +34,7 @@ metadata:
   name: fiftyone-s3-sync-runner
 subjects:
   - kind: ServiceAccount
-    name: default
+    name: on-prem-gh-runners-gha-rs-no-permission
     namespace: on-prem-gh-runners
 roleRef:
   apiGroup: rbac.authorization.k8s.io
