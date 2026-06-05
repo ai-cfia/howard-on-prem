@@ -9,6 +9,8 @@ metadata:
 spec:
   replicas: 1
   revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: fiftyone
@@ -59,6 +61,8 @@ spec:
               mountPath: /fiftyone
             - name: shared-data
               mountPath: /ailab
+            - name: shared-data
+              mountPath: /datasets
           startupProbe:
             httpGet:
               path: /

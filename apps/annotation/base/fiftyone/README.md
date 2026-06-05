@@ -77,11 +77,56 @@ mongodb://mongodb.mongodb.svc.cluster.local:27017/fiftyone
 ```
 
 Dataset media should be available to the FiftyOne pod through filesystem paths.
-For S3-compatible storage such as Ceph or MinIO, mount or sync the bucket into
-the pod before importing datasets.
+Open-source FiftyOne should be treated as filesystem-backed for media, so the
+active review workspace is exposed through CephFS rather than direct `s3://`
+paths.
 
-The pod also mounts the annotation shared PVC at `/ailab`, matching the shared
-workspace pattern used by Label Studio and the AI Lab shared work containers.
+The pod mounts the annotation shared CephFS PVC at:
+
+```text
+/datasets
+/ailab
+```
+
+`/datasets` is the preferred path to use in the FiftyOne IO plugin when loading
+seed image folders. `/ailab` is kept for compatibility with the shared
+annotation workspace pattern used by Label Studio and AI Lab shared work
+containers.
+
+Recommended workflow:
+
+```text
+1. Add a seed dataset to the shared workspace, or sync it there from S3/MinIO.
+2. Open FiftyOne.
+3. Use the IO plugin to import from /datasets.
+4. Review labels, boxes, tags, and saved views.
+5. Export curated labels/manifests back to the shared workspace.
+6. Sync curated outputs to S3/MLflow artifacts when needed.
+```
+
+Class-folder example:
+
+```text
+/datasets/incoming/2026-06-05/batch-001/
+  Ambrosia artemisiifolia/
+    image001.jpg
+  Avena fatua/
+    image002.jpg
+```
+
+COCO example:
+
+```text
+/datasets/coco/2026-06-05/batch-001/
+  data/
+    image001.jpg
+  labels.json
+```
+
+S3-compatible storage such as MinIO/Ceph RGW should be treated as durable
+object/artifact storage. If a dataset lands in S3 first, sync the selected
+prefix into the CephFS-backed `/datasets` workspace before importing it into
+FiftyOne.
 
 ## Validation
 
@@ -93,6 +138,7 @@ kubectl logs deploy/fiftyone -n annotation
 kubectl logs statefulset/mongodb -n mongodb
 kubectl rollout restart deploy/fiftyone -n annotation
 kubectl port-forward svc/fiftyone 5151:5151 -n annotation
+kubectl exec deploy/fiftyone -n annotation -- ls /datasets
 ```
 
 Plugin checks:
@@ -147,3 +193,118 @@ Manual checks:
 - Confirm dataset metadata remains available after restart.
 - Restart the MongoDB pod and confirm metadata persists from the StatefulSet
   volume claim.
+
+Shared dataset workspace validation:
+
+1. Confirm the shared workspace is mounted:
+
+   ```bash
+   kubectl exec deploy/fiftyone -n annotation -- ls -la /datasets
+   ```
+
+2. Create a tiny class-folder smoke dataset from the FiftyOne pod terminal:
+
+   ```bash
+   kubectl exec deploy/fiftyone -n annotation -- python - <<'PY'
+   from pathlib import Path
+   from PIL import Image, ImageDraw
+
+   root = Path("/datasets/fiftyone-smoke/class-folders")
+   species = root / "Ambrosia artemisiifolia"
+   species.mkdir(parents=True, exist_ok=True)
+
+   image = Image.new("RGB", (320, 240), "#202428")
+   draw = ImageDraw.Draw(image)
+   draw.ellipse((80, 70, 240, 170), fill="#b99b55", outline="#f6e6a8", width=6)
+   image.save(species / "seed-001.jpg")
+   PY
+   ```
+
+3. Import the class-folder dataset:
+
+   ```bash
+   kubectl exec deploy/fiftyone -n annotation -- python - <<'PY'
+   import fiftyone as fo
+
+   name = "fiftyone-shared-storage-class-smoke"
+   if fo.dataset_exists(name):
+       fo.delete_dataset(name)
+
+   dataset = fo.Dataset.from_dir(
+       dataset_dir="/datasets/fiftyone-smoke/class-folders",
+       dataset_type=fo.types.ImageClassificationDirectoryTree,
+       name=name,
+   )
+   dataset.persistent = True
+   print(dataset.name, len(dataset), dataset.distinct("ground_truth.label"))
+   PY
+   ```
+
+4. Create and import a tiny COCO smoke dataset:
+
+   ```bash
+   kubectl exec deploy/fiftyone -n annotation -- python - <<'PY'
+   import json
+   from pathlib import Path
+   from PIL import Image, ImageDraw
+   import fiftyone as fo
+
+   root = Path("/datasets/fiftyone-smoke/coco")
+   data = root / "data"
+   data.mkdir(parents=True, exist_ok=True)
+
+   image = Image.new("RGB", (320, 240), "#202428")
+   draw = ImageDraw.Draw(image)
+   draw.ellipse((80, 70, 240, 170), fill="#b99b55", outline="#f6e6a8", width=6)
+   image.save(data / "seed-001.jpg")
+
+   labels = {
+       "images": [
+           {"id": 1, "file_name": "seed-001.jpg", "width": 320, "height": 240}
+       ],
+       "annotations": [
+           {
+               "id": 1,
+               "image_id": 1,
+               "category_id": 1,
+               "bbox": [80, 70, 160, 100],
+               "area": 16000,
+               "iscrowd": 0,
+           }
+       ],
+       "categories": [{"id": 1, "name": "Ambrosia artemisiifolia"}],
+   }
+   (root / "labels.json").write_text(json.dumps(labels), encoding="utf-8")
+
+   name = "fiftyone-shared-storage-coco-smoke"
+   if fo.dataset_exists(name):
+       fo.delete_dataset(name)
+
+   dataset = fo.Dataset.from_dir(
+       dataset_type=fo.types.COCODetectionDataset,
+       data_path=str(data),
+       labels_path=str(root / "labels.json"),
+       label_field="ground_truth",
+       name=name,
+   )
+   dataset.persistent = True
+   print(dataset.name, len(dataset), dataset.count("ground_truth.detections"))
+   PY
+   ```
+
+5. Restart FiftyOne and confirm both datasets still exist:
+
+   ```bash
+   kubectl rollout restart deploy/fiftyone -n annotation
+   kubectl rollout status deploy/fiftyone -n annotation
+   kubectl exec deploy/fiftyone -n annotation -- python - <<'PY'
+   import fiftyone as fo
+
+   for name in (
+       "fiftyone-shared-storage-class-smoke",
+       "fiftyone-shared-storage-coco-smoke",
+   ):
+       dataset = fo.load_dataset(name)
+       print(name, len(dataset), dataset.persistent)
+   PY
+   ```
