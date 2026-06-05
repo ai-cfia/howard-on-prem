@@ -284,11 +284,21 @@ Shared dataset workspace validation:
        dataset_type=fo.types.COCODetectionDataset,
        data_path=str(data),
        labels_path=str(root / "labels.json"),
-       label_field="ground_truth",
        name=name,
    )
    dataset.persistent = True
-   print(dataset.name, len(dataset), dataset.count("ground_truth.detections"))
+
+   detections_field = next(
+       name
+       for name, field in dataset.get_field_schema().items()
+       if getattr(field, "document_type", None) is fo.Detections
+   )
+   print(
+       dataset.name,
+       len(dataset),
+       detections_field,
+       dataset.count(f"{detections_field}.detections"),
+   )
    PY
    ```
 
