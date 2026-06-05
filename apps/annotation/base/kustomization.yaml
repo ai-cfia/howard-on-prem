@@ -8,4 +8,7 @@ resources:
   - labelstudio/labelstudio.yaml
   - labelstudio/certificates.yaml
   - fiftyone/fiftyone.yaml
+  - fiftyone/s3-secrets.yaml
+  - fiftyone/s3-sync-rbac.yaml
+  - fiftyone/s3-sync.yaml
   - httproute.yaml

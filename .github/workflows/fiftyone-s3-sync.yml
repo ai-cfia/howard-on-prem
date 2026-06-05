@@ -1,0 +1,175 @@
+---
+name: FiftyOne S3 dataset sync
+
+"on":
+  workflow_dispatch:
+    inputs:
+      s3_prefix:
+        description: S3 prefix under the mlflow bucket to sync
+        required: true
+        default: datasets
+        type: string
+      destination:
+        description: Destination path under the FiftyOne shared workspace
+        required: true
+        default: /datasets/s3-imports
+        type: string
+      wait_for_completion:
+        description: Wait for the sync job to complete and print logs
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+jobs:
+  sync:
+    runs-on: on-prem-gh-runners
+
+    steps:
+      - name: Install kubectl if needed
+        run: |
+          if ! command -v kubectl >/dev/null 2>&1; then
+            curl -LO \
+              "https://dl.k8s.io/release/$(curl -L -s \
+              https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x kubectl
+            sudo mv kubectl /usr/local/bin/kubectl
+          fi
+
+      - name: Check Kubernetes access
+        run: |
+          set -eu
+
+          echo "Kubernetes context:"
+          kubectl config current-context || true
+
+          echo "Kubernetes identity:"
+          kubectl auth whoami || true
+
+          failed=0
+          for check in \
+            "create jobs" \
+            "get jobs" \
+            "list jobs" \
+            "watch jobs" \
+            "get pods" \
+            "list pods" \
+            "get pods --subresource=log"
+          do
+            set +e
+            output="$(kubectl auth can-i ${check} -n annotation 2>&1)"
+            status="$?"
+            set -e
+
+            echo "${check}: ${output}"
+            if [ "${status}" != "0" ] || [ "${output}" != "yes" ]; then
+              failed=1
+            fi
+          done
+
+          exit "${failed}"
+
+      - name: Validate sync inputs
+        run: |
+          JOB_NAME="fiftyone-s3-sync-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          echo "JOB_NAME=${JOB_NAME}" >> "$GITHUB_ENV"
+
+          case "${{ inputs.s3_prefix }}" in
+            *[!A-Za-z0-9._/-]* | /* | *..*)
+              echo "Invalid S3 prefix: ${{ inputs.s3_prefix }}" >&2
+              exit 1
+              ;;
+          esac
+
+          case "${{ inputs.destination }}" in
+            /datasets/s3-imports | /datasets/s3-imports/*)
+              ;;
+            *)
+              echo "Destination must be under /datasets/s3-imports" >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Trigger FiftyOne S3 sync
+        run: |
+          cat > /tmp/fiftyone-s3-sync-job.yaml <<EOF
+          ---
+          apiVersion: batch/v1
+          kind: Job
+          metadata:
+            name: ${JOB_NAME}
+            namespace: annotation
+          spec:
+            backoffLimit: 1
+            ttlSecondsAfterFinished: 86400
+            activeDeadlineSeconds: 1800
+            template:
+              spec:
+                affinity:
+                  nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                      nodeSelectorTerms:
+                        - matchExpressions:
+                            - key: type
+                              operator: In
+                              values:
+                                - app-worker
+                containers:
+                  - name: sync
+                    image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+                    imagePullPolicy: IfNotPresent
+                    env:
+                      - name: S3_PREFIX
+                        value: "${{ inputs.s3_prefix }}"
+                      - name: DATASETS_DESTINATION
+                        value: "${{ inputs.destination }}"
+                    envFrom:
+                      - configMapRef:
+                          name: fiftyone-s3-sync-config
+                      - secretRef:
+                          name: fiftyone-s3-secrets
+                    command:
+                      - /scripts/sync-datasets.sh
+                    resources:
+                      requests:
+                        cpu: "100m"
+                        memory: "128Mi"
+                      limits:
+                        memory: "512Mi"
+                    securityContext:
+                      allowPrivilegeEscalation: false
+                      readOnlyRootFilesystem: false
+                      capabilities:
+                        drop:
+                          - ALL
+                    volumeMounts:
+                      - name: datasets
+                        mountPath: /datasets
+                      - name: sync-script
+                        mountPath: /scripts
+                restartPolicy: Never
+                volumes:
+                  - name: datasets
+                    persistentVolumeClaim:
+                      claimName: labelstudio-shared-pvc
+                  - name: sync-script
+                    configMap:
+                      name: fiftyone-s3-sync-config
+                      defaultMode: 0555
+          EOF
+
+          kubectl create -f /tmp/fiftyone-s3-sync-job.yaml
+
+      - name: Wait for sync job
+        if: inputs.wait_for_completion == 'true'
+        run: |
+          kubectl wait -n annotation \
+            --for=condition=complete \
+            "job/${JOB_NAME}" \
+            --timeout=30m
+
+      - name: Print sync logs
+        if: inputs.wait_for_completion == 'true'
+        run: kubectl logs -n annotation "job/${JOB_NAME}"

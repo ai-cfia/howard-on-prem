@@ -1,31 +1,29 @@
 # FiftyOne
 
-This directory deploys FiftyOne as an internal ML dataset curation and visual
-review workbench.
+FiftyOne is deployed as an internal dataset curation and visual review
+workbench for AI Lab image datasets.
 
-## Scope
+## Runtime
 
-- The FiftyOne app runs as a single-replica Deployment.
-- The deployed image extends the pinned upstream FiftyOne image and installs
-  the AI Lab's required FiftyOne plugins.
-- MongoDB is deployed as a shared storage service from `storage/mongodb` and
-  stores FiftyOne metadata.
-- This first pass intentionally skips MongoDB backups, clustering, and
-  hardening so the team can validate the app, database connection, and
-  persistence.
-- Access control is limited to the existing cluster/network controls for this
-  first pass.
+- The app runs as a single-replica Deployment.
+- Metadata is stored in the shared MongoDB service:
+
+  ```text
+  mongodb://mongodb.mongodb.svc.cluster.local:27017/fiftyone
+  ```
+
+- The image is built in `ai-cfia/devops` under `dockerfiles/fiftyone`.
+- The deployment consumes the published image from GHCR.
 
 ## Plugins
 
-The custom FiftyOne image is built from:
+The custom image extends:
 
 ```text
 voxel51/fiftyone:1.15.0-python3.9-20260502
 ```
 
-and installs the following plugins from the pinned `voxel51/fiftyone-plugins`
-ref in the DevOps Dockerfile:
+Installed plugins:
 
 ```text
 @voxel51/annotation
@@ -34,74 +32,127 @@ ref in the DevOps Dockerfile:
 @voxel51/utils
 ```
 
-Delegation is intentionally not installed for this phase.
+`@voxel51/delegation` is intentionally not installed.
 
-Built-in vs installed behavior:
-
-- `@voxel51/operators` and `@voxel51/panels` are already built into the
-  upstream FiftyOne image.
-- `@voxel51/annotation`, `@voxel51/io`, `@voxel51/brain`, and
-  `@voxel51/utils` are installed into `/opt/fiftyone/plugins` by the custom
-  image build.
-- `FIFTYONE_PLUGINS_DIR` is set to `/opt/fiftyone/plugins` in the deployment so
-  FiftyOne loads the installed plugins from the image.
-
-The image also installs CPU-only `torch`, `torchvision`, and `umap-learn`. The
-Brain plugin can use precomputed embeddings without Torch, but the UI's
-model-based similarity workflow loads FiftyOne Model Zoo models such as
-`resnet18-imagenet-torch`, which require Torch at runtime. The Brain
-visualization workflow uses UMAP by default, which requires `umap-learn`.
-
-The image build is owned by the `ai-cfia/devops` repository under
-`dockerfiles/fiftyone`. This deployment only consumes the published image.
+The image also includes CPU-only `torch`, `torchvision`, and `umap-learn` for
+the Brain similarity and visualization workflows.
 
 ## Networking
 
-FiftyOne uses the same shared Gateway pattern as Label Studio. The HTTPRoute
-exposes:
+FiftyOne is exposed through the shared Louis Gateway:
 
 ```text
 https://fiftyone.inspection.alpha.canada.ca
 ```
 
-The Gateway listener is defined in `apps/louis/base/gateway.yaml`, and the
-HTTPRoute is defined in `apps/annotation/base/httproute.yaml`. DNS should point
-to the shared Gateway IP.
+The HTTPRoute is defined in `apps/annotation/base/httproute.yaml`. The Gateway
+listener is defined in `apps/louis/base/gateway.yaml`.
 
-## Storage
+## Dataset Storage
 
-FiftyOne metadata is stored in the shared MongoDB service:
+FiftyOne should load media from filesystem paths visible inside the pod. The
+shared annotation CephFS workspace is mounted at:
 
 ```text
-mongodb://mongodb.mongodb.svc.cluster.local:27017/fiftyone
+/datasets
+/ailab
 ```
 
-Dataset media should be available to the FiftyOne pod through filesystem paths.
-For S3-compatible storage such as Ceph or MinIO, mount or sync the bucket into
-the pod before importing datasets.
+Use `/datasets` for new FiftyOne imports. `/ailab` is kept for compatibility
+with the existing shared annotation workspace.
 
-The pod also mounts the annotation shared PVC at `/ailab`, matching the shared
-workspace pattern used by Label Studio and the AI Lab shared work containers.
+Recommended dataset layouts:
+
+```text
+/datasets/incoming/<date>/<batch>/
+  Ambrosia artemisiifolia/
+    image001.jpg
+  Avena fatua/
+    image002.jpg
+```
+
+```text
+/datasets/coco/<date>/<batch>/
+  data/
+    image001.jpg
+  labels.json
+```
+
+S3-compatible storage such as MinIO or Ceph RGW should be treated as durable
+object storage. When datasets arrive there first, sync the selected prefix into
+the CephFS-backed `/datasets` workspace before importing it into FiftyOne.
+
+## S3 Sync
+
+The `fiftyone-s3-sync` CronJob mirrors datasets from the MLflow S3-compatible
+store into the shared `/datasets` workspace.
+
+Default source and destination:
+
+```text
+s3://mlflow/datasets -> /datasets/s3-imports
+```
+
+The CronJob is suspended by default. It does not run on a schedule. Use the
+manual GitHub Actions workflow `FiftyOne S3 dataset sync` to trigger a sync
+when a new dataset prefix is ready.
+
+The CronJob is guarded with `concurrencyPolicy: Forbid`, `backoffLimit: 1`,
+and a 30-minute deadline so failed or slow syncs do not overlap indefinitely.
+
+The workflow also runs a pull request preflight check that verifies the
+on-prem runner has permission to create Jobs and read Job logs in the
+`annotation` namespace.
+
+A cluster operator can also create a one-off Job from the CronJob template:
+
+```bash
+kubectl create job -n annotation --from=cronjob/fiftyone-s3-sync \
+  fiftyone-s3-sync-manual
+kubectl wait -n annotation --for=condition=complete \
+  job/fiftyone-s3-sync-manual --timeout=30m
+```
+
+The job uses `fiftyone-s3-secrets`, sourced from the same Vault path as the
+MLflow S3 configuration. Do not put S3 credentials in Git.
+
+Live sync checks:
+
+```bash
+kubectl get externalsecret fiftyone-s3-secrets -n annotation
+kubectl get secret fiftyone-s3-secrets -n annotation
+kubectl get cronjob fiftyone-s3-sync -n annotation
+kubectl logs job/fiftyone-s3-sync-manual -n annotation
+kubectl exec deploy/fiftyone -n annotation -- ls -la /datasets/s3-imports
+```
+
+## User Workflow
+
+1. Add or sync a dataset into `/datasets`.
+2. Open FiftyOne.
+3. Use the IO plugin to import the dataset from `/datasets`.
+4. Review images, labels, boxes, tags, and saved views.
+5. Export curated labels or manifests back to the shared workspace.
+6. Sync curated outputs to S3 or MLflow artifacts when needed.
 
 ## Validation
 
+Basic deployment checks:
+
 ```bash
-kubectl get httproute -n annotation
 kubectl get pods,svc,pvc -n annotation
-kubectl get pods,svc,statefulset,pvc -n mongodb
+kubectl get httproute -n annotation
 kubectl logs deploy/fiftyone -n annotation
-kubectl logs statefulset/mongodb -n mongodb
-kubectl rollout restart deploy/fiftyone -n annotation
-kubectl port-forward svc/fiftyone 5151:5151 -n annotation
+kubectl exec deploy/fiftyone -n annotation -- ls -la /datasets
 ```
 
-Plugin checks:
+Plugin check:
 
 ```bash
 kubectl exec deploy/fiftyone -n annotation -- fiftyone plugins list
 ```
 
-Expected installed plugins:
+Expected plugins:
 
 ```text
 @voxel51/annotation
@@ -110,40 +161,25 @@ Expected installed plugins:
 @voxel51/utils
 ```
 
-Expected excluded plugin:
+Persistence check:
 
-```text
-@voxel51/delegation
+```bash
+kubectl rollout restart deploy/fiftyone -n annotation
+kubectl rollout status deploy/fiftyone -n annotation
 ```
 
-should not be listed.
+After restart, confirm previously imported datasets are still listed in the
+FiftyOne UI.
 
-Local validation of the custom image:
+## Smoke Test
 
-- Docker image built successfully.
-- `fiftyone plugins list` showed all four requested plugins enabled.
-- CPU-only `torch` and `torchvision` imported successfully.
-- `umap-learn` imported successfully.
-- Brain model-based similarity ran successfully with
-  `resnet18-imagenet-torch` on a local smoke-test dataset.
-- Brain visualization ran successfully with precomputed embeddings on a local
-  smoke-test dataset.
-- A local FiftyOne container started successfully against MongoDB and returned
-  HTTP 200.
-- Brain duplicate/similarity workflows were previously validated in the local
-  validation lab on a sample seed dataset:
-  - exact duplicates: pass
-  - similarity: pass
-  - visualization: pass
-  - uniqueness: pass
-  - COCO similarity: pass
+Use a small class-folder or COCO dataset under `/datasets` to validate imports.
 
-Manual checks:
+Class-folder import should preserve species names from folder names.
+COCO import should render bounding boxes in the sample viewer.
 
-- Open `https://fiftyone.inspection.alpha.canada.ca`.
-- Confirm the UI loads.
-- Import or attach a small test dataset if appropriate.
-- Restart the FiftyOne pod.
-- Confirm dataset metadata remains available after restart.
-- Restart the MongoDB pod and confirm metadata persists from the StatefulSet
-  volume claim.
+For a repeatable local version of this validation, use:
+
+```text
+/Users/youssefjedidi/CFIA/fiftyone-validation-lab
+```
