@@ -1,0 +1,92 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fiftyone-s3-sync-config
+data:
+  S3_BUCKET: mlflow
+  S3_PREFIX: datasets
+  DATASETS_DESTINATION: /datasets/s3-imports
+  sync-datasets.sh: |
+    #!/bin/sh
+    set -eu
+
+    : "${MLFLOW_S3_ENDPOINT_URL:?missing endpoint URL}"
+    : "${AWS_ACCESS_KEY_ID:?AWS_ACCESS_KEY_ID is required}"
+    : "${AWS_SECRET_ACCESS_KEY:?missing secret access key}"
+    : "${S3_BUCKET:?S3_BUCKET is required}"
+    : "${S3_PREFIX:?S3_PREFIX is required}"
+    : "${DATASETS_DESTINATION:?DATASETS_DESTINATION is required}"
+
+    mkdir -p "${DATASETS_DESTINATION}"
+    mc alias set mlflow "${MLFLOW_S3_ENDPOINT_URL}" \
+      "${AWS_ACCESS_KEY_ID}" "${AWS_SECRET_ACCESS_KEY}"
+    mc mirror --overwrite \
+      "mlflow/${S3_BUCKET}/${S3_PREFIX}" \
+      "${DATASETS_DESTINATION}"
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: fiftyone-s3-sync
+spec:
+  # Reusable sync template. It is intentionally suspended so dataset syncs are
+  # triggered explicitly, for example by the manual GitHub Actions workflow.
+  schedule: "0 6 * * *"
+  suspend: true
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      ttlSecondsAfterFinished: 86400
+      activeDeadlineSeconds: 1800
+      template:
+        spec:
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: type
+                        operator: In
+                        values:
+                          - app-worker
+          containers:
+            - name: sync
+              image: minio/mc:RELEASE.2025-04-16T18-13-26Z
+              imagePullPolicy: IfNotPresent
+              envFrom:
+                - configMapRef:
+                    name: fiftyone-s3-sync-config
+                - secretRef:
+                    name: fiftyone-s3-secrets
+              command:
+                - /scripts/sync-datasets.sh
+              resources:
+                requests:
+                  cpu: "100m"
+                  memory: "128Mi"
+                limits:
+                  memory: "512Mi"
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: false
+                capabilities:
+                  drop:
+                    - ALL
+              volumeMounts:
+                - name: datasets
+                  mountPath: /datasets
+                - name: sync-script
+                  mountPath: /scripts
+          restartPolicy: Never
+          volumes:
+            - name: datasets
+              persistentVolumeClaim:
+                claimName: labelstudio-shared-pvc
+            - name: sync-script
+              configMap:
+                name: fiftyone-s3-sync-config
+                defaultMode: 0555

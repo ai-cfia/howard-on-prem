@@ -82,6 +82,46 @@ S3-compatible storage such as MinIO or Ceph RGW should be treated as durable
 object storage. When datasets arrive there first, sync the selected prefix into
 the CephFS-backed `/datasets` workspace before importing it into FiftyOne.
 
+## S3 Sync
+
+The `fiftyone-s3-sync` CronJob mirrors datasets from the MLflow S3-compatible
+store into the shared `/datasets` workspace.
+
+Default source and destination:
+
+```text
+s3://mlflow/datasets -> /datasets/s3-imports
+```
+
+The CronJob is suspended by default. It does not run on a schedule. Use the
+manual GitHub Actions workflow `FiftyOne S3 dataset sync` to trigger a sync
+when a new dataset prefix is ready.
+
+The CronJob is guarded with `concurrencyPolicy: Forbid`, `backoffLimit: 1`,
+and a 30-minute deadline so failed or slow syncs do not overlap indefinitely.
+
+A cluster operator can also create a one-off Job from the CronJob template:
+
+```bash
+kubectl create job -n annotation --from=cronjob/fiftyone-s3-sync \
+  fiftyone-s3-sync-manual
+kubectl wait -n annotation --for=condition=complete \
+  job/fiftyone-s3-sync-manual --timeout=30m
+```
+
+The job uses `fiftyone-s3-secrets`, sourced from the same Vault path as the
+MLflow S3 configuration. Do not put S3 credentials in Git.
+
+Live sync checks:
+
+```bash
+kubectl get externalsecret fiftyone-s3-secrets -n annotation
+kubectl get secret fiftyone-s3-secrets -n annotation
+kubectl get cronjob fiftyone-s3-sync -n annotation
+kubectl logs job/fiftyone-s3-sync-manual -n annotation
+kubectl exec deploy/fiftyone -n annotation -- ls -la /datasets/s3-imports
+```
+
 ## User Workflow
 
 1. Add or sync a dataset into `/datasets`.
