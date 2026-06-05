@@ -10,6 +10,7 @@ name: FiftyOne S3 dataset sync
     paths:
       - .github/workflows/fiftyone-s3-sync.yml
       - apps/annotation/base/fiftyone/s3-sync.yaml
+      - apps/annotation/base/fiftyone/s3-sync-rbac.yaml
       - apps/annotation/base/fiftyone/s3-secrets.yaml
       - apps/annotation/base/kustomization.yaml
   workflow_dispatch:
@@ -51,9 +52,26 @@ jobs:
 
       - name: Check Kubernetes access
         run: |
-          test "$(kubectl auth can-i create jobs -n annotation)" = "yes"
-          test "$(kubectl auth can-i get jobs -n annotation)" = "yes"
-          test "$(kubectl auth can-i get pods/log -n annotation)" = "yes"
+          set -eu
+
+          failed=0
+          for check in \
+            "create jobs" \
+            "get jobs" \
+            "list jobs" \
+            "watch jobs" \
+            "get pods" \
+            "list pods" \
+            "get pods/log"
+          do
+            result="$(kubectl auth can-i ${check} -n annotation)"
+            echo "${check}: ${result}"
+            if [ "${result}" != "yes" ]; then
+              failed=1
+            fi
+          done
+
+          exit "${failed}"
 
   sync:
     if: github.event_name == 'workflow_dispatch'
@@ -72,9 +90,26 @@ jobs:
 
       - name: Check Kubernetes access
         run: |
-          test "$(kubectl auth can-i create jobs -n annotation)" = "yes"
-          test "$(kubectl auth can-i get jobs -n annotation)" = "yes"
-          test "$(kubectl auth can-i get pods/log -n annotation)" = "yes"
+          set -eu
+
+          failed=0
+          for check in \
+            "create jobs" \
+            "get jobs" \
+            "list jobs" \
+            "watch jobs" \
+            "get pods" \
+            "list pods" \
+            "get pods/log"
+          do
+            result="$(kubectl auth can-i ${check} -n annotation)"
+            echo "${check}: ${result}"
+            if [ "${result}" != "yes" ]; then
+              failed=1
+            fi
+          done
+
+          exit "${failed}"
 
       - name: Validate sync inputs
         run: |
@@ -165,7 +200,7 @@ jobs:
                       defaultMode: 0555
           EOF
 
-          kubectl apply -f /tmp/fiftyone-s3-sync-job.yaml
+          kubectl create -f /tmp/fiftyone-s3-sync-job.yaml
 
       - name: Wait for sync job
         if: inputs.wait_for_completion == 'true'
