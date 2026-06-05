@@ -2,17 +2,6 @@
 name: FiftyOne S3 dataset sync
 
 "on":
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-    paths:
-      - .github/workflows/fiftyone-s3-sync.yml
-      - apps/annotation/base/fiftyone/s3-sync.yaml
-      - apps/annotation/base/fiftyone/s3-sync-rbac.yaml
-      - apps/annotation/base/fiftyone/s3-secrets.yaml
-      - apps/annotation/base/kustomization.yaml
   workflow_dispatch:
     inputs:
       s3_prefix:
@@ -35,56 +24,7 @@ name: FiftyOne S3 dataset sync
           - "false"
 
 jobs:
-  preflight:
-    if: github.event_name == 'pull_request'
-    runs-on: on-prem-gh-runners
-
-    steps:
-      - name: Install kubectl if needed
-        run: |
-          if ! command -v kubectl >/dev/null 2>&1; then
-            curl -LO \
-              "https://dl.k8s.io/release/$(curl -L -s \
-              https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-            chmod +x kubectl
-            sudo mv kubectl /usr/local/bin/kubectl
-          fi
-
-      - name: Check Kubernetes access
-        run: |
-          set -eu
-
-          echo "Kubernetes context:"
-          kubectl config current-context || true
-
-          echo "Kubernetes identity:"
-          kubectl auth whoami || true
-
-          failed=0
-          for check in \
-            "create jobs" \
-            "get jobs" \
-            "list jobs" \
-            "watch jobs" \
-            "get pods" \
-            "list pods" \
-            "get pods --subresource=log"
-          do
-            set +e
-            output="$(kubectl auth can-i ${check} -n annotation 2>&1)"
-            status="$?"
-            set -e
-
-            echo "${check}: ${output}"
-            if [ "${status}" != "0" ] || [ "${output}" != "yes" ]; then
-              failed=1
-            fi
-          done
-
-          exit "${failed}"
-
   sync:
-    if: github.event_name == 'workflow_dispatch'
     runs-on: on-prem-gh-runners
 
     steps:
