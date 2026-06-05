@@ -100,6 +100,10 @@ when a new dataset prefix is ready.
 The CronJob is guarded with `concurrencyPolicy: Forbid`, `backoffLimit: 1`,
 and a 30-minute deadline so failed or slow syncs do not overlap indefinitely.
 
+The workflow also runs a pull request preflight check that verifies the
+on-prem runner has permission to create Jobs and read Job logs in the
+`annotation` namespace.
+
 A cluster operator can also create a one-off Job from the CronJob template:
 
 ```bash

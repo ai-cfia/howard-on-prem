@@ -2,6 +2,16 @@
 name: FiftyOne S3 dataset sync
 
 "on":
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - .github/workflows/fiftyone-s3-sync.yml
+      - apps/annotation/base/fiftyone/s3-sync.yaml
+      - apps/annotation/base/fiftyone/s3-secrets.yaml
+      - apps/annotation/base/kustomization.yaml
   workflow_dispatch:
     inputs:
       s3_prefix:
@@ -24,7 +34,29 @@ name: FiftyOne S3 dataset sync
           - "false"
 
 jobs:
+  preflight:
+    if: github.event_name == 'pull_request'
+    runs-on: on-prem-gh-runners
+
+    steps:
+      - name: Install kubectl if needed
+        run: |
+          if ! command -v kubectl >/dev/null 2>&1; then
+            curl -LO \
+              "https://dl.k8s.io/release/$(curl -L -s \
+              https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x kubectl
+            sudo mv kubectl /usr/local/bin/kubectl
+          fi
+
+      - name: Check Kubernetes access
+        run: |
+          test "$(kubectl auth can-i create jobs -n annotation)" = "yes"
+          test "$(kubectl auth can-i get jobs -n annotation)" = "yes"
+          test "$(kubectl auth can-i get pods/log -n annotation)" = "yes"
+
   sync:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: on-prem-gh-runners
 
     steps:
