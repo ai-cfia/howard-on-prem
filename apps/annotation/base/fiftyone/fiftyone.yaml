@@ -29,7 +29,8 @@ spec:
                       - ai-worker
       containers:
         - name: fiftyone
-          image: voxel51/fiftyone:1.15.0-python3.9-20260502
+          image: >-
+            ghcr.io/ai-cfia/fiftyone:1.15.0-python3.9-plugins-torch-20260604
           imagePullPolicy: IfNotPresent
           command:
             - python
@@ -48,6 +49,8 @@ spec:
               value: /fiftyone/zoo/datasets
             - name: FIFTYONE_MODEL_ZOO_DIR
               value: /fiftyone/zoo/models
+            - name: FIFTYONE_PLUGINS_DIR
+              value: /opt/fiftyone/plugins
           ports:
             - containerPort: 5151
               name: http
