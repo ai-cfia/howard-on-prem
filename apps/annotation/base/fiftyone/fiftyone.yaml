@@ -9,6 +9,8 @@ metadata:
 spec:
   replicas: 1
   revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: fiftyone
@@ -59,6 +61,8 @@ spec:
               mountPath: /fiftyone
             - name: shared-data
               mountPath: /ailab
+            - name: datasets
+              mountPath: /datasets
           startupProbe:
             httpGet:
               path: /
@@ -90,6 +94,9 @@ spec:
         - name: shared-data
           persistentVolumeClaim:
             claimName: labelstudio-shared-pvc
+        - name: datasets
+          persistentVolumeClaim:
+            claimName: fiftyone-datasets-pvc
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -105,6 +112,22 @@ spec:
   resources:
     requests:
       storage: 20Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fiftyone-datasets-pvc
+  labels:
+    app.kubernetes.io/name: fiftyone
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  storageClassName: ceph-cold-filesystem
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 4Ti
+  volumeMode: Filesystem
 ---
 apiVersion: v1
 kind: Service
