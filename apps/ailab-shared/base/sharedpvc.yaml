@@ -11,7 +11,21 @@ spec:
       storage: 14Ti
   storageClassName: ceph-cold-filesystem
   volumeMode: Filesystem
-
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fiftyone-datasets-pvc
+  namespace: ailab-shared
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 4Ti
+  volumeName: pvc-4ff93e0d-e7b3-406c-b3ed-8e50142c0c3d-ailab-shared
+  storageClassName: ceph-cold-filesystem
+  volumeMode: Filesystem
 # ---
 # kind: PersistentVolumeClaim
 # apiVersion: v1

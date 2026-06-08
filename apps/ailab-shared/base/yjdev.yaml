@@ -43,6 +43,8 @@ spec:
               mountPath: /dev/shm
             - name: yjdev-volume
               mountPath: /yjdev
+            - name: fiftyone-datasets-volume
+              mountPath: /datasets
           securityContext:
             # runAsUser: 1000
             # runAsGroup: 1000
@@ -65,6 +67,9 @@ spec:
         - name: yjdev-volume
           persistentVolumeClaim:
             claimName: yjdev-pvc
+        - name: fiftyone-datasets-volume
+          persistentVolumeClaim:
+            claimName: fiftyone-datasets-pvc
 ---
 apiVersion: v1
 kind: Service
