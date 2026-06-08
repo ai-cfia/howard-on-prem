@@ -77,11 +77,43 @@ mongodb://mongodb.mongodb.svc.cluster.local:27017/fiftyone
 ```
 
 Dataset media should be available to the FiftyOne pod through filesystem paths.
-For S3-compatible storage such as Ceph or MinIO, mount or sync the bucket into
-the pod before importing datasets.
+
+The deployment mounts a dedicated CephFS shared filesystem PVC for datasets:
+
+```text
+/datasets
+```
+
+The dataset PVC uses the `ceph-cold-filesystem` storage class with
+`ReadWriteMany`, matching the existing Rook/CephFS shared filesystem pattern in
+Howard. This keeps the first storage pass simple: files are made available on a
+normal filesystem path, and FiftyOne imports them from there.
 
 The pod also mounts the annotation shared PVC at `/ailab`, matching the shared
 workspace pattern used by Label Studio and the AI Lab shared work containers.
+
+Recommended import paths:
+
+```text
+/datasets
+/ailab
+```
+
+For seed class-folder datasets, keep species names in folder names:
+
+```text
+/datasets/Ambrosia artemisiifolia/
+  image001.jpg
+```
+
+For COCO detection datasets:
+
+```text
+/datasets/<batch>/
+  data/
+    image001.jpg
+  labels.json
+```
 
 ## Validation
 
@@ -90,6 +122,7 @@ kubectl get httproute -n annotation
 kubectl get pods,svc,pvc -n annotation
 kubectl get pods,svc,statefulset,pvc -n mongodb
 kubectl logs deploy/fiftyone -n annotation
+kubectl exec deploy/fiftyone -n annotation -- ls -la /datasets
 kubectl logs statefulset/mongodb -n mongodb
 kubectl rollout restart deploy/fiftyone -n annotation
 kubectl port-forward svc/fiftyone 5151:5151 -n annotation
