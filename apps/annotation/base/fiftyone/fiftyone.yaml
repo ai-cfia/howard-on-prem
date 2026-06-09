@@ -35,11 +35,19 @@ spec:
             ghcr.io/ai-cfia/fiftyone:1.15.0-python3.9-plugins-torch-20260604
           imagePullPolicy: IfNotPresent
           command:
-            - python
-            - -m
-            - fiftyone.server.main
-            - --port
-            - "5151"
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              echo "Waiting for S3 dataset mount..."
+              for _ in $(seq 1 90); do
+                if [ -f /s3-mount-status/ready ]; then
+                  exec python -m fiftyone.server.main --port 5151
+                fi
+                sleep 2
+              done
+              echo "Timed out waiting for S3 dataset mount" >&2
+              exit 1
           env:
             - name: FIFTYONE_DATABASE_URI
               value: mongodb://mongodb.mongodb.svc.cluster.local:27017/fiftyone
@@ -63,6 +71,12 @@ spec:
               mountPath: /ailab
             - name: datasets
               mountPath: /datasets
+            - name: s3-mount
+              mountPath: /fiftyone-s3
+              mountPropagation: HostToContainer
+            - name: s3-mount-status
+              mountPath: /s3-mount-status
+              readOnly: true
           startupProbe:
             httpGet:
               path: /
@@ -87,6 +101,97 @@ spec:
             periodSeconds: 30
             timeoutSeconds: 5
             failureThreshold: 5
+        - name: s3-datasets
+          image: rclone/rclone:1.74.2
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+
+              : "${MLFLOW_S3_ENDPOINT_URL:?missing S3 endpoint URL}"
+              : "${AWS_ACCESS_KEY_ID:?missing AWS access key ID}"
+              : "${AWS_SECRET_ACCESS_KEY:?missing AWS secret access key}"
+              : "${FIFTYONE_S3_BUCKET:?missing S3 bucket}"
+              : "${FIFTYONE_S3_PREFIX:?missing S3 prefix}"
+
+              # Remove any stale readiness flags from previous runs
+              rm -f /s3-mount-status/ready
+
+              mkdir -p "${FIFTYONE_S3_MOUNT_PATH}"
+
+              # Ensure the FUSE allow_other option is configured idempotently.
+              touch /etc/fuse.conf
+              if ! grep -q '^user_allow_other' /etc/fuse.conf; then
+                echo 'user_allow_other' >> /etc/fuse.conf
+              fi
+
+              export RCLONE_CONFIG_MLFLOW_TYPE=s3
+              export RCLONE_CONFIG_MLFLOW_PROVIDER=Ceph
+              export RCLONE_CONFIG_MLFLOW_ENV_AUTH=true
+              export RCLONE_CONFIG_MLFLOW_ENDPOINT="${MLFLOW_S3_ENDPOINT_URL}"
+              export RCLONE_CONFIG_MLFLOW_REGION=
+
+              # Exact rclone mount command: read-only, no cache/staging
+              rclone mount \
+                "mlflow:${FIFTYONE_S3_BUCKET}/${FIFTYONE_S3_PREFIX}" \
+                "${FIFTYONE_S3_MOUNT_PATH}" \
+                --read-only \
+                --allow-other \
+                --dir-cache-time 1m \
+                --poll-interval 0 \
+                --log-level INFO &
+
+              mount_pid="$!"
+
+              # Clean up the readiness flag and rclone process on termination.
+              trap 'rm -f /s3-mount-status/ready;
+                kill "${mount_pid}" 2>/dev/null || true' EXIT TERM INT
+
+              # Verify the mount point is active and listable before startup.
+              for _ in $(seq 1 60); do
+                if grep -Fq " ${FIFTYONE_S3_MOUNT_PATH} " /proc/mounts &&
+                  ls "${FIFTYONE_S3_MOUNT_PATH}" >/dev/null 2>&1; then
+                  touch /s3-mount-status/ready
+                  wait "${mount_pid}"
+                fi
+                if ! kill -0 "${mount_pid}" 2>/dev/null; then
+                  wait "${mount_pid}"
+                fi
+                sleep 2
+              done
+
+              echo "S3 dataset mount did not become ready" >&2
+              kill "${mount_pid}" 2>/dev/null || true
+              exit 1
+          env:
+            - name: FIFTYONE_S3_BUCKET
+              value: mlflow
+            - name: FIFTYONE_S3_PREFIX
+              value: datasets
+            - name: FIFTYONE_S3_MOUNT_PATH
+              value: /fiftyone-s3
+          envFrom:
+            - secretRef:
+                name: fiftyone-s3-secrets
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              memory: "512Mi"
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          volumeMounts:
+            - name: s3-mount
+              mountPath: /fiftyone-s3
+              mountPropagation: Bidirectional
+            - name: s3-mount-status
+              mountPath: /s3-mount-status
+            - name: dev-fuse
+              mountPath: /dev/fuse
       volumes:
         - name: workspace
           persistentVolumeClaim:
@@ -97,6 +202,14 @@ spec:
         - name: datasets
           persistentVolumeClaim:
             claimName: fiftyone-datasets-pvc
+        - name: s3-mount
+          emptyDir: {}
+        - name: s3-mount-status
+          emptyDir: {}
+        - name: dev-fuse
+          hostPath:
+            path: /dev/fuse
+            type: CharDevice
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
