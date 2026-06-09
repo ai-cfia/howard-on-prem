@@ -139,6 +139,7 @@ spec:
                 "${FIFTYONE_S3_MOUNT_PATH}" \
                 --read-only \
                 --allow-other \
+                --allow-non-empty \
                 --dir-cache-time 1m \
                 --poll-interval 0 \
                 --log-level INFO &
