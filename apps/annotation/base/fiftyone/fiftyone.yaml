@@ -102,7 +102,8 @@ spec:
             timeoutSeconds: 5
             failureThreshold: 5
         - name: s3-datasets
-          image: rclone/rclone:1.74.2
+          image: >-
+            efrecon/s3fs:1.95@sha256:5b4078918899cca287dcc915e8e655ee526c1851e962e24df15673e6c66473d2
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
@@ -121,33 +122,39 @@ spec:
 
               mkdir -p "${FIFTYONE_S3_MOUNT_PATH}"
 
+              credentials_file=/root/.passwd-s3fs
+              printf '%s:%s\n' \
+                "${AWS_ACCESS_KEY_ID}" \
+                "${AWS_SECRET_ACCESS_KEY}" > "${credentials_file}"
+              chmod 600 "${credentials_file}"
+
               # Ensure the FUSE allow_other option is configured idempotently.
               touch /etc/fuse.conf
               if ! grep -q '^user_allow_other' /etc/fuse.conf; then
                 echo 'user_allow_other' >> /etc/fuse.conf
               fi
 
-              export RCLONE_CONFIG_MLFLOW_TYPE=s3
-              export RCLONE_CONFIG_MLFLOW_PROVIDER=Ceph
-              export RCLONE_CONFIG_MLFLOW_ENV_AUTH=true
-              export RCLONE_CONFIG_MLFLOW_ENDPOINT="${MLFLOW_S3_ENDPOINT_URL}"
-              export RCLONE_CONFIG_MLFLOW_REGION=
-
-              # Exact rclone mount command: read-only, no cache/staging
-              rclone mount \
-                "mlflow:${FIFTYONE_S3_BUCKET}/${FIFTYONE_S3_PREFIX}" \
+              # Follow the FiftyOne cloud-storage guide: mount S3 as a local
+              # read-only filesystem, then let FiftyOne import from that path.
+              s3fs \
+                "${FIFTYONE_S3_BUCKET}:/${FIFTYONE_S3_PREFIX}" \
                 "${FIFTYONE_S3_MOUNT_PATH}" \
-                --read-only \
-                --allow-other \
-                --allow-non-empty \
-                --dir-cache-time 1m \
-                --poll-interval 0 \
-                --log-level INFO &
+                -f \
+                -o passwd_file="${credentials_file}" \
+                -o url="${MLFLOW_S3_ENDPOINT_URL}" \
+                -o use_path_request_style \
+                -o allow_other \
+                -o ro \
+                -o nonempty \
+                -o compat_dir \
+                -o umask=0022 \
+                -o stat_cache_expire=60 \
+                -o dbglevel=info &
 
               mount_pid="$!"
 
-              # Clean up the readiness flag and rclone process on termination.
-              trap 'rm -f /s3-mount-status/ready;
+              # Clean up the readiness flag, password file, and s3fs process.
+              trap 'rm -f /s3-mount-status/ready "${credentials_file}";
                 kill "${mount_pid}" 2>/dev/null || true' EXIT TERM INT
 
               # Verify the mount point is active and listable before startup.
