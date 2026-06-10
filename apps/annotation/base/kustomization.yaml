@@ -9,4 +9,5 @@ resources:
   - labelstudio/certificates.yaml
   - fiftyone/fiftyone.yaml
   - fiftyone/s3-secrets.yaml
+  - fiftyone/startup-scripts.yaml
   - httproute.yaml

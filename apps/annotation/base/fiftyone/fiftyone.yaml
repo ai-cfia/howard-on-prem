@@ -36,18 +36,7 @@ spec:
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
-            - -c
-            - |
-              set -eu
-              echo "Waiting for S3 dataset mount..."
-              for _ in $(seq 1 90); do
-                if [ -f /s3-mount-status/ready ]; then
-                  exec python -m fiftyone.server.main --port 5151
-                fi
-                sleep 2
-              done
-              echo "Timed out waiting for S3 dataset mount" >&2
-              exit 1
+            - /opt/fiftyone-startup/wait-for-s3-mount.sh
           env:
             - name: FIFTYONE_DATABASE_URI
               value: mongodb://mongodb.mongodb.svc.cluster.local:27017/fiftyone
@@ -61,6 +50,8 @@ spec:
               value: /fiftyone/zoo/models
             - name: FIFTYONE_PLUGINS_DIR
               value: /opt/fiftyone/plugins
+            - name: FIFTYONE_S3_MOUNT_PATH
+              value: /fiftyone-s3
           ports:
             - containerPort: 5151
               name: http
@@ -76,6 +67,9 @@ spec:
               mountPropagation: HostToContainer
             - name: s3-mount-status
               mountPath: /s3-mount-status
+              readOnly: true
+            - name: startup-scripts
+              mountPath: /opt/fiftyone-startup
               readOnly: true
           startupProbe:
             httpGet:
@@ -107,72 +101,7 @@ spec:
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
-            - -c
-            - |
-              set -eu
-
-              : "${MLFLOW_S3_ENDPOINT_URL:?missing S3 endpoint URL}"
-              : "${AWS_ACCESS_KEY_ID:?missing AWS access key ID}"
-              : "${AWS_SECRET_ACCESS_KEY:?missing AWS secret access key}"
-              : "${FIFTYONE_S3_BUCKET:?missing S3 bucket}"
-              : "${FIFTYONE_S3_PREFIX:?missing S3 prefix}"
-
-              # Remove any stale readiness flags from previous runs
-              rm -f /s3-mount-status/ready
-
-              mkdir -p "${FIFTYONE_S3_MOUNT_PATH}"
-
-              credentials_file=/root/.passwd-s3fs
-              printf '%s:%s\n' \
-                "${AWS_ACCESS_KEY_ID}" \
-                "${AWS_SECRET_ACCESS_KEY}" > "${credentials_file}"
-              chmod 600 "${credentials_file}"
-
-              # Ensure the FUSE allow_other option is configured idempotently.
-              touch /etc/fuse.conf
-              if ! grep -q '^user_allow_other' /etc/fuse.conf; then
-                echo 'user_allow_other' >> /etc/fuse.conf
-              fi
-
-              # Follow the FiftyOne cloud-storage guide: mount S3 as a local
-              # read-only filesystem, then let FiftyOne import from that path.
-              s3fs \
-                "${FIFTYONE_S3_BUCKET}:/${FIFTYONE_S3_PREFIX}" \
-                "${FIFTYONE_S3_MOUNT_PATH}" \
-                -f \
-                -o passwd_file="${credentials_file}" \
-                -o url="${MLFLOW_S3_ENDPOINT_URL}" \
-                -o use_path_request_style \
-                -o allow_other \
-                -o ro \
-                -o nonempty \
-                -o compat_dir \
-                -o umask=0022 \
-                -o stat_cache_expire=60 \
-                -o dbglevel=info &
-
-              mount_pid="$!"
-
-              # Clean up the readiness flag, password file, and s3fs process.
-              trap 'rm -f /s3-mount-status/ready "${credentials_file}";
-                kill "${mount_pid}" 2>/dev/null || true' EXIT TERM INT
-
-              # Verify the mount point is active and listable before startup.
-              for _ in $(seq 1 60); do
-                if grep -Fq " ${FIFTYONE_S3_MOUNT_PATH} " /proc/mounts &&
-                  ls "${FIFTYONE_S3_MOUNT_PATH}" >/dev/null 2>&1; then
-                  touch /s3-mount-status/ready
-                  wait "${mount_pid}"
-                fi
-                if ! kill -0 "${mount_pid}" 2>/dev/null; then
-                  wait "${mount_pid}"
-                fi
-                sleep 2
-              done
-
-              echo "S3 dataset mount did not become ready" >&2
-              kill "${mount_pid}" 2>/dev/null || true
-              exit 1
+            - /opt/fiftyone-startup/mount-s3-datasets.sh
           env:
             - name: FIFTYONE_S3_BUCKET
               value: mlflow
@@ -180,6 +109,8 @@ spec:
               value: datasets
             - name: FIFTYONE_S3_MOUNT_PATH
               value: /fiftyone-s3
+            - name: FIFTYONE_S3_REGION
+              value: us-east-1
           envFrom:
             - secretRef:
                 name: fiftyone-s3-secrets
@@ -189,6 +120,18 @@ spec:
               memory: "128Mi"
             limits:
               memory: "512Mi"
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  test -f /s3-mount-status/ready &&
+                  grep -Fq " ${FIFTYONE_S3_MOUNT_PATH} " /proc/mounts &&
+                  ls "${FIFTYONE_S3_MOUNT_PATH}" >/dev/null
+            periodSeconds: 60
+            timeoutSeconds: 20
+            failureThreshold: 5
           securityContext:
             privileged: true
             runAsUser: 0
@@ -200,6 +143,9 @@ spec:
               mountPath: /s3-mount-status
             - name: dev-fuse
               mountPath: /dev/fuse
+            - name: startup-scripts
+              mountPath: /opt/fiftyone-startup
+              readOnly: true
       volumes:
         - name: workspace
           persistentVolumeClaim:
@@ -214,6 +160,9 @@ spec:
           emptyDir: {}
         - name: s3-mount-status
           emptyDir: {}
+        - name: startup-scripts
+          configMap:
+            name: fiftyone-startup-scripts
         - name: dev-fuse
           hostPath:
             path: /dev/fuse
