@@ -1,0 +1,110 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fiftyone-startup-scripts
+data:
+  wait-for-s3-mount.sh: |
+    #!/bin/sh
+    set -eu
+
+    : "${FIFTYONE_S3_MOUNT_PATH:?missing S3 mount path}"
+
+    echo "Waiting for S3 dataset mount..."
+
+    for _ in $(seq 1 90); do
+      if [ -f /s3-mount-status/ready ] &&
+        grep -Fq " ${FIFTYONE_S3_MOUNT_PATH} " /proc/mounts &&
+        ls "${FIFTYONE_S3_MOUNT_PATH}" >/dev/null 2>&1; then
+        exec python -m fiftyone.server.main --port 5151
+      fi
+      sleep 2
+    done
+
+    echo "Timed out waiting for S3 dataset mount" >&2
+    exit 1
+
+  mount-s3-datasets.sh: |
+    #!/bin/sh
+    set -eu
+
+    : "${MLFLOW_S3_ENDPOINT_URL:?missing S3 endpoint URL}"
+    : "${AWS_ACCESS_KEY_ID:?missing AWS access key ID}"
+    : "${AWS_SECRET_ACCESS_KEY:?missing AWS secret access key}"
+    : "${FIFTYONE_S3_BUCKET:?missing S3 bucket}"
+    : "${FIFTYONE_S3_PREFIX:?missing S3 prefix}"
+    : "${FIFTYONE_S3_MOUNT_PATH:?missing S3 mount path}"
+
+    FIFTYONE_S3_REGION="${FIFTYONE_S3_REGION:-us-east-1}"
+    mount_pid=""
+
+    cleanup() {
+      trap - EXIT TERM INT
+      rm -f /s3-mount-status/ready
+
+      if [ -n "${mount_pid}" ]; then
+        kill "${mount_pid}" 2>/dev/null || true
+      fi
+
+      fusermount3 -u "${FIFTYONE_S3_MOUNT_PATH}" 2>/dev/null ||
+        fusermount -u "${FIFTYONE_S3_MOUNT_PATH}" 2>/dev/null ||
+        umount "${FIFTYONE_S3_MOUNT_PATH}" 2>/dev/null ||
+        umount -l "${FIFTYONE_S3_MOUNT_PATH}" 2>/dev/null ||
+        true
+
+      if [ -n "${mount_pid}" ]; then
+        wait "${mount_pid}" 2>/dev/null || true
+      fi
+    }
+
+    terminate() {
+      cleanup
+      exit 143
+    }
+
+    trap cleanup EXIT
+    trap terminate TERM INT
+
+    rm -f /s3-mount-status/ready
+    mkdir -p "${FIFTYONE_S3_MOUNT_PATH}"
+
+    # Required for the s3fs allow_other mount option.
+    touch /etc/fuse.conf
+    if ! grep -q '^user_allow_other' /etc/fuse.conf; then
+      echo 'user_allow_other' >> /etc/fuse.conf
+    fi
+
+    # Mount the S3-compatible dataset prefix as a read-only local filesystem.
+    s3fs \
+      "${FIFTYONE_S3_BUCKET}:/${FIFTYONE_S3_PREFIX}" \
+      "${FIFTYONE_S3_MOUNT_PATH}" \
+      -f \
+      -o url="${MLFLOW_S3_ENDPOINT_URL}" \
+      -o endpoint="${FIFTYONE_S3_REGION}" \
+      -o use_path_request_style \
+      -o allow_other \
+      -o ro \
+      -o nonempty \
+      -o compat_dir \
+      -o umask=0022 \
+      -o stat_cache_expire=60 \
+      -o dbglevel=info &
+
+    mount_pid="$!"
+
+    for _ in $(seq 1 60); do
+      if grep -Fq " ${FIFTYONE_S3_MOUNT_PATH} " /proc/mounts &&
+        ls "${FIFTYONE_S3_MOUNT_PATH}" >/dev/null 2>&1; then
+        touch /s3-mount-status/ready
+        wait "${mount_pid}"
+      fi
+
+      if ! kill -0 "${mount_pid}" 2>/dev/null; then
+        wait "${mount_pid}"
+      fi
+
+      sleep 2
+    done
+
+    echo "S3 dataset mount did not become ready" >&2
+    exit 1
