@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - pytorchdev.yaml
   - pytorchtrain.yaml
+  - pytorchtrain_2.yaml
   - openssh/openssh.yaml
   - openssh/configmap.yaml
   - openssh/secrets.yaml

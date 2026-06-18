@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pytorchtrain2
+  namespace: ailab-shared
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: pytorchtrain2
+  template:
+    metadata:
+      labels:
+        app: pytorchtrain2
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - ai-lab-2
+      imagePullSecrets:
+        - name: ghcr-image-pull-secret
+      containers:
+        - name: pytorchtrain2
+          # image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050803
+          image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-25-devenv:2025111301
+          imagePullPolicy: Always
+          resources:
+            limits:
+              nvidia.com/gpu: "1"
+          ports:
+            - containerPort: 22
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: ailab-shared-volume
+              mountPath: /ailab
+            - name: dshm
+              mountPath: /dev/shm
+          securityContext:
+            # runAsUser: 1000
+            # runAsGroup: 1000
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: true
+            capabilities:
+              add:
+                - SETUID
+                - SETGID
+                - DAC_OVERRIDE
+              drop:
+                - ALL_OTHERS
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 16Gi
+        - name: ailab-shared-volume
+          persistentVolumeClaim:
+            claimName: ailab-shared-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pytorchtrain2ssh-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: pytorchtrain2
+  ports:
+    - protocol: TCP
+      port: 22
+      targetPort: 22
