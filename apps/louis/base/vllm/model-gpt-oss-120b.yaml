@@ -75,7 +75,7 @@ spec:
                 - key: kubernetes.io/hostname
                   operator: In
                   values:
-                    - ai-lab-3
+                    - ai-lab-2
       volumes:
         - name: cache-volume
           persistentVolumeClaim:
