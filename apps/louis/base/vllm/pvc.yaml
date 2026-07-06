@@ -27,3 +27,18 @@ spec:
     requests:
       storage: 10Gi
   volumeMode: Filesystem
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: gpt-oss-120b
+  name: gpt-oss-120b-pvc
+spec:
+  storageClassName: ceph-hot-block
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 10Gi
+  volumeMode: Filesystem
