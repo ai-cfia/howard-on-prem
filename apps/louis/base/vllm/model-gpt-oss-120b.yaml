@@ -26,7 +26,7 @@ spec:
               --served-model-name gpt-oss-120b
               --async-scheduling
               --gpu-memory-utilization 0.90
-              --max-model-len 100000
+              --max-model-len 90000
               --max-num-seqs 4
               --max-num-batched-tokens 1024
               --tool-server demo
