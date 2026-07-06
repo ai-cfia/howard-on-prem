@@ -39,6 +39,8 @@ spec:
           env:
             - name: VLLM_LOGGING_LEVEL
               value: "DEBUG"
+            - name: NCCL_P2P_DISABLE
+              value: "1"
           ports:
             - containerPort: 8000
           resources:
