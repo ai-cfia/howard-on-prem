@@ -19,20 +19,20 @@ spec:
         - name: gpt-oss-120b
           image: vllm/vllm-openai:v0.24.0
           command: ["/bin/sh", "-c"]
-          args: [
-            "vllm serve openai/gpt-oss-120b",
-            "--trust-remote-code",
-            "--served-model-name gpt-oss-120b",
-            "--async-scheduling",
-            "--gpu-memory-utilization 0.85",
-            "--max-model-len 130000",
-            "--max-num-seqs 4",
-            "--max-num-batched-tokens 1024",
-            "--tool-server demo",
-            "--tool-call-parser openai",
-            "--reasoning-parser openai_gptoss",
-            "--enable-auto-tool-choice"
-          ]
+          args:
+            - >
+              vllm serve openai/gpt-oss-120b
+              --trust-remote-code
+              --served-model-name gpt-oss-120b
+              --async-scheduling
+              --gpu-memory-utilization 0.85
+              --max-model-len 130000
+              --max-num-seqs 4
+              --max-num-batched-tokens 1024
+              --tool-server demo
+              --tool-call-parser openai
+              --reasoning-parser openai_gptoss
+              --enable-auto-tool-choice
           envFrom:
             - secretRef:
                 name: huggingface-secrets
