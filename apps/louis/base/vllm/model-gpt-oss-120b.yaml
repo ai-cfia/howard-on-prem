@@ -25,7 +25,7 @@ spec:
             "--served-model-name gpt-oss-120b",
             "--async-scheduling",
             "--gpu-memory-utilization 0.85",
-            "--max-model-len 131072",
+            "--max-model-len 130000",
             "--max-num-seqs 4",
             "--max-num-batched-tokens 1024",
             "--tool-server demo",
@@ -61,13 +61,13 @@ spec:
             httpGet:
               path: /health
               port: 8000
-            initialDelaySeconds: 180
+            initialDelaySeconds: 600
             periodSeconds: 30
           readinessProbe:
             httpGet:
               path: /health
               port: 8000
-            initialDelaySeconds: 300
+            initialDelaySeconds: 720
             periodSeconds: 30
       affinity:
         nodeAffinity:
