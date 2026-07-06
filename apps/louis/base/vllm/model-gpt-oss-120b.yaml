@@ -48,7 +48,7 @@ spec:
               nvidia.com/gpu: "1"
             requests:
               cpu: "2"
-              memory: 4G
+              memory: 16G
               nvidia.com/gpu: "1"
           volumeMounts:
             - name: cache-volume
@@ -84,7 +84,7 @@ spec:
         - name: shm
           emptyDir:
             medium: Memory
-            sizeLimit: "4Gi"
+            sizeLimit: "16Gi"
 
 ---
 apiVersion: v1
