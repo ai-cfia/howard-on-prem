@@ -24,7 +24,7 @@ spec:
                     - ai-lab-1
       containers:
         - name: docling
-          image: ghcr.io/docling-project/docling-serve-cu124:v1.26.0
+          image: ghcr.io/docling-project/docling-serve-cu128:v1.26.0
           imagePullPolicy: Always
           ports:
             - containerPort: 5001
