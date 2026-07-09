@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: ollama
-          image: ollama/ollama:0.9.6
+          image: ollama/ollama:0.31.2
           ports:
           - containerPort: 11434
           resources:
