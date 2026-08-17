@@ -1,0 +1,140 @@
+---
+# Keep the controller and all workflow execution inside this namespace. The
+# chart still installs cluster-scoped CRDs, but its runtime RBAC uses Roles.
+singleNamespace: true
+createAggregateRoles: false
+
+crds:
+  install: true
+  keep: true
+  full: true
+  # Argo 4 installs its full validation schemas with a short-lived hook Job.
+  # Keep that Job on an application worker and give it a small, fixed budget.
+  upgradeJob:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 250m
+        memory: 128Mi
+    nodeSelector:
+      type: app-worker
+
+workflow:
+  serviceAccount:
+    create: true
+    name: argo-workflow
+  rbac:
+    create: true
+
+controller:
+  parallelism: 5
+  namespaceParallelism: 5
+  workflowNamespaces:
+    - argo-workflows
+  clusterWorkflowTemplates:
+    enabled: false
+  workflowRestrictions:
+    templateReferencing: Secure
+  retentionPolicy:
+    completed: 20
+    failed: 10
+    errored: 10
+  nodeEvents:
+    enabled: false
+  workflowEvents:
+    enabled: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                  - app-worker
+
+server:
+  enabled: true
+  secure: false
+  authModes:
+    - sso
+  clusterWorkflowTemplates:
+    enabled: false
+    enableEditing: false
+  # Keycloak authenticates the browser session. The group claim is then mapped
+  # to one of the namespace-scoped service accounts in base/sso-rbac.yaml.
+  sso:
+    enabled: true
+    issuer: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure
+    clientId:
+      name: argo-workflows-sso
+      key: client-id
+    clientSecret:
+      name: argo-workflows-sso
+      key: client-secret
+    redirectUrl: >-
+      https://argo-workflows.inspection.alpha.canada.ca/oauth2/callback
+    rbac:
+      enabled: true
+      secretWhitelist:
+        - argo-workflows-admin.service-account-token
+        - argo-workflows-user.service-account-token
+        - argo-workflows-sso
+    scopes:
+      - profile
+      - email
+      - groups
+    sessionExpiry: 10h
+  # Cilium terminates TLS here; Argo Server receives HTTP inside the cluster
+  # and still requires an authenticated SSO session for every request.
+  ingress:
+    enabled: true
+    ingressClassName: cilium
+    annotations:
+      lbipam.cilium.io/ips: 10.140.79.37
+      ingress.cilium.io/loadbalancer-mode: dedicated
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - argo-workflows.inspection.alpha.canada.ca
+    paths:
+      - /
+    pathType: Prefix
+    tls:
+      - secretName: argo-workflows-tls
+        hosts:
+          - argo-workflows.inspection.alpha.canada.ca
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 3
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                  - app-worker
+
+# Artifact storage belongs to the first real data stage. The hosting layer does
+# not receive Ceph S3 credentials before that contract is defined.
+artifactRepository: {}
+useStaticCredentials: false
