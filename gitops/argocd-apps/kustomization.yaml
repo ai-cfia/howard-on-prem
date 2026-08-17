@@ -33,6 +33,7 @@ resources:
 
   # Gitops applications
   - ../argocd/
+  - ../argo-workflows/
   - ../on-prem-gh-runners/
   - ../argocd-metrics-server/
   # - ../telepresence/

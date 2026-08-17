@@ -1,0 +1,129 @@
+---
+singleNamespace: true
+createAggregateRoles: false
+
+crds:
+  install: true
+  keep: true
+  full: true
+  upgradeJob:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 250m
+        memory: 128Mi
+    nodeSelector:
+      type: app-worker
+
+workflow:
+  serviceAccount:
+    create: true
+    name: argo-workflow
+  rbac:
+    create: true
+
+controller:
+  parallelism: 5
+  namespaceParallelism: 5
+  workflowNamespaces:
+    - argo-workflows
+  clusterWorkflowTemplates:
+    enabled: false
+  workflowRestrictions:
+    templateReferencing: Secure
+  retentionPolicy:
+    completed: 20
+    failed: 10
+    errored: 10
+  nodeEvents:
+    enabled: false
+  workflowEvents:
+    enabled: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                  - app-worker
+
+server:
+  enabled: true
+  secure: false
+  authModes:
+    - sso
+  clusterWorkflowTemplates:
+    enabled: false
+    enableEditing: false
+  sso:
+    enabled: true
+    issuer: https://keycloak.inspection.alpha.canada.ca/realms/infrastructure
+    clientId:
+      name: argo-workflows-sso
+      key: client-id
+    clientSecret:
+      name: argo-workflows-sso
+      key: client-secret
+    redirectUrl: >-
+      https://argo-workflows.inspection.alpha.canada.ca/oauth2/callback
+    rbac:
+      enabled: true
+      secretWhitelist:
+        - argo-workflows-admin.service-account-token
+        - argo-workflows-user.service-account-token
+        - argo-workflows-sso
+    scopes:
+      - profile
+      - email
+      - groups
+    sessionExpiry: 10h
+  ingress:
+    enabled: true
+    ingressClassName: cilium
+    annotations:
+      ingress.cilium.io/loadbalancer-mode: shared
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - argo-workflows.inspection.alpha.canada.ca
+    paths:
+      - /
+    pathType: Prefix
+    tls:
+      - secretName: argo-workflows-tls
+        hosts:
+          - argo-workflows.inspection.alpha.canada.ca
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 3
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                  - app-worker
+
+artifactRepository: {}
+useStaticCredentials: false

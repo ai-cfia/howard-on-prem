@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo-workflows-user
+  annotations:
+    workflows.argoproj.io/rbac-rule: "'apps' in groups"
+    workflows.argoproj.io/rbac-rule-precedence: "10"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argo-workflows-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argo-workflows-user
+subjects:
+  - kind: ServiceAccount
+    name: argo-workflows-user
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo-workflows-admin
+  annotations:
+    workflows.argoproj.io/rbac-rule: "'devsecops' in groups"
+    workflows.argoproj.io/rbac-rule-precedence: "20"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argo-workflows-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argo-workflows-admin
+subjects:
+  - kind: ServiceAccount
+    name: argo-workflows-admin
