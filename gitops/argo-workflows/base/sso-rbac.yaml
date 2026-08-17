@@ -7,55 +7,6 @@ metadata:
     workflows.argoproj.io/rbac-rule: "'apps' in groups"
     workflows.argoproj.io/rbac-rule-precedence: "10"
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: argo-workflows-user.service-account-token
-  annotations:
-    kubernetes.io/service-account.name: argo-workflows-user
-type: kubernetes.io/service-account-token
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: argo-workflows-user
-rules:
-  - apiGroups:
-      - argoproj.io
-    resources:
-      - workflows
-    verbs:
-      - create
-      - get
-      - list
-      - watch
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - argoproj.io
-    resources:
-      - workflowtemplates
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ""
-    resources:
-      - events
-      - pods
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ""
-    resources:
-      - pods/log
-    verbs:
-      - get
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -75,50 +26,6 @@ metadata:
   annotations:
     workflows.argoproj.io/rbac-rule: "'devsecops' in groups"
     workflows.argoproj.io/rbac-rule-precedence: "20"
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: argo-workflows-admin.service-account-token
-  annotations:
-    kubernetes.io/service-account.name: argo-workflows-admin
-type: kubernetes.io/service-account-token
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: argo-workflows-admin
-rules:
-  - apiGroups:
-      - argoproj.io
-    resources:
-      - workflows
-      - workflowtemplates
-      - cronworkflows
-    verbs:
-      - create
-      - get
-      - list
-      - watch
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - ""
-    resources:
-      - configmaps
-      - events
-      - pods
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ""
-    resources:
-      - pods/log
-    verbs:
-      - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
