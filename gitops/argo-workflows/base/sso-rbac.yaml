@@ -1,6 +1,4 @@
 ---
-# Argo maps each SSO request to one of these service accounts. The resulting
-# Kubernetes Role, rather than the UI itself, decides what that user may do.
 apiVersion: v1
 kind: ServiceAccount
 metadata:
