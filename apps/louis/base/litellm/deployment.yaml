@@ -37,7 +37,7 @@ spec:
                       - app-worker
       containers:
         - name: litellm
-          image: ghcr.io/berriai/litellm-non_root:v1.98.0
+          image: ghcr.io/berriai/litellm-non_root:v1.97.0
           args: ["--port", "4000", "--config", "/app/proxy_server_config.yaml"]
           envFrom:
             - secretRef:
