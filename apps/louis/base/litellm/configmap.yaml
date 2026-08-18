@@ -145,19 +145,19 @@ data:
             api_key: os.environ/GPT_OSS_120B_API_KEY
         - model_name: muse-glimmer-30b
           litellm_params:
-            model: openai/muse-glimmer-30b
+            model: hosted_vllm/muse-glimmer-30b
             api_base: os.environ/MUSE_GLIMMER_30B_API_ENDPOINT
             api_key: os.environ/MUSE_GLIMMER_30B_API_KEY
         - model_name: snowflake-arctic-embed-l-v2.0
           litellm_params:
-            model: snowflake/snowflake-arctic-embed-l-v2.0
+            model: hosted_vllm/snowflake-arctic-embed-l-v2.0
             api_base: os.environ/SNOWFLAKE_ARCTIC_EMBED_L_V2_0_API_ENDPOINT
             api_key: os.environ/SNOWFLAKE_ARCTIC_EMBED_L_V2_0_API_KEY
           model_info:
             mode: embedding
         - model_name: bge-reranker-v2-m3
           litellm_params:
-            model: BAAI/bge-reranker-v2-m3
+            model: hosted_vllm/bge-reranker-v2-m3
             api_base: os.environ/BGE_RERANKER_V2_M3_API_ENDPOINT
             api_key: os.environ/BGE_RERANKER_V2_M3_API_KEY
           model_info:
