@@ -1,0 +1,101 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpt-oss-120b-deployment
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: gpt-oss-120b
+  template:
+    metadata:
+      labels:
+        app: gpt-oss-120b
+    spec:
+      runtimeClassName: nvidia
+      containers:
+        - name: gpt-oss-120b
+          image: vllm/vllm-openai:v0.24.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - >
+              vllm serve meta-models/Muse-Glimmer-30B
+              --served-model-name muse-glimmer
+              --tensor-parallel-size 4
+              --gpu-memory-utilization 0.92
+              --max-model-len 131072
+              --max-num-seqs 64
+              --enable-auto-tool-choice
+              --tool-call-parser muse_glimmer
+              --reasoning-parser muse_glimmer
+              --generation-config auto
+          envFrom:
+            - secretRef:
+                name: huggingface-secrets
+          env:
+            - name: VLLM_LOGGING_LEVEL
+              value: "DEBUG"
+            - name: NCCL_P2P_DISABLE
+              value: "1"
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              # cpu: "2"
+              # memory: 8G
+              nvidia.com/gpu: "1"
+            requests:
+              cpu: "2"
+              memory: 16G
+              nvidia.com/gpu: "1"
+          volumeMounts:
+            - name: cache-volume
+              mountPath: /root/.cache/huggingface
+            - name: shm
+              mountPath: /dev/shm
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 600
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 720
+            periodSeconds: 30
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - ai-lab-2
+      volumes:
+        - name: cache-volume
+          persistentVolumeClaim:
+            claimName: gpt-oss-120b-pvc
+        # vLLM needs to access the host's shared memory for tensor parallel inference.
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: "16Gi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gpt-oss-120b-service
+spec:
+  type: ClusterIP
+  selector:
+    app: gpt-oss-120b
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
