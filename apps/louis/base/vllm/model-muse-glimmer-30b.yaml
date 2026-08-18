@@ -2,21 +2,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gpt-oss-120b-deployment
+  name: muse-glimmer-30b-deployment
 spec:
   replicas: 1
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: gpt-oss-120b
+      app: muse-glimmer-30b
   template:
     metadata:
       labels:
-        app: gpt-oss-120b
+        app: muse-glimmer-30b
     spec:
       runtimeClassName: nvidia
       containers:
-        - name: gpt-oss-120b
+        - name: muse-glimmer-30b
           image: vllm/vllm-openai:muse-glimmer
           command: ["/bin/sh", "-c"]
           args:
@@ -80,7 +80,7 @@ spec:
       volumes:
         - name: cache-volume
           persistentVolumeClaim:
-            claimName: gpt-oss-120b-pvc
+            claimName: muse-glimmer-30b-pvc
         # vLLM needs to access the host's shared memory for tensor parallel inference.
         - name: shm
           emptyDir:
@@ -91,11 +91,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gpt-oss-120b-service
+  name: muse-glimmer-30b-service
 spec:
   type: ClusterIP
   selector:
-    app: gpt-oss-120b
+    app: muse-glimmer-30b
   ports:
     - protocol: TCP
       port: 8000

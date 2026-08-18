@@ -143,6 +143,11 @@ data:
             model: openai/gpt-oss-120b
             api_base: os.environ/GPT_OSS_120B_API_ENDPOINT
             api_key: os.environ/GPT_OSS_120B_API_KEY
+        - model_name: muse-glimmer-30b
+          litellm_params:
+            model: openai/muse-glimmer-30b
+            api_base: os.environ/MUSE_GLIMMER_30B_API_ENDPOINT
+            api_key: os.environ/MUSE_GLIMMER_30B_API_KEY
         - model_name: snowflake-arctic-embed-l-v2.0
           litellm_params:
             model: snowflake/snowflake-arctic-embed-l-v2.0
