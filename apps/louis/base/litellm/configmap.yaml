@@ -145,7 +145,7 @@ data:
             api_key: os.environ/GPT_OSS_120B_API_KEY
         - model_name: muse-glimmer-30b
           litellm_params:
-            model: hosted_vllm/muse-glimmer-30b
+            model: hosted_vllm/muse-glimmer
             api_base: os.environ/MUSE_GLIMMER_30B_API_ENDPOINT
             api_key: os.environ/MUSE_GLIMMER_30B_API_KEY
         - model_name: snowflake-arctic-embed-l-v2.0
