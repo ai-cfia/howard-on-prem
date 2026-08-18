@@ -17,15 +17,16 @@ spec:
       runtimeClassName: nvidia
       containers:
         - name: gpt-oss-120b
-          image: vllm/vllm-openai:v0.27.1
+          image: vllm/vllm-openai:muse-glimmer
           command: ["/bin/sh", "-c"]
           args:
             - >
               vllm serve meta-models/Muse-Glimmer-30B
               --served-model-name muse-glimmer
-              --tensor-parallel-size 4
+              --tensor-parallel-size 1
               --gpu-memory-utilization 0.92
-              --max-model-len 131072
+              --max-model-len auto
+              --max-num-batched-tokens 8192
               --max-num-seqs 64
               --enable-auto-tool-choice
               --tool-call-parser muse_glimmer
