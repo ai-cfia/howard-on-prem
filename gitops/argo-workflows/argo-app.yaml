@@ -6,6 +6,12 @@ metadata:
   namespace: argocd
 spec:
   project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
   destination:
     server: https://kubernetes.default.svc
     namespace: argo-workflows
