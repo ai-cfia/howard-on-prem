@@ -1,0 +1,19 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: argo-workflows-tls
+spec:
+  secretName: argo-workflows-tls
+  duration: 2160h
+  renewBefore: 360h
+  subject:
+    organizations:
+      - ACIA CFIA AI Lab
+  commonName: argo-workflows.inspection.alpha.canada.ca
+  dnsNames:
+    - argo-workflows.inspection.alpha.canada.ca
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
