@@ -11,5 +11,5 @@ spec:
     namespace: argo-workflows
   source:
     repoURL: https://github.com/ai-cfia/nachet.git
-    path: mlops
+    path: mlops/workflows
     targetRevision: main
