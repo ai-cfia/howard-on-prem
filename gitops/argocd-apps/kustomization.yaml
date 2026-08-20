@@ -67,6 +67,7 @@ resources:
   # MLOps
   - ../../mlops/nvidia/
   - ../../mlops/mlflow/
+  - ../../mlops/nachet/
   - ../../mlops/triton/
 
   # Infrastructure and configuration applications
