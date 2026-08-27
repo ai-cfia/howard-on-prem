@@ -8,7 +8,7 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: ailab-shared
+    namespace: argo-workflows
   sources:
     - repoURL: https://github.com/ai-cfia/nachet.git
       path: mlops/workflows

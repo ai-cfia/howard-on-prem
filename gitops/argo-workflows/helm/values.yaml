@@ -19,15 +19,16 @@ crds:
 
 workflow:
   serviceAccount:
-    create: false
+    create: true
+    name: argo-workflow
   rbac:
-    create: false
+    create: true
 
 controller:
   parallelism: 5
   namespaceParallelism: 5
-  extraArgs:
-    - --managed-namespace=ailab-shared
+  workflowNamespaces:
+    - argo-workflows
   clusterWorkflowTemplates:
     enabled: false
   workflowRestrictions:
@@ -60,8 +61,6 @@ controller:
 server:
   enabled: true
   secure: false
-  extraArgs:
-    - --managed-namespace=ailab-shared
   authModes:
     - sso
   clusterWorkflowTemplates:
