@@ -9,7 +9,10 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: argo-workflows
-  source:
-    repoURL: https://github.com/ai-cfia/nachet.git
-    path: mlops/workflows
-    targetRevision: main
+  sources:
+    - repoURL: https://github.com/ai-cfia/nachet.git
+      path: mlops/workflows
+      targetRevision: main
+    - repoURL: https://github.com/ai-cfia/howard-on-prem.git
+      path: mlops/nachet/workflows/base
+      targetRevision: HEAD
