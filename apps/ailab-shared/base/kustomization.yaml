@@ -14,3 +14,4 @@ resources:
   - seedlab-pytorch.yaml
   - plantdata-pytorch.yaml
   - yjdev.yaml
+  - fire-pytorch.yaml

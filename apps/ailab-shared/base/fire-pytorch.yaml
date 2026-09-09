@@ -28,7 +28,7 @@ spec:
       containers:
         - name: fire-pytorch
           # image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-24-devenv:2025050803
-          image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-25-devenv:2025111301
+          image: ghcr.io/ai-cfia/nachet-model-ccds/pytorch-gpu-devenv:26-2026090901
           imagePullPolicy: Always
           resources:
             requests:
