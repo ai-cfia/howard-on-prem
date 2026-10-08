@@ -36,7 +36,7 @@ spec:
               mountPath: /label-studio/data
       containers:
         - name: labelstudio
-          image: heartexlabs/label-studio:1.18.0
+          image: heartexlabs/label-studio:1.23.2
           imagePullPolicy: Always
           # command: ["label-studio-uwsgi"]
           # resources:

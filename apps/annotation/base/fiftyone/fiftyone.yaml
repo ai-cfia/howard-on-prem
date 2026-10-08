@@ -32,7 +32,7 @@ spec:
       containers:
         - name: fiftyone
           image: >-
-            ghcr.io/ai-cfia/fiftyone:1.15.0-python3.9-plugins-torch-20260604
+            voxel51/fiftyone:1.22.1-python3.13
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
