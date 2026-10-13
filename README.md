@@ -1,11 +1,13 @@
 # Howard On-Premises Platform
 
-A production-ready, GitOps-driven Kubernetes platform for the Canadian Food Inspection Agency (CFIA/ACIA), designed to host AI/ML workloads and enterprise applications with strict security and compliance requirements.
+A production-ready, GitOps-driven Kubernetes platform for the Canadian Food
+Inspection Agency (CFIA/ACIA), designed to host AI/ML workloads and enterprise
+applications with strict security and compliance requirements.
 
 ## 📋 Table of Contents
 
 - [About the Project](#-about-the-project)
-- [Architecture Overview](#️-architecture-overview)
+- [Architecture Overview](#-architecture-overview)
 - [Technology Stack](#-technology-stack)
 - [How Components Work Together](#-how-components-work-together)
 - [Project Structure](#-project-structure)
@@ -17,7 +19,8 @@ A production-ready, GitOps-driven Kubernetes platform for the Canadian Food Insp
 
 ## 🎯 About the Project
 
-The Howard On-Premises Platform is a comprehensive Kubernetes infrastructure solution that provides:
+The Howard On-Premises Platform is a comprehensive Kubernetes infrastructure
+solution that provides:
 
 - **Enterprise-grade AI/ML platform** for food inspection and safety applications
 - **Multi-tenant environment** with strict security boundaries
@@ -29,11 +32,12 @@ The Howard On-Premises Platform is a comprehensive Kubernetes infrastructure sol
 
 - **Fertiscan**: Fertilizer inspection and analysis system
 - **Nachet**: Insect identification using ML models for pest detection
-- **Louis**: Comprehensive AI platform with LLM capabilities, RAG, and research tools
+- **Louis**: Comprehensive AI platform with LLM capabilities, RAG, and research
+  tools
 - **LibreChat**: Multi-model AI chat interface for internal use
 - **Finesse**: Internal management and workflow applications
 
-## 🏗️ Architecture Overview
+## 🏗 Architecture Overview
 
 ```mermaid
 graph TB
@@ -96,7 +100,7 @@ graph TB
 ### Core Infrastructure
 
 | Component | Purpose | Version/Details |
-|-----------|---------|-----------------|
+| ----------- | --------- | ----------------- |
 | **Kubernetes** | Container orchestration | v1.28+ |
 | **ArgoCD** | GitOps deployment | v8.3.0 |
 | **Cilium** | CNI & Service Mesh | eBPF-based networking |
@@ -105,7 +109,7 @@ graph TB
 ### Security & Authentication
 
 | Component | Purpose | Configuration |
-|-----------|---------|---------------|
+| ----------- | --------- | --------------- |
 | **Keycloak** | SSO/Identity provider | OIDC for all services |
 | **Vault** | Secrets management | Auto-unseal enabled |
 | **cert-manager** | TLS certificates | Let's Encrypt production |
@@ -115,7 +119,7 @@ graph TB
 ### Data Management
 
 | Component | Purpose | Features |
-|-----------|---------|----------|
+| ----------- | --------- | ---------- |
 | **CloudNativePG** | PostgreSQL operator | HA clusters with auto-backup |
 | **MinIO** | S3-compatible storage | Distributed mode |
 | **Velero** | Backup & DR | Cluster-level backups |
@@ -123,7 +127,7 @@ graph TB
 ### Observability Stack
 
 | Component | Purpose | Retention |
-|-----------|---------|-----------|
+| ----------- | --------- | ----------- |
 | **Grafana** | Dashboards & visualization | SSO integrated |
 | **Loki** | Log aggregation | 30 days |
 | **Mimir** | Metrics storage | 60 days |
@@ -133,7 +137,7 @@ graph TB
 ### AI/ML Infrastructure
 
 | Component | Purpose | Features |
-|-----------|---------|----------|
+| ----------- | --------- | ---------- |
 | **NVIDIA GPU Operator** | GPU management | Time-slicing support |
 | **MLflow** | ML experiment tracking | Model registry |
 | **Triton** | Model inference server | Multi-framework support |
@@ -353,7 +357,8 @@ Configured alerts for:
 4. Push to the branch
 5. Create a Pull Request
 
-All changes are deployed through GitOps - direct cluster modifications are discouraged.
+All changes are deployed through GitOps - direct cluster modifications are
+discouraged.
 
 ### Development Workflow
 
@@ -365,7 +370,8 @@ All changes are deployed through GitOps - direct cluster modifications are disco
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.
 
 ## 📞 Support
 
