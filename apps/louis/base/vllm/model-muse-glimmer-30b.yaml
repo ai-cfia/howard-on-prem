@@ -60,13 +60,13 @@ spec:
             httpGet:
               path: /health
               port: 8000
-            initialDelaySeconds: 600
+            initialDelaySeconds: 1200
             periodSeconds: 30
           readinessProbe:
             httpGet:
               path: /health
               port: 8000
-            initialDelaySeconds: 720
+            initialDelaySeconds: 1440
             periodSeconds: 30
       affinity:
         nodeAffinity:
