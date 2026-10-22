@@ -88,7 +88,7 @@ spec:
         inherit: true
         replication: false
         bypassrls: false
-        connectionLimit: 10
+        connectionLimit: 100
         passwordSecret:
           name: litellm-dev-user-creds
 
