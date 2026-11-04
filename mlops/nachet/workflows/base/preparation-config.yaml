@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nachet-preparation-config
+data:
+  bucket: mlflow
+  region: us-east-1
+  server-media-root: /fiftyone-preparation

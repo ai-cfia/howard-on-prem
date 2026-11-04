@@ -7,3 +7,4 @@ namespace: argo-workflows
 resources:
   - pvc.yaml
   - secret.yaml
+  - preparation-config.yaml
