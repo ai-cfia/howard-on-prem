@@ -117,6 +117,28 @@ For COCO detection datasets:
 
 ## Validation
 
+### S3 preparation images
+
+Preparation uploads full-image PNGs to `s3://mlflow/png/detection/`. The
+`s3-preparation` sidecar exposes those keys read-only at:
+
+```text
+/fiftyone-preparation/png/detection/<sha256>.png
+```
+
+Use `/fiftyone-preparation` as `server-media-root` in the preparation workflow
+configuration. The existing `/fiftyone-s3` mount still reads `mlflow/datasets/`;
+`/datasets` and `/ailab` also keep their current paths. The new sidecar reuses
+the mount script and S3 Secret, with its own readiness status volume.
+
+Before deploying this change, check the live FiftyOne datasets' `filepath`
+values and confirm `mlflow/png/detection/` is readable with the existing S3
+credentials. The added sidecar must be ready for the whole pod to be ready.
+After rollout, open one existing dataset and one newly prepared image. This
+checkout does not establish what paths the live datasets currently use.
+
+### Cluster checks
+
 ```bash
 kubectl get httproute -n annotation
 kubectl get pods,svc,pvc -n annotation
