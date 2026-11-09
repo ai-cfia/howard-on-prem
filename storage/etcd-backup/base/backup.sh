@@ -17,13 +17,6 @@ etcdctl snapshot status "$staging/snapshot.db"
 # Publish the checked file without replacing an existing snapshot.
 ln -T "$staging/snapshot.db" "$snapshot"
 
-backup_day=${timestamp%-*}
-daily_start=$(date -u -d "$backup_day 13 days ago" +%Y%m%d)
-weekly_end=$(date -u -d "$backup_day 14 days ago" +%F)
-weekly_end_weekday=$(date -u -d "$weekly_end" +%u)
-# Include the week containing the first eligible day and seven older weeks.
-weekly_start=$(date -u -d "$weekly_end $((weekly_end_weekday - 1 + 7 * 7)) days ago" +%Y%m%d)
-
 # Process the newest snapshot in each period first.
 set --
 for saved in /backup/etcd-snapshot-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9].db; do
@@ -36,32 +29,44 @@ if [ "${1:-}" != "$snapshot" ]; then
   exit 0
 fi
 
-previous_period=
-months=0
+days_kept=0
+weeks_kept=0
+months_kept=0
+daily_bucket=
+weekly_bucket=
+monthly_bucket=
+last_snapshot_month=
 prune_list="$staging/prune-list"
 : > "$prune_list"
 for saved do
   saved_timestamp=${saved##*/etcd-snapshot-}
-  calendar=$(date -u -d "${saved_timestamp%-*}" '+%Y%m%d %G-W%V %Y-%m')
+  calendar=$(date -u -d "${saved_timestamp%-*}" '+%F %G-W%V %Y-%m')
   read -r day week month <<EOF
 $calendar
 EOF
-  if [ "$day" -ge "$daily_start" ]; then
-    period=$day
-  elif [ "$day" -ge "$weekly_start" ]; then
-    period=$week
-  else
-    period=$month
-  fi
-  if [ "$period" != "$previous_period" ]; then
-    previous_period=$period
-    if [ "$day" -ge "$weekly_start" ]; then
+  previous_month=$last_snapshot_month
+  last_snapshot_month=$month
+
+  # Finish the last daily or weekly bucket before moving to the next tier.
+  if [ "$days_kept" -lt 14 ] || [ "$day" = "$daily_bucket" ]; then
+    if [ "$day" != "$daily_bucket" ]; then
+      daily_bucket=$day
+      days_kept=$((days_kept + 1))
       continue
     fi
-    months=$((months + 1))
-    if [ "$months" -le 3 ]; then
+  elif [ "$weeks_kept" -lt 8 ] || [ "$week" = "$weekly_bucket" ]; then
+    if [ "$week" != "$weekly_bucket" ]; then
+      weekly_bucket=$week
+      weeks_kept=$((weeks_kept + 1))
+      continue
+    elif [ "$month" != "$previous_month" ]; then
+      # A week can span two months. Keep the earlier month's newest copy.
       continue
     fi
+  elif [ "$months_kept" -lt 3 ] && [ "$month" != "$monthly_bucket" ]; then
+    monthly_bucket=$month
+    months_kept=$((months_kept + 1))
+    continue
   fi
   printf '%s\n' "$saved" >> "$prune_list"
 done
