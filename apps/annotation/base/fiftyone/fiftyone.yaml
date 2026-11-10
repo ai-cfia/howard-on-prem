@@ -68,6 +68,10 @@ spec:
             - name: s3-mount-status
               mountPath: /s3-mount-status
               readOnly: true
+            - name: preparation-media
+              mountPath: /fiftyone-preparation
+              mountPropagation: HostToContainer
+              readOnly: true
             - name: startup-scripts
               mountPath: /opt/fiftyone-startup
               readOnly: true
@@ -146,6 +150,57 @@ spec:
             - name: startup-scripts
               mountPath: /opt/fiftyone-startup
               readOnly: true
+        - name: s3-preparation
+          image: >-
+            efrecon/s3fs:1.95@sha256:5b4078918899cca287dcc915e8e655ee526c1851e962e24df15673e6c66473d2
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - /opt/fiftyone-startup/mount-s3-datasets.sh
+          env:
+            - name: FIFTYONE_S3_BUCKET
+              value: mlflow
+            - name: FIFTYONE_S3_PREFIX
+              value: png/detection
+            - name: FIFTYONE_S3_MOUNT_PATH
+              value: /fiftyone-preparation/png/detection
+            - name: FIFTYONE_S3_REGION
+              value: us-east-1
+          envFrom:
+            - secretRef:
+                name: fiftyone-s3-secrets
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              memory: "512Mi"
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  test -f /s3-mount-status/ready &&
+                  grep -Fq " ${FIFTYONE_S3_MOUNT_PATH} " /proc/mounts &&
+                  ls "${FIFTYONE_S3_MOUNT_PATH}" >/dev/null
+            periodSeconds: 60
+            timeoutSeconds: 20
+            failureThreshold: 5
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          volumeMounts:
+            - name: preparation-media
+              mountPath: /fiftyone-preparation
+              mountPropagation: Bidirectional
+            - name: preparation-mount-status
+              mountPath: /s3-mount-status
+            - name: dev-fuse
+              mountPath: /dev/fuse
+            - name: startup-scripts
+              mountPath: /opt/fiftyone-startup
+              readOnly: true
       volumes:
         - name: workspace
           persistentVolumeClaim:
@@ -159,6 +214,11 @@ spec:
         - name: s3-mount
           emptyDir: {}
         - name: s3-mount-status
+          emptyDir: {}
+        - name: preparation-media
+          emptyDir:
+            medium: Memory
+        - name: preparation-mount-status
           emptyDir: {}
         - name: startup-scripts
           configMap:
