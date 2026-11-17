@@ -28,7 +28,7 @@ data:
     #!/bin/sh
     set -eu
 
-    : "${MLFLOW_S3_ENDPOINT_URL:?missing S3 endpoint URL}"
+    : "${FIFTYONE_S3_ENDPOINT_URL:?missing S3 endpoint URL}"
     : "${AWS_ACCESS_KEY_ID:?missing AWS access key ID}"
     : "${AWS_SECRET_ACCESS_KEY:?missing AWS secret access key}"
     : "${FIFTYONE_S3_BUCKET:?missing S3 bucket}"
@@ -79,7 +79,7 @@ data:
       "${FIFTYONE_S3_BUCKET}:/${FIFTYONE_S3_PREFIX}" \
       "${FIFTYONE_S3_MOUNT_PATH}" \
       -f \
-      -o url="${MLFLOW_S3_ENDPOINT_URL}" \
+      -o url="${FIFTYONE_S3_ENDPOINT_URL}" \
       -o endpoint="${FIFTYONE_S3_REGION}" \
       -o use_path_request_style \
       -o allow_other \

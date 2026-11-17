@@ -117,25 +117,75 @@ For COCO detection datasets:
 
 ## Validation
 
-### S3 preparation images
+### Cold Ceph S3 mounts
 
-Preparation uploads full-image PNGs to `s3://mlflow/png/detection/`. The
-`s3-preparation` sidecar exposes those keys read-only at:
+FiftyOne reads two prefixes in `nachet-seed-image-dataset`:
 
-```text
-/fiftyone-preparation/png/detection/<sha256>.png
-```
+| Cold bucket prefix | Read-only path in FiftyOne |
+| --- | --- |
+| `datasets/` | `/fiftyone-s3` |
+| `png/detection/` | `/fiftyone-preparation/png/detection` |
 
-Use `/fiftyone-preparation` as `server-media-root` in the preparation workflow
-configuration. The existing `/fiftyone-s3` mount still reads `mlflow/datasets/`;
-`/datasets` and `/ailab` also keep their current paths. The new sidecar reuses
-the mount script and S3 Secret, with its own readiness status volume.
+FiftyOne keeps the full image paths in its review records. Keep the same paths
+when moving the objects to cold Ceph.
 
-Before deploying this change, check the live FiftyOne datasets' `filepath`
-values and confirm `mlflow/png/detection/` is readable with the existing S3
-credentials. The added sidecar must be ready for the whole pod to be ready.
-After rollout, open one existing dataset and one newly prepared image. This
-checkout does not establish what paths the live datasets currently use.
+Both Argo CD applications auto-sync. Merging the Howard change deploys the
+mount and configuration changes. Complete the image-copy and credential checks
+in this section before merging.
+
+1. Let active preparation runs finish and pause new runs. Inventory the files
+   served by `/fiftyone-s3` and `/fiftyone-preparation`. Identify any jobs or
+   tools uploading to the hot prefixes and stop them or switch their upload
+   destinations during the cutover. Copy the dataset files under
+   `s3://mlflow/datasets/` and the referenced PNGs under
+   `s3://mlflow/png/detection/` to the same prefixes in the cold bucket. Use the
+   hot gateway for the source and the cold gateway for the destination. Verify
+   that the cold objects match the originals before switching the mounts.
+2. Store the `nachet-seed-image-dataset-user` credentials in one Vault entry:
+   `secrets/nachet/mlops/preparation/cold-s3`. It needs `AWS_ACCESS_KEY_ID` and
+   `AWS_SECRET_ACCESS_KEY`. External Secrets copies this entry into
+   `nachet-preparation-cold-s3` in `argo-workflows` and `fiftyone-cold-s3` in
+   `annotation`. In the Vault UI, the path inside the `secrets/` engine is
+   `nachet/mlops/preparation/cold-s3`. Verify the shared account's permissions
+   below and test both s3fs mounts, including opening an image through each.
+3. Merge the Howard change for
+   [#469](https://github.com/ai-cfia/howard-on-prem/issues/469) and wait for
+   Argo CD's `annotation` and `nachet-mlops` applications to sync successfully
+   and become healthy. Confirm both ExternalSecrets are ready, then merge
+   Nachet's preparation-template change.
+   Open an existing image from each mount that has saved samples. Run a small
+   batch through Argo and open a newly prepared image in FiftyOne. Then resume
+   normal preparation.
+
+If rolling the mounts back to hot Ceph after new cold uploads, first verify
+that every referenced image also exists in hot storage. Copy and verify any
+missing images before reverting, and coordinate the upload destinations again.
+
+### Shared cold Ceph S3 credentials
+
+Preparation and FiftyOne use the same Ceph account and Vault entry. The
+FiftyOne image mounts remain read-only, but the shared credentials also allow
+direct S3 writes under `png/detection/`. No separate reader account or
+duplicate Vault entry is needed.
+
+The workflow user's cold bucket policy grants
+`s3:ListBucket` under `raw/`, `s3:GetObject` under `raw/*`, and
+`s3:GetObject` and `s3:PutObject` under `png/detection/*`. The policy was
+applied through Ceph on November 16. For FiftyOne, also verify `s3:ListBucket`
+for `datasets`, `datasets/*`, `png/detection` and `png/detection/*`, and
+`s3:GetObject` under both prefixes. Add any missing read permissions to the
+shared account before merging. Effective access needs testing.
+
+Confirm and record the bucket owner and ACL grants in the cold Ceph dashboard
+before using those credentials. An Allow-only bucket policy
+does not remove permissions the workflow user already has through ownership
+or ACL grants. Check the actual permissions with the workflow account.
+
+With the workflow account, list a collection under `raw/`, read an original,
+and write and read back a disposable PNG under `png/detection/`. Check that a
+write to a fresh disposable key under `raw/` returns `AccessDenied`. If that
+write succeeds, have the bucket owner remove the probe and correct the policy
+before running preparation. COCO files are written to the shared workspace PVC.
 
 ### Cluster checks
 

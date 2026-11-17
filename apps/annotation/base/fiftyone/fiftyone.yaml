@@ -107,8 +107,10 @@ spec:
             - /bin/sh
             - /opt/fiftyone-startup/mount-s3-datasets.sh
           env:
+            - name: FIFTYONE_S3_ENDPOINT_URL
+              value: http://rook-ceph-rgw-ceph-cold-objectstore.rook-ceph-cold-cluster.svc.cluster.local:80
             - name: FIFTYONE_S3_BUCKET
-              value: mlflow
+              value: nachet-seed-image-dataset
             - name: FIFTYONE_S3_PREFIX
               value: datasets
             - name: FIFTYONE_S3_MOUNT_PATH
@@ -117,7 +119,7 @@ spec:
               value: us-east-1
           envFrom:
             - secretRef:
-                name: fiftyone-s3-secrets
+                name: fiftyone-cold-s3
           resources:
             requests:
               cpu: "100m"
@@ -158,8 +160,10 @@ spec:
             - /bin/sh
             - /opt/fiftyone-startup/mount-s3-datasets.sh
           env:
+            - name: FIFTYONE_S3_ENDPOINT_URL
+              value: http://rook-ceph-rgw-ceph-cold-objectstore.rook-ceph-cold-cluster.svc.cluster.local:80
             - name: FIFTYONE_S3_BUCKET
-              value: mlflow
+              value: nachet-seed-image-dataset
             - name: FIFTYONE_S3_PREFIX
               value: png/detection
             - name: FIFTYONE_S3_MOUNT_PATH
@@ -168,7 +172,7 @@ spec:
               value: us-east-1
           envFrom:
             - secretRef:
-                name: fiftyone-s3-secrets
+                name: fiftyone-cold-s3
           resources:
             requests:
               cpu: "100m"
