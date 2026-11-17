@@ -53,18 +53,18 @@ spec:
         passwordSecret:
           name: nachet-dev-user-creds
 
-      - name: nachet_dataset_smoke
+      - name: mlops-test-user
         ensure: present
-        comment: "Owner of the Nachet dataset release smoke database"
+        comment: "Owner of the shared MLOps test database"
         login: true
         superuser: false
         createdb: false
         createrole: false
         replication: false
         bypassrls: false
-        connectionLimit: 10
+        connectionLimit: 20
         passwordSecret:
-          name: nachet-dataset-release-smoke-user-creds
+          name: mlops-test-user-creds
 
       - name: bn_keycloak
         ensure: present

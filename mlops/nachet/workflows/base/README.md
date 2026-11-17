@@ -1,21 +1,20 @@
 # Nachet dataset release smoke test
 
-The `cloudnativepg` Argo CD application provisions the
-`nachet-dataset-release-smoke` database and the `nachet_datasets_smoke` schema in
-the existing `acia-cfia-dev-cluster` PostgreSQL cluster. The `nachet-mlops`
-application syncs the workflow credentials into `argo-workflows`.
+The `cloudnativepg` Argo CD application provisions the shared `mlops-test`
+database and `mlops-test-user` login in the `acia-cfia-dev-cluster` PostgreSQL
+cluster. The `nachet-mlops` application syncs the workflow credentials into
+`argo-workflows`. Each smoke run uses a schema named after its workflow UUID.
 
 ## Vault setup
 
 Create an entry in the `devsecops` Vault KV mount at
-`cloudnativepg/nachet-dataset-release-smoke-user` with these fields.
+`cloudnativepg/mlops-test-user` with these fields.
 
 | Field | Value |
 | --- | --- |
-| `username` | `nachet_dataset_smoke` |
+| `username` | `mlops-test-user` |
 | `password` | A generated password for this role |
-| `DATASET_DATABASE_URL` | `postgresql+psycopg://nachet_dataset_smoke:<url-encoded-password>@acia-cfia-dev-cluster-rw.cloudnativepg.svc.cluster.local:5432/nachet-dataset-release-smoke` |
-| `DATASET_REGISTRY_SCHEMA` | `nachet_datasets_smoke` |
+| `DATASET_DATABASE_URL` | `postgresql+psycopg://mlops-test-user:<url-encoded-password>@acia-cfia-dev-cluster-rw.cloudnativepg.svc.cluster.local:5432/mlops-test` |
 
 Use the same password in both fields, with percent encoding in the URL. Update
 both fields in the same Vault edit when rotating the password.
@@ -40,24 +39,15 @@ Once the manifests are available to Argo CD, sync `nachet-mlops`. The
 secret sync. The Secret description lists the keys and sizes.
 
 ```sh
-kubectl -n cloudnativepg wait --for=condition=Ready externalsecret/nachet-dataset-release-smoke-user-creds --timeout=120s
-kubectl -n cloudnativepg wait --for=jsonpath='{.status.applied}'=true database/nachet-dataset-release-smoke --timeout=120s
+kubectl -n cloudnativepg wait --for=condition=Ready externalsecret/mlops-test-user-creds --timeout=120s
+kubectl -n cloudnativepg wait --for=jsonpath='{.status.applied}'=true database/mlops-test --timeout=120s
 kubectl -n argo-workflows wait --for=condition=Ready externalsecret/nachet-dataset-release-smoke --timeout=120s
 kubectl -n argo-workflows describe secret nachet-dataset-release-smoke
 ```
 
-Run the standalone migrations from the Nachet checkout's `mlops/datasets`
-directory in an environment with access to the PostgreSQL service. Supply
-`DATASET_DATABASE_URL` and `DATASET_REGISTRY_SCHEMA` from the smoke entry.
-From a workstation with cluster access, run
-`kubectl -n cloudnativepg port-forward svc/acia-cfia-dev-cluster-rw 15432:5432`
-in another terminal and use `127.0.0.1:15432` in the URL for the migration shell.
-
-```sh
-uv sync --locked
-uv run alembic -c alembic.ini upgrade head
-uv run alembic -c alembic.ini current
-```
+Use the Nachet WorkflowTemplate and dataset-release image with per-run schema
+support. The seed pod creates and migrates each schema. The exit handler drops
+the schema and deletes the run's fixture objects.
 
 Submit the smoke workflow with the dedicated Ceph bucket. Use the actual bucket
 name if it has a suffix. The workflow accepts `nachet-dataset-smoke` and

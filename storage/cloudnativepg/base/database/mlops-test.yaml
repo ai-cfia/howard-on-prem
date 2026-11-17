@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: mlops-test
+spec:
+  name: mlops-test
+  owner: mlops-test-user
+  cluster:
+    name: acia-cfia-dev-cluster
