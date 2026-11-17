@@ -117,30 +117,35 @@ For COCO detection datasets:
 
 ## Validation
 
-### S3 preparation images
+### Cold Ceph S3 mounts
 
-`s3-preparation` mounts `s3://nachet-seed-image-dataset/png/detection/`
-read-only. Both old and new preparation reviews use paths under:
+FiftyOne reads two prefixes in `nachet-seed-image-dataset`:
 
-```text
-/fiftyone-preparation/png/detection/<sha256>.png
-```
+| Cold bucket prefix | Read-only path in FiftyOne |
+| --- | --- |
+| `datasets/` | `/fiftyone-s3` |
+| `png/detection/` | `/fiftyone-preparation/png/detection` |
 
-Before switching the mount from hot Ceph to cold Ceph:
+FiftyOne keeps the full image paths in its review records. Keep the same paths
+when moving the objects to cold Ceph.
 
-1. Let active preparation runs finish and pause new runs. Check existing
-   FiftyOne `filepath` values under `/fiftyone-preparation`. Copy the referenced
-   PNGs from `s3://mlflow/png/detection/` to the cold bucket with the same keys.
-   Check their SHA-256 hashes against the filenames.
+Before switching both mounts:
+
+1. Let active preparation runs finish and pause new runs. Inventory the files
+   served by `/fiftyone-s3` and `/fiftyone-preparation`. Copy the dataset files
+   under `s3://mlflow/datasets/` and the referenced PNGs under
+   `s3://mlflow/png/detection/` to the same prefixes in the cold bucket. Use the
+   hot gateway for the source and the cold gateway for the destination. Verify
+   that the cold objects match the originals before switching the mounts.
 2. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to
-   `secrets/nachet/preparation/cold-s3-readonly` in Vault. Check with those
-   credentials that the `png/detection` prefix can be listed and its PNGs read.
+   `secrets/nachet/preparation/cold-s3-readonly` in Vault. Both mounts use the
+   resulting `fiftyone-cold-s3` Secret. Grant the reader `s3:ListBucket` scoped to
+   `datasets`, `datasets/*`, `png/detection` and `png/detection/*`, and
+   `s3:GetObject` under both prefixes. Verify those reads with the reader account.
 3. Sync Howard, then the Nachet preparation template for
    [#469](https://github.com/ai-cfia/howard-on-prem/issues/469). Open an existing
-   preparation image and run a small batch through Argo to check that a new
-   image also opens in FiftyOne. Then resume normal preparation runs.
-
-The `/fiftyone-s3` mount serves `mlflow/datasets/` for general dataset imports.
+   image from each mount that has saved samples. Run a small batch through Argo
+   and open a newly prepared image in FiftyOne. Then resume normal preparation.
 
 ### Cluster checks
 
