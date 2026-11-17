@@ -18,9 +18,20 @@ Create an entry in the `devsecops` Vault KV mount at
 | `DATASET_REGISTRY_SCHEMA` | `nachet_datasets_smoke` |
 
 Use the same password in both fields, with percent encoding in the URL. Update
-both fields in the same Vault edit when rotating the password. The workflow
-ExternalSecret also reads `S3_ENDPOINT_URL`, `S3_ACCESS_KEY`, and `S3_SECRET_KEY`
-from `nachet/mlops/smoke` in the `secrets` mount.
+both fields in the same Vault edit when rotating the password.
+
+The workflow ExternalSecret reads the existing `nachet/mlops/smoke` entry in the
+`secrets` mount and maps the Vault fields to the workflow environment.
+
+| Vault field | Workflow environment variable |
+| --- | --- |
+| `AWS_ENDPOINT_URL_S3` | `S3_ENDPOINT_URL` |
+| `AWS_ACCESS_KEY_ID` | `S3_ACCESS_KEY` |
+| `AWS_SECRET_ACCESS_KEY` | `S3_SECRET_KEY` |
+| `AWS_DEFAULT_REGION` | `AWS_DEFAULT_REGION` |
+
+`AWS_ENDPOINT_URL_S3` should point to the Ceph object gateway for the smoke
+bucket. For the cold gateway, see [the Nachet preparation config](preparation-config.yaml).
 
 ## First run
 
