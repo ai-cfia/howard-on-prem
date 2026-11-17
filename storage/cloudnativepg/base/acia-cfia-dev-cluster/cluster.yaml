@@ -53,6 +53,19 @@ spec:
         passwordSecret:
           name: nachet-dev-user-creds
 
+      - name: nachet_dataset_smoke
+        ensure: present
+        comment: "Owner of the Nachet dataset release smoke database"
+        login: true
+        superuser: false
+        createdb: false
+        createrole: false
+        replication: false
+        bypassrls: false
+        connectionLimit: 10
+        passwordSecret:
+          name: nachet-dataset-release-smoke-user-creds
+
       - name: bn_keycloak
         ensure: present
         comment: "Owner of keycloak database"
