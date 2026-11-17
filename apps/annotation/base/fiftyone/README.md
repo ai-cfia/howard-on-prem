@@ -119,22 +119,28 @@ For COCO detection datasets:
 
 ### S3 preparation images
 
-`s3-preparation-cold` mounts `s3://nachet-seed-image-dataset/png/detection/`
-read-only for new review datasets. Nachet registers image paths under:
+`s3-preparation` mounts `s3://nachet-seed-image-dataset/png/detection/`
+read-only. Both old and new preparation reviews use paths under:
 
 ```text
-/fiftyone-preparation-cold/png/detection/<sha256>.png
+/fiftyone-preparation/png/detection/<sha256>.png
 ```
 
-Existing reviews use the hot `mlflow/png/detection/` mount at
-`/fiftyone-preparation/png/detection/`. `/fiftyone-s3` serves `mlflow/datasets/`.
+Before switching the mount from hot Ceph to cold Ceph:
 
-Before deploying, add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to
-`secrets/nachet/preparation/cold-s3-readonly` in Vault for the FiftyOne reader.
-Its Ceph policy needs to list the `png/detection` prefix and read the objects
-under it. Check that the reader can list that prefix before rolling FiftyOne
-out. The deployment becomes ready when all the sidecars are ready. After rollout,
-open an existing review image and an image registered by the new workflow.
+1. Let active preparation runs finish and pause new runs. Check existing
+   FiftyOne `filepath` values under `/fiftyone-preparation`. Copy the referenced
+   PNGs from `s3://mlflow/png/detection/` to the cold bucket with the same keys.
+   Check their SHA-256 hashes against the filenames.
+2. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to
+   `secrets/nachet/preparation/cold-s3-readonly` in Vault. Check with those
+   credentials that the `png/detection` prefix can be listed and its PNGs read.
+3. Sync Howard, then the Nachet preparation template for
+   [#469](https://github.com/ai-cfia/howard-on-prem/issues/469). Open an existing
+   preparation image and run a small batch through Argo to check that a new
+   image also opens in FiftyOne. Then resume normal preparation runs.
+
+The `/fiftyone-s3` mount serves `mlflow/datasets/` for general dataset imports.
 
 ### Cluster checks
 
