@@ -129,7 +129,9 @@ FiftyOne reads two prefixes in `nachet-seed-image-dataset`:
 FiftyOne keeps the full image paths in its review records. Keep the same paths
 when moving the objects to cold Ceph.
 
-Before switching both mounts:
+Both Argo CD applications auto-sync. Merging the Howard change deploys the
+mount and configuration changes. Complete the image-copy and credential checks
+in this section before merging.
 
 1. Let active preparation runs finish and pause new runs. Inventory the files
    served by `/fiftyone-s3` and `/fiftyone-preparation`. Identify any jobs or
@@ -145,8 +147,10 @@ Before switching both mounts:
    `datasets`, `datasets/*`, `png/detection` and `png/detection/*`, and
    `s3:GetObject` under both prefixes. Test both s3fs mounts with the reader
    account, including opening an image through each mount.
-3. Sync Howard, then the Nachet preparation template for
-   [#469](https://github.com/ai-cfia/howard-on-prem/issues/469).
+3. Merge the Howard change for
+   [#469](https://github.com/ai-cfia/howard-on-prem/issues/469) and wait for
+   Argo CD's `annotation` and `nachet-mlops` applications to sync successfully
+   and become healthy. Then merge Nachet's preparation-template change.
    Open an existing image from each mount that has saved samples. Run a small
    batch through Argo and open a newly prepared image in FiftyOne. Then resume
    normal preparation.
@@ -165,8 +169,7 @@ Argo uses `nachet-preparation-cold-s3`, supplied from Vault at
 applied through Ceph on November 16. Effective workflow access needs testing.
 
 Confirm and record the bucket owner and ACL grants in the cold Ceph dashboard
-before using those credentials. Joseffus expected the upload admin account to
-own the bucket, but this is still unverified. An Allow-only bucket policy
+before using those credentials. An Allow-only bucket policy
 does not remove permissions the workflow user already has through ownership
 or ACL grants. Check the actual permissions with the workflow account.
 
