@@ -92,10 +92,9 @@ data:
 
     mount_pid="$!"
 
-    # Check the mount without listing every object in the prefix.
     for _ in $(seq 1 60); do
       if grep -Fq " ${FIFTYONE_S3_MOUNT_PATH} " /proc/mounts &&
-        test -r "${FIFTYONE_S3_MOUNT_PATH}"; then
+        ls "${FIFTYONE_S3_MOUNT_PATH}" >/dev/null 2>&1; then
         touch /s3-mount-status/ready
         wait "${mount_pid}"
       fi

@@ -139,13 +139,30 @@ Before switching both mounts:
    that the cold objects match the originals before switching the mounts.
 2. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to
    `secrets/nachet/preparation/cold-s3-readonly` in Vault. Both mounts use the
-   resulting `fiftyone-cold-s3` Secret. Grant the reader `s3:ListBucket` scoped to
+   resulting `fiftyone-cold-s3` Secret. Grant the reader `s3:ListBucket` for
    `datasets`, `datasets/*`, `png/detection` and `png/detection/*`, and
-   `s3:GetObject` under both prefixes. Verify those reads with the reader account.
+   `s3:GetObject` under both prefixes. Test both s3fs mounts with the reader
+   account, including opening an image through each mount.
 3. Sync Howard, then the Nachet preparation template for
-   [#469](https://github.com/ai-cfia/howard-on-prem/issues/469). Open an existing
-   image from each mount that has saved samples. Run a small batch through Argo
-   and open a newly prepared image in FiftyOne. Then resume normal preparation.
+   [#469](https://github.com/ai-cfia/howard-on-prem/issues/469).
+   Open an existing image from each mount that has saved samples. Run a small
+   batch through Argo and open a newly prepared image in FiftyOne. Then resume
+   normal preparation.
+
+### Preparation workflow permissions
+
+Argo uses `nachet-preparation-cold-s3`, supplied from Vault at
+`secrets/nachet/preparation/cold-s3`. Store the credentials of
+`nachet-seed-image-dataset-user` there. Its cold bucket policy grants
+`s3:ListBucket` under `raw/`, `s3:GetObject` under `raw/*`, and
+`s3:GetObject` and `s3:PutObject` under `png/detection/*`. The policy was
+applied through Ceph on November 16. Effective workflow access needs testing.
+
+With the workflow account, list a collection under `raw/`, read an original,
+and write and read back a disposable PNG under `png/detection/`. Check that a
+write to a fresh disposable key under `raw/` returns `AccessDenied`. If that
+write succeeds, have the bucket owner remove the probe and correct the policy
+before running preparation. COCO files are written to the shared workspace PVC.
 
 ### Cluster checks
 

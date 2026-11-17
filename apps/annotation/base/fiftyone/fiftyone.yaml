@@ -187,7 +187,7 @@ spec:
                 - |
                   test -f /s3-mount-status/ready &&
                   grep -Fq " ${FIFTYONE_S3_MOUNT_PATH} " /proc/mounts &&
-                  test -r "${FIFTYONE_S3_MOUNT_PATH}"
+                  ls "${FIFTYONE_S3_MOUNT_PATH}" >/dev/null
             periodSeconds: 60
             timeoutSeconds: 20
             failureThreshold: 5
