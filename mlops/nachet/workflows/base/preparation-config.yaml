@@ -7,3 +7,13 @@ data:
   bucket: mlflow
   region: us-east-1
   server-media-root: /fiftyone-preparation
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nachet-preparation-cold-config
+data:
+  bucket: nachet-seed-image-dataset
+  endpoint-url: http://rook-ceph-rgw-ceph-cold-objectstore.rook-ceph-cold-cluster.svc.cluster.local:80
+  region: us-east-1
+  server-media-root: /fiftyone-preparation-cold

@@ -119,23 +119,22 @@ For COCO detection datasets:
 
 ### S3 preparation images
 
-Preparation uploads full-image PNGs to `s3://mlflow/png/detection/`. The
-`s3-preparation` sidecar exposes those keys read-only at:
+`s3-preparation-cold` mounts `s3://nachet-seed-image-dataset/png/detection/`
+read-only for new review datasets. Nachet registers image paths under:
 
 ```text
-/fiftyone-preparation/png/detection/<sha256>.png
+/fiftyone-preparation-cold/png/detection/<sha256>.png
 ```
 
-Use `/fiftyone-preparation` as `server-media-root` in the preparation workflow
-configuration. The existing `/fiftyone-s3` mount still reads `mlflow/datasets/`;
-`/datasets` and `/ailab` also keep their current paths. The new sidecar reuses
-the mount script and S3 Secret, with its own readiness status volume.
+Existing reviews use the hot `mlflow/png/detection/` mount at
+`/fiftyone-preparation/png/detection/`. `/fiftyone-s3` serves `mlflow/datasets/`.
 
-Before deploying this change, check the live FiftyOne datasets' `filepath`
-values and confirm `mlflow/png/detection/` is readable with the existing S3
-credentials. The added sidecar must be ready for the whole pod to be ready.
-After rollout, open one existing dataset and one newly prepared image. This
-checkout does not establish what paths the live datasets currently use.
+Before deploying, add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to
+`secrets/nachet/preparation/cold-s3-readonly` in Vault for the FiftyOne reader.
+Its Ceph policy needs to list the `png/detection` prefix and read the objects
+under it. Check that the reader can list that prefix before rolling FiftyOne
+out. The deployment becomes ready when all the sidecars are ready. After rollout,
+open an existing review image and an image registered by the new workflow.
 
 ### Cluster checks
 
