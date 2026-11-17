@@ -132,8 +132,10 @@ when moving the objects to cold Ceph.
 Before switching both mounts:
 
 1. Let active preparation runs finish and pause new runs. Inventory the files
-   served by `/fiftyone-s3` and `/fiftyone-preparation`. Copy the dataset files
-   under `s3://mlflow/datasets/` and the referenced PNGs under
+   served by `/fiftyone-s3` and `/fiftyone-preparation`. Identify any jobs or
+   tools uploading to the hot prefixes and stop them or switch their upload
+   destinations during the cutover. Copy the dataset files under
+   `s3://mlflow/datasets/` and the referenced PNGs under
    `s3://mlflow/png/detection/` to the same prefixes in the cold bucket. Use the
    hot gateway for the source and the cold gateway for the destination. Verify
    that the cold objects match the originals before switching the mounts.
@@ -149,6 +151,10 @@ Before switching both mounts:
    batch through Argo and open a newly prepared image in FiftyOne. Then resume
    normal preparation.
 
+If rolling the mounts back to hot Ceph after new cold uploads, first verify
+that every referenced image also exists in hot storage. Copy and verify any
+missing images before reverting, and coordinate the upload destinations again.
+
 ### Preparation workflow permissions
 
 Argo uses `nachet-preparation-cold-s3`, supplied from Vault at
@@ -157,6 +163,12 @@ Argo uses `nachet-preparation-cold-s3`, supplied from Vault at
 `s3:ListBucket` under `raw/`, `s3:GetObject` under `raw/*`, and
 `s3:GetObject` and `s3:PutObject` under `png/detection/*`. The policy was
 applied through Ceph on November 16. Effective workflow access needs testing.
+
+Confirm and record the bucket owner and ACL grants in the cold Ceph dashboard
+before using those credentials. Joseffus expected the upload admin account to
+own the bucket, but this is still unverified. An Allow-only bucket policy
+does not remove permissions the workflow user already has through ownership
+or ACL grants. Check the actual permissions with the workflow account.
 
 With the workflow account, list a collection under `raw/`, read an original,
 and write and read back a disposable PNG under `png/detection/`. Check that a
