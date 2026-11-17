@@ -141,16 +141,18 @@ in this section before merging.
    `s3://mlflow/png/detection/` to the same prefixes in the cold bucket. Use the
    hot gateway for the source and the cold gateway for the destination. Verify
    that the cold objects match the originals before switching the mounts.
-2. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to
-   `secrets/nachet/preparation/cold-s3-readonly` in Vault. Both mounts use the
-   resulting `fiftyone-cold-s3` Secret. Grant the reader `s3:ListBucket` for
-   `datasets`, `datasets/*`, `png/detection` and `png/detection/*`, and
-   `s3:GetObject` under both prefixes. Test both s3fs mounts with the reader
-   account, including opening an image through each mount.
+2. Store the `nachet-seed-image-dataset-user` credentials in one Vault entry:
+   `secrets/nachet/mlops/preparation/cold-s3`. It needs `AWS_ACCESS_KEY_ID` and
+   `AWS_SECRET_ACCESS_KEY`. External Secrets copies this entry into
+   `nachet-preparation-cold-s3` in `argo-workflows` and `fiftyone-cold-s3` in
+   `annotation`. In the Vault UI, the path inside the `secrets/` engine is
+   `nachet/mlops/preparation/cold-s3`. Verify the shared account's permissions
+   below and test both s3fs mounts, including opening an image through each.
 3. Merge the Howard change for
    [#469](https://github.com/ai-cfia/howard-on-prem/issues/469) and wait for
    Argo CD's `annotation` and `nachet-mlops` applications to sync successfully
-   and become healthy. Then merge Nachet's preparation-template change.
+   and become healthy. Confirm both ExternalSecrets are ready, then merge
+   Nachet's preparation-template change.
    Open an existing image from each mount that has saved samples. Run a small
    batch through Argo and open a newly prepared image in FiftyOne. Then resume
    normal preparation.
@@ -159,14 +161,20 @@ If rolling the mounts back to hot Ceph after new cold uploads, first verify
 that every referenced image also exists in hot storage. Copy and verify any
 missing images before reverting, and coordinate the upload destinations again.
 
-### Preparation workflow permissions
+### Shared cold Ceph S3 credentials
 
-Argo uses `nachet-preparation-cold-s3`, supplied from Vault at
-`secrets/nachet/preparation/cold-s3`. Store the credentials of
-`nachet-seed-image-dataset-user` there. Its cold bucket policy grants
+Preparation and FiftyOne use the same Ceph account and Vault entry. The
+FiftyOne image mounts remain read-only, but the shared credentials also allow
+direct S3 writes under `png/detection/`. No separate reader account or
+duplicate Vault entry is needed.
+
+The workflow user's cold bucket policy grants
 `s3:ListBucket` under `raw/`, `s3:GetObject` under `raw/*`, and
 `s3:GetObject` and `s3:PutObject` under `png/detection/*`. The policy was
-applied through Ceph on November 16. Effective workflow access needs testing.
+applied through Ceph on November 16. For FiftyOne, also verify `s3:ListBucket`
+for `datasets`, `datasets/*`, `png/detection` and `png/detection/*`, and
+`s3:GetObject` under both prefixes. Add any missing read permissions to the
+shared account before merging. Effective access needs testing.
 
 Confirm and record the bucket owner and ACL grants in the cold Ceph dashboard
 before using those credentials. An Allow-only bucket policy
