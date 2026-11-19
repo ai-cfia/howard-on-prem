@@ -28,6 +28,7 @@ The workflow ExternalSecret reads the existing `nachet/mlops/smoke` entry in the
 | `AWS_ACCESS_KEY_ID` | `S3_ACCESS_KEY` |
 | `AWS_SECRET_ACCESS_KEY` | `S3_SECRET_KEY` |
 | `AWS_DEFAULT_REGION` | `AWS_DEFAULT_REGION` |
+| `TEST_ROOT_DIR` | `DATASET_SMOKE_ROOT` |
 
 `AWS_ENDPOINT_URL_S3` should point to the Ceph object gateway for the smoke
 bucket. For the cold gateway, see [the Nachet preparation config](preparation-config.yaml).
@@ -46,13 +47,15 @@ kubectl -n argo-workflows describe secret nachet-dataset-release-smoke
 ```
 
 Use the Nachet WorkflowTemplate and dataset-release image with per-run schema
-support. The seed pod creates and migrates each schema. The exit handler drops
-the schema and deletes the run's fixture objects.
+and object prefix support. The seed pod creates and migrates each schema. The
+exit handler drops the schema and deletes the run's fixture objects.
 
-Submit the smoke workflow with the dedicated Ceph bucket. Use the actual bucket
-name if it has a suffix. The workflow accepts `nachet-dataset-smoke` and
-`nachet-dataset-smoke-<suffix>`.
+For Howard, set `TEST_ROOT_DIR` to `nachet-seed-image-dataset/smoke` in Vault.
+Leave the workflow's `container` parameter blank to use that bucket. Each run
+uses `smoke/<workflow UUID>/`. The Vault S3 credentials need read, write, and
+delete access under `smoke/`. To use a dedicated bucket, set `container` to
+`nachet-dataset-smoke` or `nachet-dataset-smoke-<suffix>`.
 
 ```sh
-argo submit -n argo-workflows --from workflowtemplate/nachet-dataset-release-smoke -p container=nachet-dataset-smoke --watch
+argo submit -n argo-workflows --from workflowtemplate/nachet-dataset-release-smoke --watch
 ```
