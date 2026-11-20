@@ -16,13 +16,69 @@ data:
       if [ -f /s3-mount-status/ready ] &&
         grep -Fq " ${FIFTYONE_S3_MOUNT_PATH} " /proc/mounts &&
         ls "${FIFTYONE_S3_MOUNT_PATH}" >/dev/null 2>&1; then
-        exec python -m fiftyone.server.main --port 5151
+        exec python /opt/fiftyone-startup/run-servers.py "$@"
       fi
       sleep 2
     done
 
     echo "Timed out waiting for S3 dataset mount" >&2
     exit 1
+
+  run-servers.py: |
+    import argparse
+    import signal
+    import subprocess
+    import sys
+    import time
+
+
+    def main():
+        parser = argparse.ArgumentParser()
+        parser.add_argument("ports", nargs="+", type=int)
+        args = parser.parse_args()
+        if len(set(args.ports)) != len(args.ports) or any(
+            port < 1 or port > 65535 for port in args.ports
+        ):
+            parser.error("ports must be distinct integers from 1 to 65535")
+
+        stopping = False
+
+        def stop(_signum, _frame):
+            nonlocal stopping
+            stopping = True
+
+        signal.signal(signal.SIGTERM, stop)
+        signal.signal(signal.SIGINT, stop)
+        servers = {}
+        try:
+            for port in args.ports:
+                if stopping:
+                    break
+                servers[port] = subprocess.Popen(
+                    [sys.executable, "-m", "fiftyone.server.main", "--port", str(port)]
+                )
+
+            while not stopping:
+                for port, server in servers.items():
+                    status = server.poll()
+                    if status is not None:
+                        print(f"FiftyOne server on port {port} exited ({status})", flush=True)
+                        return 1
+                time.sleep(0.5)
+            return 0
+        finally:
+            for server in servers.values():
+                server.terminate()
+            for server in servers.values():
+                try:
+                    server.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    server.kill()
+                    server.wait()
+
+
+    if __name__ == "__main__":
+        raise SystemExit(main())
 
   mount-s3-datasets.sh: |
     #!/bin/sh

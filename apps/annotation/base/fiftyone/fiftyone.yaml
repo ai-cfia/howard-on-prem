@@ -37,6 +37,14 @@ spec:
           command:
             - /bin/sh
             - /opt/fiftyone-startup/wait-for-s3-mount.sh
+          args:
+            - "5151"
+            - "5152"
+            - "5153"
+            - "5154"
+            - "5155"
+            - "5156"
+            - "5157"
           env:
             - name: FIFTYONE_DATABASE_URI
               value: mongodb://mongodb.mongodb.svc.cluster.local:27017/fiftyone
@@ -55,6 +63,18 @@ spec:
           ports:
             - containerPort: 5151
               name: http
+            - containerPort: 5152
+              name: http-1
+            - containerPort: 5153
+              name: http-2
+            - containerPort: 5154
+              name: http-3
+            - containerPort: 5155
+              name: http-4
+            - containerPort: 5156
+              name: http-5
+            - containerPort: 5157
+              name: http-6
           volumeMounts:
             - name: workspace
               mountPath: /fiftyone
@@ -277,4 +297,100 @@ spec:
   ports:
     - name: http
       port: 5151
-      targetPort: 5151
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiftyone-1
+  labels:
+    app.kubernetes.io/name: fiftyone
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: fiftyone
+  ports:
+    - name: http
+      port: 5152
+      targetPort: http-1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiftyone-2
+  labels:
+    app.kubernetes.io/name: fiftyone
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: fiftyone
+  ports:
+    - name: http
+      port: 5153
+      targetPort: http-2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiftyone-3
+  labels:
+    app.kubernetes.io/name: fiftyone
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: fiftyone
+  ports:
+    - name: http
+      port: 5154
+      targetPort: http-3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiftyone-4
+  labels:
+    app.kubernetes.io/name: fiftyone
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: fiftyone
+  ports:
+    - name: http
+      port: 5155
+      targetPort: http-4
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiftyone-5
+  labels:
+    app.kubernetes.io/name: fiftyone
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: fiftyone
+  ports:
+    - name: http
+      port: 5156
+      targetPort: http-5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiftyone-6
+  labels:
+    app.kubernetes.io/name: fiftyone
+    app.kubernetes.io/part-of: fiftyone
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: fiftyone
+  ports:
+    - name: http
+      port: 5157
+      targetPort: http-6

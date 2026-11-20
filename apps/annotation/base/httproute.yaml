@@ -38,3 +38,123 @@ spec:
       backendRefs:
         - name: fiftyone
           port: 5151
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: fiftyone-1-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      namespace: louis
+      sectionName: https-fiftyone-1
+  hostnames:
+    - fiftyone-1.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: fiftyone-1
+          port: 5152
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: fiftyone-2-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      namespace: louis
+      sectionName: https-fiftyone-2
+  hostnames:
+    - fiftyone-2.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: fiftyone-2
+          port: 5153
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: fiftyone-3-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      namespace: louis
+      sectionName: https-fiftyone-3
+  hostnames:
+    - fiftyone-3.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: fiftyone-3
+          port: 5154
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: fiftyone-4-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      namespace: louis
+      sectionName: https-fiftyone-4
+  hostnames:
+    - fiftyone-4.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: fiftyone-4
+          port: 5155
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: fiftyone-5-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      namespace: louis
+      sectionName: https-fiftyone-5
+  hostnames:
+    - fiftyone-5.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: fiftyone-5
+          port: 5156
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: fiftyone-6-route
+spec:
+  parentRefs:
+    - name: louis-gateway
+      namespace: louis
+      sectionName: https-fiftyone-6
+  hostnames:
+    - fiftyone-6.inspection.alpha.canada.ca
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: "/"
+      backendRefs:
+        - name: fiftyone-6
+          port: 5157
