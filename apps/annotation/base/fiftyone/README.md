@@ -200,6 +200,13 @@ kubectl rollout restart deploy/fiftyone -n annotation
 kubectl port-forward svc/fiftyone 5151:5151 -n annotation
 ```
 
+The deployment starts seven FiftyOne app servers after the S3 dataset mount is
+ready. Their ports are set by the FiftyOne container's `args`. Each server has
+its own Service and hostname: `fiftyone.inspection.alpha.canada.ca`, followed by
+`fiftyone-1.inspection.alpha.canada.ca` through
+`fiftyone-6.inspection.alpha.canada.ca`. All servers share MongoDB and the same
+mounted datasets.
+
 Plugin checks:
 
 ```bash

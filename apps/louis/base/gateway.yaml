@@ -98,6 +98,114 @@ spec:
                 operator: In
                 values:
                   - annotation
+    - name: https-fiftyone-1
+      hostname: fiftyone-1.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: fiftyone-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - annotation
+    - name: https-fiftyone-2
+      hostname: fiftyone-2.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: fiftyone-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - annotation
+    - name: https-fiftyone-3
+      hostname: fiftyone-3.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: fiftyone-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - annotation
+    - name: https-fiftyone-4
+      hostname: fiftyone-4.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: fiftyone-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - annotation
+    - name: https-fiftyone-5
+      hostname: fiftyone-5.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: fiftyone-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - annotation
+    - name: https-fiftyone-6
+      hostname: fiftyone-6.inspection.alpha.canada.ca
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: fiftyone-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - annotation
     - name: https-argo-workflows
       hostname: argo-workflows.inspection.alpha.canada.ca
       port: 443

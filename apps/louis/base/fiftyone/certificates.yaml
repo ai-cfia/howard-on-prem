@@ -13,6 +13,12 @@ spec:
   commonName: fiftyone.inspection.alpha.canada.ca
   dnsNames:
     - fiftyone.inspection.alpha.canada.ca
+    - fiftyone-1.inspection.alpha.canada.ca
+    - fiftyone-2.inspection.alpha.canada.ca
+    - fiftyone-3.inspection.alpha.canada.ca
+    - fiftyone-4.inspection.alpha.canada.ca
+    - fiftyone-5.inspection.alpha.canada.ca
+    - fiftyone-6.inspection.alpha.canada.ca
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
