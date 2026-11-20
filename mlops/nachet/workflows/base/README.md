@@ -31,7 +31,7 @@ The workflow ExternalSecret reads the existing `nachet/mlops/smoke` entry in the
 | `TEST_ROOT_DIR` | `DATASET_SMOKE_ROOT` |
 
 `AWS_ENDPOINT_URL_S3` should point to the Ceph object gateway for the smoke
-bucket. For the cold gateway, see [the Nachet preparation config](preparation-config.yaml).
+bucket. For the cold gateway, see the Nachet preparation config preparation-config.yaml.
 
 ## First run
 
