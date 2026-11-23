@@ -59,3 +59,47 @@ delete access under `smoke/`. To use a dedicated bucket, set `container` to
 ```sh
 argo submit -n argo-workflows --from workflowtemplate/nachet-dataset-release-smoke --watch
 ```
+
+## Train on a reviewed dataset release
+
+Create a dedicated entry at `nachet/mlops/training/dataset-release` in the
+`secrets` Vault KV mount. The `nachet-training-dataset-release` ExternalSecret
+copies the fields from this entry into `argo-workflows`. Keep the entry limited
+to the training dataset settings below.
+
+| Vault field | Value |
+| --- | --- |
+| `DATASET_DATABASE_URL` | `postgresql+psycopg://` URL for a dedicated read-only login on the release registry database. Percent-encode the password in the URL. |
+| `S3_ENDPOINT_URL` | Ceph object gateway for the published release bucket. |
+| `S3_ACCESS_KEY` | Access key for the training dataset reader. |
+| `S3_SECRET_KEY` | Secret key for the training dataset reader. |
+| `DATASET_REGISTRY_SCHEMA` | Optional registry schema. Defaults to `nachet_datasets`. |
+| `DATASET_CONTAINER` | Optional default release bucket. The workflow's `dataset-container` parameter can select a bucket. |
+| `S3_REGION_NAME` | Optional region for the release bucket's gateway. |
+
+Use the database and schema that contain the ready release. Grant the login
+database `CONNECT`, schema `USAGE`, and table `SELECT` on `dataset_release`,
+`dataset_membership`, and `dataset_crop`. Grant the Ceph identity
+`s3:GetObject` on the selected bucket's `releases/`, `png/detection/`, and
+`png/classification/` prefixes. These credentials serve only the dataset
+reader. MLflow artifact access uses the existing `nachet-training-s3` Secret.
+
+After the Howard change is merged, sync `nachet-mlops` and check readiness and
+key names.
+
+```sh
+kubectl -n argo-workflows wait --for=condition=Ready externalsecret/nachet-training-dataset-release --timeout=120s
+kubectl -n argo-workflows describe secret nachet-training-dataset-release
+```
+
+After the Nachet training change is merged, wait for the post-merge
+[MLOps training build and publish workflow](https://github.com/ai-cfia/nachet/actions/workflows/mlops-training-build.yml)
+to publish both `nachet-detector-trainer:main` and
+`nachet-classifier-trainer:main` before submitting training.
+
+Run `nachet-detector-training` and `nachet-classifier-training` with the
+`smoke` profile and the same dataset name, version, and expected manifest
+SHA-256. Select a ready release with published classification crops. Check
+that both CPU preflights pass and that the MLflow runs record the same
+release identity. Submit each workflow again with a different manifest hash
+and confirm that the CPU preflight fails before Argo creates a GPU pod.
