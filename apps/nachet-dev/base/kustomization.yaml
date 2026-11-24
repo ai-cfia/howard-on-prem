@@ -19,4 +19,4 @@ resources:
   - httproute.yaml
   - certificates.yaml
   - nachet-dev-op-deployment.yml
-  - nachet-staging-op-deployment.yml
+  # - nachet-staging-op-deployment.yml
