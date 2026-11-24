@@ -66,6 +66,7 @@ spec:
             limits:
               cpu: "12"
               memory: "8Gi"
+              nvidia.com/gpu: "1"
           securityContext:
             runAsNonRoot: false
             runAsUser: 1000
