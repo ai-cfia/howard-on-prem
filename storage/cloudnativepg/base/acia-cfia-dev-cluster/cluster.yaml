@@ -53,6 +53,32 @@ spec:
         passwordSecret:
           name: nachet-dev-user-creds
 
+      - name: nachet-release-publisher
+        ensure: present
+        comment: "Owns the Nachet dataset release database"
+        login: true
+        superuser: false
+        createdb: false
+        createrole: false
+        replication: false
+        bypassrls: false
+        connectionLimit: 20
+        passwordSecret:
+          name: nachet-release-publisher-creds
+
+      - name: nachet-release-reader
+        ensure: present
+        comment: "Reads published Nachet dataset releases for training"
+        login: true
+        superuser: false
+        createdb: false
+        createrole: false
+        replication: false
+        bypassrls: false
+        connectionLimit: 20
+        passwordSecret:
+          name: nachet-release-reader-creds
+
       - name: mlops-test-user
         ensure: present
         comment: "Owner of the shared MLOps test database"

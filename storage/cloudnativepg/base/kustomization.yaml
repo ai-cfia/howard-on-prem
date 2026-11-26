@@ -9,6 +9,7 @@ resources:
   
   - database/fertiscan-preview.yaml
   - database/nachet-dev.yaml
+  - database/nachet-dataset-releases.yaml
   - database/mlops-test.yaml
   - database/finesse.yaml
   - database/finesse-internal.yaml

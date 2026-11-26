@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: nachet-dataset-releases
+spec:
+  name: nachet_dataset_releases
+  owner: nachet-release-publisher
+  cluster:
+    name: acia-cfia-dev-cluster
