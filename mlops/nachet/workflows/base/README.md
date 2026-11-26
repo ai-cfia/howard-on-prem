@@ -68,13 +68,14 @@ the CloudNativePG and Nachet workflow manifests.
 
 | Vault mount and path | Required fields |
 | --- | --- |
-| `devsecops/cloudnativepg/nachet-release-publisher` | `username` (`nachet-release-publisher`), `password`, and `DATASET_DATABASE_URL` |
+| `devsecops/cloudnativepg/nachet-release-publisher` | `username` (`nachet-release-publisher`) and `password` |
 | `devsecops/cloudnativepg/nachet-release-reader` | `username` (`nachet-release-reader`) and `password` |
-| `secrets/nachet/mlops/dataset-release` | `S3_ENDPOINT_URL`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, and any needed region setting |
+| `secrets/nachet/mlops/dataset-release` | `DATASET_DATABASE_URL`, `S3_ENDPOINT_URL`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, and any needed region setting |
 
 Use `acia-cfia-dev-cluster-rw.cloudnativepg.svc.cluster.local:5432` and
 `nachet_dataset_releases` in both PostgreSQL URLs. Percent-encode passwords
-in the URLs. Store the reader URL in the training Vault entry below. Give the
+in the URLs. Store the publisher URL in the publisher workflow entry above
+and the reader URL in the training Vault entry below. Give the
 publisher S3 identity read access to `png/detection/` and read/write access to
 `png/classification/` in `nachet-seed-image-dataset`.
 
