@@ -60,6 +60,45 @@ delete access under `smoke/`. To use a dedicated bucket, set `container` to
 argo submit -n argo-workflows --from workflowtemplate/nachet-dataset-release-smoke --watch
 ```
 
+## Publish a normal dataset release
+
+The `nachet_dataset_releases` database runs on `acia-cfia-dev-cluster`. The
+default schema is `nachet_datasets`. Create these Vault entries before syncing
+the CloudNativePG and Nachet workflow manifests.
+
+| Vault mount and path | Required fields |
+| --- | --- |
+| `devsecops/cloudnativepg/nachet-release-publisher` | `username` (`nachet-release-publisher`) and `password` |
+| `devsecops/cloudnativepg/nachet-release-reader` | `username` (`nachet-release-reader`) and `password` |
+| `secrets/nachet/mlops/dataset-release` | `DATASET_DATABASE_URL`, `S3_ENDPOINT_URL`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, and any needed region setting |
+
+Use `acia-cfia-dev-cluster-rw.cloudnativepg.svc.cluster.local:5432` and
+`nachet_dataset_releases` in both PostgreSQL URLs. Percent-encode passwords
+in the URLs. Store the publisher URL in the publisher workflow entry above
+and the reader URL in the training Vault entry below. Give the
+publisher S3 identity read access to `png/detection/` and read/write access to
+`png/classification/` in `nachet-seed-image-dataset`.
+
+After the database is ready, connect to it as the publisher and run
+`CREATE SCHEMA IF NOT EXISTS nachet_datasets;`. Apply the standalone Nachet
+dataset migrations from `mlops/datasets` in Nachet. Set
+`DATASET_DATABASE_URL` in the migration environment to the publisher URL from
+Vault, then run `uv run alembic -c alembic.ini upgrade head`. Grant the reader
+access to the created tables and restrict default database access:
+
+```sql
+REVOKE CONNECT, TEMPORARY ON DATABASE nachet_dataset_releases FROM PUBLIC;
+GRANT CONNECT ON DATABASE nachet_dataset_releases TO "nachet-release-reader";
+GRANT USAGE ON SCHEMA nachet_datasets TO "nachet-release-reader";
+GRANT SELECT ON nachet_datasets.dataset_release,
+                nachet_datasets.dataset_membership,
+                nachet_datasets.dataset_crop TO "nachet-release-reader";
+```
+
+Prepare the draft using the publisher connection. Submit
+`nachet-dataset-release` with that draft's name and version and
+`container=nachet-seed-image-dataset`.
+
 ## Train on a reviewed dataset release
 
 Create a dedicated entry at `nachet/mlops/training/dataset-release` in the
